@@ -13,11 +13,11 @@ object Day6All {
 object Day6Fast : Solution<LongArray> {
   override val name = "day6"
   override val parser = Parser { input ->
-    val out = LongArray(9) { 0L }
-    input.split(",").map { it.toInt() }
-      .groupBy { it }
-      .forEach { (key, values) -> out[key] = values.size.toLong() }
-    out
+    val fishies = LongArray(9) { 0L }
+    input.split(",").map { it.toInt() }.forEach {
+      fishies[it]++
+    }
+    fishies
   }
 
   override fun part1(input: LongArray): Long {
