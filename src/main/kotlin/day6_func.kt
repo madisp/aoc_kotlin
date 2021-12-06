@@ -32,9 +32,7 @@ object Day6Func : Solution<Map<Int, Long>> {
           listOf(day - 1 to count)
         }
       }
-      // we've got duplicate keyed pairs in these lists now, group by the internal timer value and sum the two
-      .groupBy { it.first }
-      .mapValues { (_, v) -> v.sumOf { it.second } }
-      .toMap()
+      // we've got duplicate keyed pairs in these lists now
+      .mergeToMap { _, c1, c2 -> c1 + c2 }
   }
 }
