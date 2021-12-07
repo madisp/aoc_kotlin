@@ -7,7 +7,8 @@ fun interface Parser<In> {
 
   companion object {
     val lines = Parser { it.split('\n').filter(String::isNotBlank) }
-    val ints = lines.mapItems { it.toInt() }
+    val ints = Parser { it.trim().split(',').map { num -> num.trim().toInt() } }
+    val intLines = lines.mapItems { it.toInt() }
   }
 }
 
