@@ -1,3 +1,5 @@
+package utils
+
 fun interface Parser<In> {
   operator fun invoke(input: String): In
 

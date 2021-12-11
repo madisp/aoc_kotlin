@@ -1,3 +1,5 @@
+import utils.Parser
+
 fun main() {
   Day4Imp.run()
 }
