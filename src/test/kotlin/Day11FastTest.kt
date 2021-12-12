@@ -3,9 +3,7 @@ import org.junit.Test
 import java.lang.StringBuilder
 
 class Day11FastTest {
-  val grid =
-    Day11Fast.parser(readFile("day11_test"))
-      .cells.map { (_, v) -> v }.toIntArray()
+  val grid = Day11Fast.parser(readFile("day11_test")).values.toIntArray()
 
   private fun IntArray.toDigitString(): String {
     val sb = StringBuilder()

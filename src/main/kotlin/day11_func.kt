@@ -14,8 +14,7 @@ object Day11Func : Solution<Grid> {
 
     val flashSurrounding = flashPts.flatMap { it.surrounding }
       .filter { it !in flashPts && it !in alreadyFlashed }
-      .map { it to 1 }
-      .mergeToMap { _, c1, c2 -> c1 + c2 }
+      .withCounts()
 
     val flashedGrid = grid.map { coord, value ->
       (value + (flashSurrounding[coord] ?: 0)).coerceAtMost(10) % 10

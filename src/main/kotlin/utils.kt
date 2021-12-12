@@ -17,3 +17,7 @@ fun <K, V> List<Pair<K, V>>.mergeToMap(collisionFn: (K, V, V) -> V): Map<K, V> {
     .mapValues { (k, v) -> v.reduce { v1, v2 -> collisionFn(k, v1, v2) } }
     .toMap()
 }
+
+fun <T> List<T>.withCounts(): Map<T, Int> {
+  return groupBy { it }.mapValues { (_, c) -> c.size }
+}

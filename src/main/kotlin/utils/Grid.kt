@@ -1,28 +1,10 @@
 package utils
 
-class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr, width, height) {
-
-  class MutableColumn(private val grid: MutableGrid, private val x: Int) : Column(grid, x) {
-    operator fun set(y: Int, value: Int) = grid.set(x, y, value)
-  }
-
-  override operator fun get(x: Int) = MutableColumn(this, x)
-
-  fun set(x: Int, y: Int, value: Int) {
-    arr[y * width + x] = value
-  }
-
-  operator fun set(c: Coord, value: Int) {
-    set(c.x, c.y, value)
-  }
-}
-
 open class Grid(
   private val arr: IntArray,
   val width: Int,
   val height: Int
 ) {
-
   open class Column(private val grid: Grid, private val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
   }
@@ -40,7 +22,6 @@ open class Grid(
   }
 
   val cells: Collection<Pair<Coord, Int>> get() = coords.map { it to this[it] }
-
   val values: Collection<Int> get() = arr.asList()
 
   operator fun contains(c: Coord) = c.x in (0 until width) && c.y in (0 until height)

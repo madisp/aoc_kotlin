@@ -66,7 +66,7 @@ object Day11Fast : Solution<Grid> {
   }
 
   override fun part1(input: Grid): Int {
-    val grid = input.cells.map { (_, v) -> v }.toIntArray()
+    val grid = input.values.toIntArray()
     var totalFlashes = 0
     repeat(100) {
       totalFlashes += evolve(grid)
@@ -75,7 +75,7 @@ object Day11Fast : Solution<Grid> {
   }
 
   override fun part2(input: Grid): Int {
-    val grid = input.cells.map { (_, v) -> v }.toIntArray()
+    val grid = input.values.toIntArray()
     for (day in 1 .. Integer.MAX_VALUE) {
       if (evolve(grid) == 100) {
         return day
