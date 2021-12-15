@@ -18,6 +18,10 @@ fun <K, V> List<Pair<K, V>>.mergeToMap(collisionFn: (K, V, V) -> V): Map<K, V> {
     .toMap()
 }
 
-fun <T> List<T>.withCounts(): Map<T, Int> {
+fun <T> Iterable<T>.withCounts(): Map<T, Int> {
   return groupBy { it }.mapValues { (_, c) -> c.size }
+}
+
+fun <T> Iterable<T>.withLCounts(): Map<T, Long> {
+  return groupBy { it }.mapValues { (_, c) -> c.size.toLong() }
 }

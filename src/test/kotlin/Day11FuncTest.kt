@@ -18,7 +18,7 @@ class Day11FuncTest {
   """.trimIndent())
 
   @Test fun testEvolve1Day() {
-    val step1 = evolve(input).toDigitString()
+    val step1 = evolve(input).drop(1).first().toDigitString()
 
     assertThat(step1).isEqualTo("""
       6594254334
@@ -35,9 +35,7 @@ class Day11FuncTest {
   }
 
   @Test fun testEvolve2Day() {
-    val step2 =
-      evolve(evolve(input))
-        .toDigitString()
+    val step2 = evolve(input).drop(2).first().toDigitString()
 
     assertThat(step2).isEqualTo("""
       8807476555
