@@ -5,6 +5,11 @@ open class Grid(
   val width: Int,
   val height: Int
 ) {
+  constructor(width: Int, height: Int, valuesFn: (Coord) -> Int) :
+      this(IntArray(width * height) { index -> valuesFn(
+        Coord(index % width, index / width)
+      ) }, width, height)
+
   open class Column(private val grid: Grid, private val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
   }
