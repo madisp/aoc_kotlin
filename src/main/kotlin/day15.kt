@@ -25,11 +25,7 @@ object Day15 : Solution<Grid> {
       if (new > 9) new - 9 else new
     }
 
-    var sum = 0
-    repeat(100) {
-      sum += solve(wide)
-    }
-    return sum
+    return solve(wide)
   }
 
   private fun solve(input: Grid): Int {
