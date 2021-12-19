@@ -20,10 +20,10 @@ object Day19 : Solution<List<Day19.Scanner>> {
     }.mapIndexed { index, beacons -> Scanner(index, beacons) }
   }
 
-  data class Scanner(val index: Int, val beacons: List<Vec4i>) {
+  class Scanner(val index: Int, val beacons: List<Vec4i>, distances: Map<Int, Pair<Int, Int>>? = null) {
     override fun toString() = "$index"
 
-    private val distances = beacons.productIndexed { b1Index, b1, b2Index, b2 ->
+    private val distances = distances ?: beacons.productIndexed { b1Index, b1, b2Index, b2 ->
       b1.distanceSqr(b2) to (b1Index to b2Index)
     }.groupBy { it.first }.mapValues { (_, v) ->
       v.also { require(it.size == 1) { "Unexpected dupe distance in beacons" } }.first().second
@@ -68,7 +68,7 @@ object Day19 : Solution<List<Day19.Scanner>> {
 
       // transform the scanner with our transform matrix and also transform 0,0,0 to get scanner's position relative to
       // the anchor
-      return Scanner(index, beacons.map { (matPair.key * it).asPoint }) to matPair.key * Point3i(0,0,0)
+      return Scanner(index, beacons.map { (matPair.key * it).asPoint }, distances) to matPair.key * Point3i(0,0,0)
     }
   }
 
