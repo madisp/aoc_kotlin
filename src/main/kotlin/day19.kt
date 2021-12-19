@@ -54,6 +54,9 @@ object Day19 : Solution<List<Day19.Scanner>> {
           if (rotB1 - anchor.beacons[anchorB1] == rotB2 - anchor.beacons[anchorB2]) {
             val translation = Mat4i.translate(anchor.beacons[anchorB1] - rotB1)
             (translation * rot)
+          } else if (rotB2 - anchor.beacons[anchorB1] == rotB1 - anchor.beacons[anchorB2]) {
+            val translation = Mat4i.translate(anchor.beacons[anchorB2] - rotB1)
+            (translation * rot)
           } else null
         }
       }.withCounts().maxByOrNull { it.value }
@@ -98,7 +101,6 @@ object Day19 : Solution<List<Day19.Scanner>> {
   }
 
   override fun part2(input: List<Scanner>): Number? {
-    val scanners = solve(input)
-    return scanners.map { (_, pos) -> pos }.product().maxOfOrNull { (pos1, pos2) -> pos1.distanceManhattan(pos2) }
+    return solve(input).map { (_, pos) -> pos }.product().maxOfOrNull { (pos1, pos2) -> pos1.distanceManhattan(pos2) }
   }
 }
