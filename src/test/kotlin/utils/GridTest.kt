@@ -125,4 +125,40 @@ class GridTest {
       789
     """.trimIndent().trim())
   }
+
+  @Test fun testStringBorderWidthOne() {
+    val input = """
+      012
+      345
+      678
+    """.trimIndent()
+    val grid = Grid.singleDigits(input).map { _, v -> v + 1 }
+
+    assertThat(grid.borderWith(0).toDigitString()).isEqualTo("""
+      00000
+      01230
+      04560
+      07890
+      00000
+    """.trimIndent().trim())
+  }
+
+  @Test fun testStringBorderWidthTwo() {
+    val input = """
+      012
+      345
+      678
+    """.trimIndent()
+    val grid = Grid.singleDigits(input).map { _, v -> v + 1 }
+
+    assertThat(grid.borderWith(0, borderWidth = 2).toDigitString()).isEqualTo("""
+      0000000
+      0000000
+      0012300
+      0045600
+      0078900
+      0000000
+      0000000
+    """.trimIndent().trim())
+  }
 }

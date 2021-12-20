@@ -56,8 +56,8 @@ object Day14Fast : Solution<Pair<Day14Fast.Polymer, IntArray>> {
     val charDeltas = LongArray(chars.size) { 0 }
 
     repeat(days) {
-      for (i in 0 until pairDeltas.size) { pairDeltas[i] = 0 }
-      for (i in 0 until charDeltas.size) { charDeltas[i] = 0 }
+      pairDeltas.fill(0)
+      charDeltas.fill(0)
 
       for (c1 in 0 until sz) {
         for (c2 in 0 until sz) {

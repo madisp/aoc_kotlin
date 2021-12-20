@@ -37,6 +37,16 @@ open class Grid(
 
   operator fun get(c: Coord): Int = get(c.x, c.y)
 
+  fun borderWith(value: Int, borderWidth: Int = 1): Grid {
+    return Grid(width + borderWidth * 2, height + borderWidth * 2) { (x, y) ->
+      if (x < borderWidth || y < borderWidth || x >= width + borderWidth || y >= height + borderWidth) {
+        value
+      } else {
+        this[x - borderWidth][y - borderWidth]
+      }
+    }
+  }
+
   fun map(fn: (Coord, Int) -> Int) = Grid(
     IntArray(arr.size) { i -> fn(Coord(i % width, i / height), arr[i]) },
     width,

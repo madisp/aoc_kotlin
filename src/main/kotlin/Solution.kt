@@ -38,9 +38,9 @@ interface Solution<In> {
     println()
   }
 
-  val test1 = part1(testInput)
-  val test2 = part2(testInput)
   if (!skipTest) {
+    val test1 = part1(testInput)
+    val test2 = part2(testInput)
     println("---- test ----")
     if (skipPart1) {
       println("$test2")
@@ -53,10 +53,10 @@ interface Solution<In> {
     println("---- puzzle ----")
   }
 
-  val (firstAnswer, firstTime) = measureTimedValue {
-    part1(input)
-  }
   if (!skipPart1) {
+    val (firstAnswer, firstTime) = measureTimedValue {
+      part1(input)
+    }
     println("part1: $firstAnswer ($firstTime)")
   }
 
