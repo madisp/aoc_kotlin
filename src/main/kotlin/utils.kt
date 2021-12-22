@@ -75,3 +75,5 @@ inline fun <T, V> List<T>.productIndexed(fn: (i1: Int, v1: T, i2: Int, v2: T) ->
     }
   }
 }
+
+val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first

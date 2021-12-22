@@ -5,8 +5,32 @@ import kotlin.math.abs
 fun Point3i(x: Int, y: Int, z: Int) = Vec4i(x, y, z, 1)
 fun Vec3i(x: Int, y: Int, z: Int) = Vec4i(x, y, z, 0)
 
+enum class Component4 { X, Y, Z, W }
+
 data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
   operator fun minus(o: Vec4i) = Vec4i(x - o.x, y - o.y, z - o.z, w - o.w)
+
+  operator fun get(c: Component4): Int {
+    return when (c) {
+      Component4.X -> x
+      Component4.Y -> y
+      Component4.Z -> z
+      Component4.W -> w
+    }
+  }
+
+  fun copy(c: Component4, v: Int): Vec4i {
+    return when (c) {
+      Component4.X -> copy(x = v)
+      Component4.Y -> copy(y = v)
+      Component4.Z -> copy(z = v)
+      Component4.W -> copy(w = v)
+    }
+  }
+
+  override fun toString(): String {
+    return "${if (w == 1) 'p' else 'v'}($x,$y,$z)"
+  }
 
   fun distanceSqr(o: Vec4i): Int {
     val d = this - o
