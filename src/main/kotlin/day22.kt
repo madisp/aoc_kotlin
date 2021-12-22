@@ -93,8 +93,8 @@ object Day22 : Solution<List<Day22.Command>> {
 
   override fun part1(input: List<Command>): Long {
     val pt1Input = input.map { (cmd, cuboid) -> Command(cmd, Cuboid(
-        Point3i(cuboid.start.x.coerceAtLeast(-50), cuboid.start.y.coerceAtLeast(-50), cuboid.start.z.coerceAtLeast(-50)),
-        Point3i(cuboid.end.x.coerceAtMost(50), cuboid.end.y.coerceAtMost(50), cuboid.end.z.coerceAtMost(50))
+        cuboid.start.coerceAtLeast(Point3i(-50, -50, -50)),
+        cuboid.end.coerceAtMost(Point3i(50, 50, 50))
       ))
     }.filter { (_, cuboid) -> cuboid.valid }
 

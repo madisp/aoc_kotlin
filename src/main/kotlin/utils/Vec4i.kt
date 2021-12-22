@@ -42,6 +42,20 @@ data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
     return abs(d.x) + abs(d.y) + abs(d.z)
   }
 
+  fun coerceAtLeast(value: Vec4i) = Vec4i(
+    x.coerceAtLeast(value.x),
+    y.coerceAtLeast(value.y),
+    z.coerceAtLeast(value.z),
+    w.coerceAtLeast(value.w)
+  )
+
+  fun coerceAtMost(value: Vec4i) = Vec4i(
+    x.coerceAtMost(value.x),
+    y.coerceAtMost(value.y),
+    z.coerceAtMost(value.z),
+    w.coerceAtMost(value.w)
+  )
+
   val asPoint get() = copy(w = 1)
   val asVector get() = copy(w = 0)
 }
