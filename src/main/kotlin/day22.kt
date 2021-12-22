@@ -50,7 +50,6 @@ object Day22 : Solution<List<Day22.Command>> {
     }
 
     infix fun intersect(right: Cuboid): Cuboid? {
-      require(this.valid && right.valid)
       return Cuboid(
         Point3i(maxOf(start.x, right.start.x), maxOf(start.y, right.start.y), maxOf(start.z, right.start.z)),
         Point3i(minOf(end.x, right.end.x), minOf(end.y, right.end.y), minOf(end.z, right.end.z)),
@@ -79,10 +78,6 @@ object Day22 : Solution<List<Day22.Command>> {
 
     input.forEachIndexed { _, cmd ->
       val (on, cuboid) = cmd
-      require(cuboid.start.x < cuboid.end.x)
-      require(cuboid.start.y < cuboid.end.y)
-      require(cuboid.start.z < cuboid.end.z)
-
       val new = mutableListOf<Cuboid>()
       cuboids.forEach {
         new.addAll(it - cuboid)
