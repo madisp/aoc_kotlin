@@ -9,12 +9,11 @@ fun main() {
 object Day23 : Solution<Day23.Burrow> {
   override val name = "day23"
   override val parser = Parser.lines.map { lines ->
-    val uppers = lines[2].substring(3, 10).split('#')
-      .map { Cell.valueOf(it) }
-    val lowers = lines[3].substring(3, 10).split('#')
-      .map { Cell.valueOf(it) }
 
-    val rooms = uppers.zip(lowers) { u, l -> Room(u, l) }
+    val roomCells = lines.drop(2).filter { "#########" !in it }
+      .map { it.substring(3, 10).split('#').map { Cell.valueOf(it) } }
+
+    val rooms = (0..3).map { idx -> Room(roomCells.map { it[idx] }) }
 
     Burrow(List(size = 7) { EMPTY }, rooms)
   }
@@ -26,32 +25,35 @@ object Day23 : Solution<Day23.Burrow> {
 
     val solved: Boolean get() {
       for (room in rooms.indices) {
-        if (rooms[room].upper.room != room || rooms[room].lower.room != room) {
-          return false
+        for (cell in rooms[room].cells) {
+          if (cell.room != room) {
+            return false
+          }
         }
       }
       return true
     }
 
-    fun swap(hallwayIndex: Int, roomIndex: Int, upper: Boolean): Burrow {
-      val roomCell = if (upper) rooms[roomIndex].upper else rooms[roomIndex].lower
+    fun swap(hallwayIndex: Int, roomIndex: Int): Burrow {
       val hallwayCell = hallway[hallwayIndex]
 
-      if (upper) {
-        require(hallway[hallwayIndex] == EMPTY || rooms[roomIndex].upper == EMPTY) { "Can't swap if one of the places isn't empty" }
+      val cellIndex = if (hallwayCell == EMPTY) {
+        rooms[roomIndex].cells.indexOfFirst { it != EMPTY }
       } else {
-        require(hallway[hallwayIndex] == EMPTY || rooms[roomIndex].lower == EMPTY) { "Can't swap if one of the places isn't empty" }
+        rooms[roomIndex].cells.indexOfLast { it == EMPTY }
+      }
+
+      val roomCell = rooms[roomIndex].cells[cellIndex]
+
+      require(hallway[hallwayIndex] == EMPTY || rooms[roomIndex].cells[cellIndex] == EMPTY) {
+        "Can't swap if one of the places isn't empty"
       }
 
       return copy(
         hallway = List(size = 7) { if (it == hallwayIndex) roomCell else hallway[it] },
         rooms = List(size = 4) {
           if (it == roomIndex) {
-            if (upper) {
-              rooms[it].copy(upper = hallwayCell)
-            } else {
-              rooms[it].copy(lower = hallwayCell)
-            }
+            rooms[it].copy(cells = rooms[it].cells.mapIndexed { index, cell -> if (index == cellIndex) hallway[hallwayIndex] else cell })
           } else rooms[it]
         }
       )
@@ -61,24 +63,34 @@ object Day23 : Solution<Day23.Burrow> {
       return buildString {
         append("#############\n")
         append("#${hallway[0]}${hallway[1]}.${hallway[2]}.${hallway[3]}.${hallway[4]}.${hallway[5]}${hallway[6]}#\n")
-        append("###")
-        for (room in rooms) {
-          append("${room.upper}#")
+
+        val cells = rooms.first().cells.size
+
+        for (i in 0 until cells) {
+          if (i == 0) {
+            append("###")
+          } else {
+            append("  #")
+          }
+
+          for (room in rooms) {
+            append("${room.cells[i]}#")
+          }
+
+          if (i == 0) {
+            append("##\n")
+          } else {
+            append("  \n")
+          }
         }
-        append("##\n")
-        append("  #")
-        for (room in rooms) {
-          append("${room.lower}#")
-        }
-        append("  \n")
+
         append("  #########  ")
       }
     }
   }
 
   data class Room(
-    val upper: Cell,
-    val lower: Cell
+    val cells: List<Cell> // size = arbitrary
   )
 
   enum class Cell(val energy: Int, val room: Int) {
@@ -121,9 +133,8 @@ object Day23 : Solution<Day23.Burrow> {
     Point3i(8, 1, 0),
   )
 
-  fun cost(hallway: Int, room: Int, cell: Cell, lower: Boolean): Long {
-    val dist = hallwayCoords[hallway].distanceManhattan(roomCoords[room]) +
-        if (lower) 1 else 0
+  fun cost(hallway: Int, room: Int, cell: Cell, cellIndex: Int): Long {
+    val dist = hallwayCoords[hallway].distanceManhattan(roomCoords[room]) + cellIndex
 
     return (dist.toLong() * cell.energy).also { require(it > 0) }
   }
@@ -136,24 +147,29 @@ object Day23 : Solution<Day23.Burrow> {
 
     val room = cell.room
 
-    if (burrow.rooms[room].upper != EMPTY) {
+    val cellIndex = burrow.rooms[room].cells.indexOfLast { it == EMPTY }
+
+    if (cellIndex == -1) {
       return null
     }
 
-    if (burrow.rooms[room].lower != EMPTY && burrow.rooms[room].lower != cell) {
-      return null
+    for (i in cellIndex + 1 until burrow.rooms[room].cells.size) {
+      if (burrow.rooms[room].cells[i] != cell) {
+        return null
+      }
     }
 
     if (canMove(burrow, from, room)) {
-      return burrow.swap(from, room, burrow.rooms[room].lower != EMPTY) to
-          cost(from, room, cell, burrow.rooms[room].lower == EMPTY)
+      return burrow.swap(from, room) to cost(from, room, cell, cellIndex)
     }
     return null
   }
 
   fun moveRtoH(burrow: Burrow, fromRoom: Int, to: Int): Pair<Burrow, Long>? {
     val room = burrow.rooms[fromRoom]
-    if (room.upper == EMPTY && room.lower == EMPTY) {
+
+    val cellIndex = burrow.rooms[fromRoom].cells.indexOfFirst { it != EMPTY }
+    if (cellIndex == -1) {
       return null
     }
 
@@ -165,26 +181,18 @@ object Day23 : Solution<Day23.Burrow> {
       return null
     }
 
-    if (room.upper == EMPTY) {
-      if (room.lower.room == fromRoom) {
-        // already in place
-        return null
-      }
-    } else {
-      if (room.upper.room == fromRoom && room.lower.room == fromRoom) {
-        // already in place
+    val cell = burrow.rooms[fromRoom].cells[cellIndex]
+    if (cell.room == fromRoom) {
+      if (burrow.rooms[fromRoom].cells.subList(cellIndex + 1, burrow.rooms[fromRoom].cells.size).all {
+          it.room == fromRoom
+        }) {
+        // all in place
         return null
       }
     }
 
-    if (room.upper == EMPTY) {
-      return burrow.swap(to, fromRoom, false) to cost(to, fromRoom, room.lower, true)
-    } else {
-      return burrow.swap(to, fromRoom, true) to cost(to, fromRoom, room.upper, false)
-    }
+    return burrow.swap(to, fromRoom) to cost(to, fromRoom, cell, cellIndex)
   }
-
-//  val states = mutableMapOf<Burrow, Long>()
 
   fun solve(input: Burrow): Long? {
     val seenStates = mutableMapOf<Burrow, Long>()
@@ -217,11 +225,6 @@ object Day23 : Solution<Day23.Burrow> {
         continue
       }
 
-//      count++
-//      if (count % 10000 == 0L) {
-//        println(seenStates.size)
-//      }
-
       for (index in burrow.hallway.indices) {
         moveHtoR(burrow, index)?.let { (newBurrow, moveCost) ->
           stack.add(burrows + newBurrow to cost + moveCost)
@@ -240,41 +243,15 @@ object Day23 : Solution<Day23.Burrow> {
     return best.second
   }
 
-  override fun part1(input: Burrow): Number? {
-//
-//    var burrow = input
-//    println("$burrow\n")
-//
-//    var cost = 0L
-//
-//    burrow = moveRtoH(burrow, 2, 2)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//
-//    burrow = moveRtoH(burrow, 1, 3)!!.also { (_, c) -> cost += c }.first
-//    burrow = moveHtoR(burrow, 3)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//
-//    burrow = moveRtoH(burrow, 1, 3)!!.also { (_, c) -> cost += c }.first
-//    burrow = moveHtoR(burrow, 2)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//
-//    burrow = moveRtoH(burrow, 0, 2)!!.also { (_, c) -> cost += c }.first
-//    burrow = moveHtoR(burrow, 2)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//
-//    burrow = moveRtoH(burrow, 3, 4)!!.also { (_, c) -> cost += c }.first
-//    burrow = moveRtoH(burrow, 3, 5)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//
-//    burrow = moveHtoR(burrow, 4)!!.also { (_, c) -> cost += c }.first
-//    burrow = moveHtoR(burrow, 3)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//
-//    burrow = moveHtoR(burrow, 5)!!.also { (_, c) -> cost += c }.first
-//    println("$burrow\n")
-//    println("${burrow.solved}, cost $cost")
-//    return null
+  override fun part1(input: Burrow): Long? {
+    return solve(input.copy(
+      rooms = input.rooms.map {
+        Room(listOf(it.cells.first(), it.cells.last()))
+      }
+    ))
+  }
 
+  override fun part2(input: Burrow): Long? {
     return solve(input)
   }
 }
