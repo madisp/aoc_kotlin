@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.cut
 import utils.mapItems
 
 fun main() {
@@ -7,13 +8,9 @@ fun main() {
 
 object Day2Func : Solution<List<Pair<Day2Func.Direction, Int>>> {
   override val name = "day2"
-  override val parser = Parser.lines.mapItems { line ->
-    val (direction, amountStr) = line.split(" ")
-    Direction.valueOf(direction) to amountStr.toInt()
-  }
+  override val parser = Parser.lines.mapItems { line -> line.cut(" ", Direction::valueOf, String::toInt) }
 
   enum class Direction { forward, down, up }
-
   data class State(val horizontal: Int = 0, val depth: Int = 0, val aim: Int = 0)
 
   override fun part1(input: List<Pair<Direction, Int>>): Number {

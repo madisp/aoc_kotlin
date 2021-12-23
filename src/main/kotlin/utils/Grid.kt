@@ -12,6 +12,14 @@ open class Grid(
 
   open class Column(private val grid: Grid, private val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
+    val cells: Collection<Pair<Coord, Int>> get() = (0 until grid.height).map { y -> Coord(x, y) to grid[x][y] }
+    val values: Collection<Int> get() = (0 until grid.height).map { y -> grid[x][y] }
+  }
+
+  open class Row(private val grid: Grid, private val y: Int) {
+    operator fun get(x: Int) = grid.get(x, y)
+    val cells: Collection<Pair<Coord, Int>> get() = (0 until grid.width).map { x -> Coord(x, y) to grid[x][y] }
+    val values: Collection<Int> get() = (0 until grid.width).map { x -> grid[x][y] }
   }
 
   init {
@@ -29,13 +37,17 @@ open class Grid(
   val cells: Collection<Pair<Coord, Int>> get() = coords.map { it to this[it] }
   val values: Collection<Int> get() = arr.asList()
 
+  val columns: Collection<Column> get() = (0 until width).map { this[it] }
+  val rows: Collection<Row> get() = (0 until height).map { getRow(it) }
+
   operator fun contains(c: Coord) = c.x in (0 until width) && c.y in (0 until height)
 
   fun get(x: Int, y: Int): Int = arr[y * width + x]
-
-  open operator fun get(x: Int) = Column(this, x)
-
   operator fun get(c: Coord): Int = get(c.x, c.y)
+
+  // get col, row
+  open operator fun get(x: Int) = Column(this, x)
+  open fun getRow(y: Int) = Row(this, y)
 
   fun borderWith(value: Int, borderWidth: Int = 1): Grid {
     return Grid(width + borderWidth * 2, height + borderWidth * 2) { (x, y) ->
@@ -68,6 +80,8 @@ open class Grid(
   }
 
   companion object {
+    val EMPTY = Grid(intArrayOf(), 0, 0)
+
     val singleDigits = Parser { input ->
       val stride = input
         .splitToSequence("\n")
@@ -76,6 +90,21 @@ open class Grid(
         .first()
 
       fromDigits(input, stride)
+    }
+
+    val table = Parser { input ->
+      val delimiter = " "
+      val lines = input.split("\n").filter(String::isNotBlank)
+      val stride = lines.first().split(delimiter).filter(String::isNotBlank).size
+      fromLines(lines, stride, delimiter)
+    }
+
+    private fun fromLines(input: List<String>, stride: Int, delimiter: String = " "): Grid {
+      val nums = input.filter(String::isNotBlank).flatMap {
+        it.split(" ").filter(String::isNotBlank).map(String::toInt)
+      }
+
+      return Grid(nums.toIntArray(), stride, nums.size / stride)
     }
 
     private fun fromDigits(input: String, stride: Int): Grid {

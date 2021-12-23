@@ -1,54 +1,49 @@
-import utils.Parser
+import utils.Grid
 
 fun main() {
   Day3.run()
 }
 
-object Day3 : Solution<List<String>> {
+object Day3 : Solution<Grid> {
   override val name = "day3"
-  override val parser = Parser.lines
+  override val parser = Grid.singleDigits
 
-  override fun part1(input: List<String>): Int {
-    val len = input.first().trim().length
-
-    val gamma = (0 until len).map { index ->
-      getPop(input, index).first
+  override fun part1(input: Grid): Int {
+    val gamma = (0 until input.width).map { index ->
+      getPop(input[index].values).first
     }.joinToString(separator = "").toInt(2)
 
-    val epsilon = (0 until len).map { index ->
-      getPop(input, index).second
+    val epsilon = (0 until input.width).map { index ->
+      getPop(input[index].values).second
     }.joinToString(separator = "").toInt(2)
 
     return gamma * epsilon
   }
 
-  override fun part2(input: List<String>): Int {
-    val len = input.first().trim().length
+  override fun part2(input: Grid): Int {
+    val oxygen = generateSequence(emptyList<Int>() to input.rows) { (mask, rows) ->
+      if (mask.size == input.width) return@generateSequence null
+      val newMask = mask + getPop(rows.map { it[mask.size] }).first
+      (newMask to rows.filter { it.values.startsWith(newMask) }).takeIf { it.second.isNotEmpty() }
+    }.last().second.first().values.joinToString("").toInt(2)
 
-    val oxygen = (0 until len).fold(input.toSet()) { acc, index ->
-      val pop = getPop(acc, index).first
-      if (acc.size == 1) { acc } else {
-        acc.intersect(input.filter { it[index] == pop }.toSet())
-      }
-    }.first().toInt(2)
+    val co2 = generateSequence(emptyList<Int>() to input.rows) { (mask, rows) ->
+      if (mask.size == input.width) return@generateSequence null
+      val newMask = mask + getPop(rows.map { it[mask.size] }).second
+      (newMask to rows.filter { it.values.startsWith(newMask) }).takeIf { it.second.isNotEmpty() }
+    }.last().second.first().values.joinToString("").toInt(2)
 
-    val co2 = (0 until len).fold(input.toSet()) { acc, index ->
-      val pop = getPop(acc, index).second
-      if (acc.size == 1) { acc } else {
-        acc.intersect(input.filter { it[index] == pop }.toSet())
-      }
-    }.first().toInt(2)
-
-    return oxygen * co2
+    return oxygen * co2 ///co2
   }
+
 
   /**
    * Returns 1, 0 if there's at least as many ones as zeroes in strings at pos
    * else returns 0, 1
    */
-  private fun getPop(strings: Collection<String>, pos: Int): Pair<Char, Char> {
-    val ones = strings.count { it[pos] == '1' }
-    val zeroes = strings.count { it[pos] == '0' }
-    return if (ones >= zeroes) '1' to '0' else '0' to '1'
+  private fun getPop(values: Collection<Int>): Pair<Int, Int> {
+    val ones = values.count { it == 1 }
+    val zeroes = values.count { it == 0 }
+    return if (ones >= zeroes) 1 to 0 else 0 to 1
   }
 }

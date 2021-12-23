@@ -76,4 +76,18 @@ inline fun <T, V> List<T>.productIndexed(fn: (i1: Int, v1: T, i2: Int, v2: T) ->
   }
 }
 
+fun <T> Collection<T>.startsWith(other: Collection<T>): Boolean {
+  if (this.size < other.size) {
+    return false
+  }
+  val me = iterator()
+  val them = other.iterator()
+  while (them.hasNext()) {
+    if (me.next() != them.next()) {
+      return false
+    }
+  }
+  return true
+}
+
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first

@@ -5,7 +5,12 @@ class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr
     operator fun set(y: Int, value: Int) = grid.set(x, y, value)
   }
 
+  class MutableRow(private val grid: MutableGrid, private val y: Int) : Row(grid, y) {
+    operator fun set(x: Int, value: Int) = grid.set(x, y, value)
+  }
+
   override operator fun get(x: Int) = MutableColumn(this, x)
+  override fun getRow(y: Int) = MutableRow(this, y)
 
   fun set(x: Int, y: Int, value: Int) {
     arr[y * width + x] = value
