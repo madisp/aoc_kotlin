@@ -1,5 +1,5 @@
-import utils.Coord
 import utils.Grid
+import utils.Vec2i
 import java.util.PriorityQueue
 
 fun main() {
@@ -10,7 +10,7 @@ object Day15 : Solution<Grid> {
   override val name = "day15"
   override val parser = Grid.singleDigits
 
-  data class Item(val coord: Coord, val risk: Int)
+  data class Item(val coord: Vec2i, val risk: Int)
 
   override fun part1(input: Grid): Int {
     return solve(input)
@@ -29,11 +29,11 @@ object Day15 : Solution<Grid> {
   }
 
   private fun solve(input: Grid): Int {
-    val end = Coord(input.width - 1, input.height - 1)
+    val end = Vec2i(input.width - 1, input.height - 1)
 
-    val visited = mutableSetOf<Coord>()
+    val visited = mutableSetOf<Vec2i>()
     val queue = PriorityQueue<Item>(compareBy { it.risk })
-    queue.add(Item(Coord(0, 0), 0))
+    queue.add(Item(Vec2i(0, 0), 0))
 
     while (queue.isNotEmpty()) {
       val (coord, currentRisk) = queue.remove()

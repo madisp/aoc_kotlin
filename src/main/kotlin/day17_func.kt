@@ -1,4 +1,3 @@
-import utils.Coord
 import utils.Parser
 
 fun main() {

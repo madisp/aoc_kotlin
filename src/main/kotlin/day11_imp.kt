@@ -1,6 +1,6 @@
-import utils.Coord
 import utils.Grid
 import utils.MutableGrid
+import utils.Vec2i
 
 fun main() {
   Day11Imp.run()
@@ -11,10 +11,10 @@ object Day11Imp : Solution<Grid> {
   override val parser = Grid.singleDigits
 
   fun evolve(grid: MutableGrid): Int {
-    val flashing = ArrayDeque<Coord>()
-    val flashed = mutableSetOf<Coord>()
+    val flashing = ArrayDeque<Vec2i>()
+    val flashed = mutableSetOf<Vec2i>()
 
-    fun evolve(coord: Coord) {
+    fun evolve(coord: Vec2i) {
       grid[coord] = grid[coord] + 1
       if (grid[coord] == 10) {
         flashed.add(coord)

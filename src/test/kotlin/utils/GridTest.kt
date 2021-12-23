@@ -47,10 +47,10 @@ class GridTest {
 
     val grid = Grid.singleDigits(input)
 
-    assertThat(grid[Coord(0, 0)]).isEqualTo(1)
-    assertThat(grid[Coord(3, 0)]).isEqualTo(4)
-    assertThat(grid[Coord(0, 1)]).isEqualTo(5)
-    assertThat(grid[Coord(3, 1)]).isEqualTo(8)
+    assertThat(grid[Vec2i(0, 0)]).isEqualTo(1)
+    assertThat(grid[Vec2i(3, 0)]).isEqualTo(4)
+    assertThat(grid[Vec2i(0, 1)]).isEqualTo(5)
+    assertThat(grid[Vec2i(3, 1)]).isEqualTo(8)
   }
 
   @Test fun getByColumn() {
@@ -74,11 +74,11 @@ class GridTest {
     """.trimIndent()
     val grid = Grid.singleDigits(input)
 
-    assertThat(Coord(0, 0) in grid).isTrue()
-    assertThat(Coord(-1, 0) in grid).isFalse()
-    assertThat(Coord(0, -1) in grid).isFalse()
-    assertThat(Coord(5, 0) in grid).isFalse()
-    assertThat(Coord(0, 2) in grid).isFalse()
+    assertThat(Vec2i(0, 0) in grid).isTrue()
+    assertThat(Vec2i(-1, 0) in grid).isFalse()
+    assertThat(Vec2i(0, -1) in grid).isFalse()
+    assertThat(Vec2i(5, 0) in grid).isFalse()
+    assertThat(Vec2i(0, 2) in grid).isFalse()
   }
 
   @Test fun testMapToXCoord() {

@@ -1,7 +1,7 @@
-import utils.Coord
 import utils.Grid
 import utils.MutableGrid
 import utils.Parser
+import utils.Vec2i
 
 fun main() {
   Day13.run()
@@ -14,7 +14,7 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>> {
 
     val pts = ptsLines.split("\n").filter { it.isNotBlank() }.map {
       val (x, y) = it.split(",")
-      Coord(x.toInt(), y.toInt())
+      Vec2i(x.toInt(), y.toInt())
     }
 
     val w = pts.maxOf { it.x } + 1
@@ -39,7 +39,7 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>> {
   fun foldH(grid: Grid, location: Int): Grid {
     return MutableGrid(IntArray(grid.width * location), grid.width, location).apply {
       coords.forEach { c ->
-        val mc = Coord(c.x, location + (location - c.y))
+        val mc = Vec2i(c.x, location + (location - c.y))
         this[c] = grid[c] + if (mc in grid) grid[mc] else 0
       }
     }
@@ -48,7 +48,7 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>> {
   fun foldV(grid: Grid, location: Int): Grid {
     return MutableGrid(IntArray(location * grid.height), location, grid.height).apply {
       coords.forEach { c ->
-        val mc = Coord(location + (location - c.x), c.y)
+        val mc = Vec2i(location + (location - c.x), c.y)
         this[c] = grid[c] + if (mc in grid) grid[mc] else 0
       }
     }

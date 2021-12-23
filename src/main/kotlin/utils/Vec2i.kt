@@ -1,6 +1,22 @@
 package utils
 
 data class Vec2i(val x: Int, val y: Int) {
+  val adjacent get() = listOf(
+    copy(x = x - 1),
+    copy(x = x + 1),
+    copy(y = y - 1),
+    copy(y = y + 1)
+  )
+
+  val surrounding get() = grow().filter { (x, y) -> x != this.x || y != this.y }
+
+  fun grow() = (x - 1 .. x + 1).flatMap { nx ->
+    (y - 1 .. y + 1).map { ny ->
+      Vec2i(nx, ny)
+    }
+  }
+
+
   companion object {
     fun parse(str: String, delimiter: String = ","): Vec2i {
       return str.cut(delimiter, String::toInt, String::toInt, ::Vec2i)

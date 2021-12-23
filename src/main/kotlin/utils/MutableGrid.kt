@@ -16,7 +16,7 @@ class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr
     arr[y * width + x] = value
   }
 
-  operator fun set(c: Coord, value: Int) {
+  operator fun set(c: Vec2i, value: Int) {
     set(c.x, c.y, value)
   }
 }

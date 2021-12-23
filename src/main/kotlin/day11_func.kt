@@ -1,5 +1,5 @@
-import utils.Coord
 import utils.Grid
+import utils.Vec2i
 
 fun main() {
   Day11Func.run()
@@ -9,7 +9,7 @@ object Day11Func : Solution<Grid> {
   override val name = "day11"
   override val parser = Grid.singleDigits
 
-  private tailrec fun flash(alreadyFlashed: Set<Coord>, grid: Grid): Grid {
+  private tailrec fun flash(alreadyFlashed: Set<Vec2i>, grid: Grid): Grid {
     val flashPts = grid.coords.filter { it !in alreadyFlashed && grid[it] == 0 }.toSet()
 
     val flashSurrounding = flashPts.flatMap { it.surrounding }

@@ -5,20 +5,20 @@ open class Grid(
   val width: Int,
   val height: Int
 ) {
-  constructor(width: Int, height: Int, valuesFn: (Coord) -> Int) :
+  constructor(width: Int, height: Int, valuesFn: (Vec2i) -> Int) :
       this(IntArray(width * height) { index -> valuesFn(
-        Coord(index % width, index / width)
+        Vec2i(index % width, index / width)
       ) }, width, height)
 
   open class Column(private val grid: Grid, private val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
-    val cells: Collection<Pair<Coord, Int>> get() = (0 until grid.height).map { y -> Coord(x, y) to grid[x][y] }
+    val cells: Collection<Pair<Vec2i, Int>> get() = (0 until grid.height).map { y -> Vec2i(x, y) to grid[x][y] }
     val values: Collection<Int> get() = (0 until grid.height).map { y -> grid[x][y] }
   }
 
   open class Row(private val grid: Grid, private val y: Int) {
     operator fun get(x: Int) = grid.get(x, y)
-    val cells: Collection<Pair<Coord, Int>> get() = (0 until grid.width).map { x -> Coord(x, y) to grid[x][y] }
+    val cells: Collection<Pair<Vec2i, Int>> get() = (0 until grid.width).map { x -> Vec2i(x, y) to grid[x][y] }
     val values: Collection<Int> get() = (0 until grid.width).map { x -> grid[x][y] }
   }
 
@@ -28,22 +28,22 @@ open class Grid(
     }
   }
 
-  val coords: Collection<Coord> get() = (0 until height).flatMap { y ->
+  val coords: Collection<Vec2i> get() = (0 until height).flatMap { y ->
     (0 until width).map { x ->
-      Coord(x, y)
+      Vec2i(x, y)
     }
   }
 
-  val cells: Collection<Pair<Coord, Int>> get() = coords.map { it to this[it] }
+  val cells: Collection<Pair<Vec2i, Int>> get() = coords.map { it to this[it] }
   val values: Collection<Int> get() = arr.asList()
 
   val columns: Collection<Column> get() = (0 until width).map { this[it] }
   val rows: Collection<Row> get() = (0 until height).map { getRow(it) }
 
-  operator fun contains(c: Coord) = c.x in (0 until width) && c.y in (0 until height)
+  operator fun contains(c: Vec2i) = c.x in (0 until width) && c.y in (0 until height)
 
   fun get(x: Int, y: Int): Int = arr[y * width + x]
-  operator fun get(c: Coord): Int = get(c.x, c.y)
+  operator fun get(c: Vec2i): Int = get(c.x, c.y)
 
   // get col, row
   open operator fun get(x: Int) = Column(this, x)
@@ -59,8 +59,8 @@ open class Grid(
     }
   }
 
-  fun map(fn: (Coord, Int) -> Int) = Grid(
-    IntArray(arr.size) { i -> fn(Coord(i % width, i / height), arr[i]) },
+  fun map(fn: (Vec2i, Int) -> Int) = Grid(
+    IntArray(arr.size) { i -> fn(Vec2i(i % width, i / height), arr[i]) },
     width,
     height
   )
@@ -101,7 +101,7 @@ open class Grid(
 
     private fun fromLines(input: List<String>, stride: Int, delimiter: String = " "): Grid {
       val nums = input.filter(String::isNotBlank).flatMap {
-        it.split(" ").filter(String::isNotBlank).map(String::toInt)
+        it.split(delimiter).filter(String::isNotBlank).map(String::toInt)
       }
 
       return Grid(nums.toIntArray(), stride, nums.size / stride)
