@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.cut
 import utils.mapItems
 
 fun main() {
@@ -8,8 +9,7 @@ fun main() {
 object Day8Func : Solution<List<Day8Func.Key>> {
   override val name = "day8"
   override val parser = Parser.lines.mapItems {
-    val (input, output) = it.split(" | ", limit = 2)
-    Key(input.split(' '), output.split(' '))
+    it.cut("|") { input, output -> Key(input.split(' '), output.split(' ')) }
   }
 
   override fun part1(keys: List<Key>): Int {

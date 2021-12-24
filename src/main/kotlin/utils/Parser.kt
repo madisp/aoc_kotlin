@@ -45,6 +45,11 @@ fun String.cut(delimiter: String = ","): Pair<String, String> {
   require(idx != -1)
   return substring(0, idx).trim() to substring(idx + delimiter.length).trim()
 }
+fun <R> String.cut(delimiter: String, out: (String, String) -> R): R {
+  val idx = indexOf(delimiter)
+  require(idx != -1)
+  return out(substring(0, idx).trim(), substring(idx + delimiter.length).trim())
+}
 
 fun <R> String.cut(p: (String) -> R): Pair<R, R> = cut(",", p)
 fun <R> String.cut(delimiter: String, p: (String) -> R): Pair<R, R> {

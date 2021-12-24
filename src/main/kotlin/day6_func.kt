@@ -6,11 +6,7 @@ fun main() {
 
 object Day6Func : Solution<Map<Int, Long>> {
   override val name = "day6"
-  override val parser = Parser { input ->
-    input.split(",").map { it.toInt() }
-      .groupBy { it }
-      .mapValues { it.value.size.toLong() }
-  }
+  override val parser = Parser.ints.map { it.withLCounts() }
 
   override fun part1(input: Map<Int, Long>): Long {
     return simulate(input, forDays = 80).values.sum()

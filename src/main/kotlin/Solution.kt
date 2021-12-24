@@ -23,7 +23,6 @@ interface Solution<In> {
   skipPart1: Boolean = false
 ) {
   val parse = parser
-  val testInput = parse(readFile("${name}_test"))
   val (input, parseTime) = measureTimedValue {
     parse(readFile(name))
   }
@@ -39,6 +38,7 @@ interface Solution<In> {
   }
 
   if (!skipTest) {
+    val testInput = parse(readFile("${name}_test"))
     val test1 = part1(testInput)
     val test2 = part2(testInput)
     println("---- test ----")
