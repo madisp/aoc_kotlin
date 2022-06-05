@@ -27,7 +27,7 @@ data class Vec2i(val x: Int, val y: Int) {
 data class Segment(val start: Vec2i, val end: Vec2i) {
   companion object {
     fun parse(str: String, delimiter: String = "->"): Segment {
-      return str.cut(delimiter, Vec2i::parse, Vec2i::parse, ::Segment)
+      return str.cut(delimiter, Vec2i.Companion::parse, Vec2i.Companion::parse, ::Segment)
     }
   }
 
