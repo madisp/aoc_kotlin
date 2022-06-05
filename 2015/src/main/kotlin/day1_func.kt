@@ -5,15 +5,25 @@ fun main() {
   Day1Func.run()
 }
 
-object Day1Func : Solution<List<Char>>() {
+object Day1Func : Solution<List<Int>>() {
   override val name = "day1"
-  override val parser = Parser.chars
-
-  override fun part1(input: List<Char>): Number? {
-    return super.part1(input)
+  override val parser = Parser.chars.map { chars ->
+    chars.map {
+      when (it) {
+        '(' -> 1
+        ')' -> -1
+        else -> throw IllegalArgumentException("Unexpected char $it")
+      }
+    }
   }
 
-  override fun part2(input: List<Char>): Number? {
-    return super.part2(input)
+  override fun part1(input: List<Int>): Int {
+    return input.sum()
+  }
+
+  override fun part2(input: List<Int>): Int {
+    return input.asSequence().runningReduce { acc, item -> acc + item }
+      .takeWhile { it > -1 }
+      .count() + 1
   }
 }
