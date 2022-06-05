@@ -91,3 +91,11 @@ fun <T> Collection<T>.startsWith(other: Collection<T>): Boolean {
 }
 
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
+
+fun Int.wrap(max: Int): Int {
+  return if (this > 0) {
+    this % max
+  } else {
+    (max + (this % max)) % max
+  }
+}

@@ -19,4 +19,16 @@ class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr
   operator fun set(c: Vec2i, value: Int) {
     set(c.x, c.y, value)
   }
+
+  fun swap(c1: Vec2i, c2: Vec2i) {
+    val value = this[c1]
+    this[c1] = this[c2]
+    this[c2] = value
+  }
+
+  fun copyTo(target: MutableGrid) {
+    System.arraycopy(arr, 0, target.arr, 0, arr.size)
+  }
+
+  fun clone(): MutableGrid = MutableGrid(arr.clone(), width, height)
 }

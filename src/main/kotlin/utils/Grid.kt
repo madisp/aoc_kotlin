@@ -60,7 +60,7 @@ open class Grid(
   }
 
   fun map(fn: (Vec2i, Int) -> Int) = Grid(
-    IntArray(arr.size) { i -> fn(Vec2i(i % width, i / height), arr[i]) },
+    IntArray(arr.size) { i -> fn(Vec2i(i % width, i / width), arr[i]) },
     width,
     height
   )
@@ -77,6 +77,15 @@ open class Grid(
         }
       }.joinToString("")
     }.joinToString("\n")
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other is Grid) {
+      if (width == other.width && height == other.height) {
+        return values == other.values
+      }
+    }
+    return false
   }
 
   companion object {
