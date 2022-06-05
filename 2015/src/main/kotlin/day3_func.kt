@@ -1,44 +1,37 @@
-import utils.Coord
 import utils.Parser
 import utils.Solution
+import utils.Vec2i
 import utils.mapItems
 
 fun main() {
   Day3Func.run()
 }
 
-enum class Direction(val dx: Int, val dy: Int) {
-  UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0);
-
-  fun apply(coord: Coord) = Coord(coord.x + dx, coord.y + dy)
-
-  companion object {
-    fun fromChar(char: Char): Direction {
-      return when (char) {
-        '>' -> RIGHT
-        '<' -> LEFT
-        '^' -> UP
-        'v' -> DOWN
-        else -> throw IllegalArgumentException("Unacceptable input char $char")
-      }
-    }
-  }
+fun Char.toVec() = when (this) {
+  '>' -> Vec2i(1, 0)
+  '<' -> Vec2i(-1, 0)
+  '^' -> Vec2i(0, -1)
+  'v' -> Vec2i(0, 1)
+  else -> throw IllegalArgumentException("Unacceptable input char $this")
 }
 
-object Day3Func : Solution<List<Direction>>() {
+object Day3Func : Solution<List<Vec2i>>() {
   override val name = "day3"
-  override val parser = Parser.chars.mapItems { Direction.fromChar(it) }
+  override val parser = Parser.chars.mapItems { it.toVec() }
 
-  override fun part1(input: List<Direction>): Int {
+  override fun part1(input: List<Vec2i>): Int {
     return getTrack(input).count()
   }
 
-  override fun part2(input: List<Direction>): Number? {
-    val (santa, roboSanta) = input.withIndex().partition { value -> value.index % 2 == 0 }
-    return (getTrack(santa.map { it.value }).toSet() + getTrack(roboSanta.map { it.value }).toSet()).count()
+  override fun part2(input: List<Vec2i>): Number? {
+    val (santa, roboSanta) = input.withIndex()
+      .partition { value -> value.index % 2 == 0 }
+      .toList()
+      .map { list -> list.map { it.value } }
+    return (getTrack(santa) + getTrack(roboSanta)).count()
   }
 
-  private fun getTrack(input: List<Direction>) =
-    input.runningFold(Coord(0, 0)) { coord, dir -> dir.apply(coord) }
+  private fun getTrack(input: List<Vec2i>) =
+    input.runningFold(Vec2i(0, 0)) { location, vec -> location + vec }
       .toSet()
 }

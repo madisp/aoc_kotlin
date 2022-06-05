@@ -16,6 +16,7 @@ data class Vec2i(val x: Int, val y: Int) {
     }
   }
 
+  operator fun plus(other: Vec2i) = Vec2i(this.x + other.x, this.y + other.y)
 
   companion object {
     fun parse(str: String, delimiter: String = ","): Vec2i {
