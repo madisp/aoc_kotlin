@@ -1,5 +1,6 @@
 import utils.Parser
 import utils.Solution
+import utils.mapItems
 
 fun main() {
   Day1Func.run()
@@ -7,13 +8,11 @@ fun main() {
 
 object Day1Func : Solution<List<Int>>() {
   override val name = "day1"
-  override val parser = Parser.chars.map { chars ->
-    chars.map {
-      when (it) {
-        '(' -> 1
-        ')' -> -1
-        else -> throw IllegalArgumentException("Unexpected char $it")
-      }
+  override val parser = Parser.chars.mapItems {
+    when (it) {
+      '(' -> 1
+      ')' -> -1
+      else -> throw IllegalArgumentException("Unexpected char $it")
     }
   }
 
