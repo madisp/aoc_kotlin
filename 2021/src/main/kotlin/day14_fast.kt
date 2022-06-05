@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day14Fast.run()
@@ -12,7 +13,7 @@ object Day14All {
   }
 }
 
-object Day14Fast : Solution<Pair<Day14Fast.Polymer, IntArray>> {
+object Day14Fast : Solution<Pair<Day14Fast.Polymer, IntArray>>() {
   private val elements = "HKFVNSBCPO"
   private val sz = elements.length
   private val psh = generateSequence(1) { it * 2 }.indexOfFirst { it > sz }

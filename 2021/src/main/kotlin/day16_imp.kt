@@ -1,12 +1,13 @@
 @file:OptIn(ExperimentalUnsignedTypes::class)
 
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day16Imp.run()
 }
 
-object Day16Imp : Solution<UByteArray> {
+object Day16Imp : Solution<UByteArray>() {
   override val name = "day16"
   override val parser = Parser { input ->
     input.chunked(2).map { it.toUByte(16) }.toUByteArray()

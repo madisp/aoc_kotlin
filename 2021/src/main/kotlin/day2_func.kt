@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.Solution
 import utils.cut
 import utils.mapItems
 
@@ -6,7 +7,7 @@ fun main() {
   Day2Func.run()
 }
 
-object Day2Func : Solution<List<Pair<Day2Func.Direction, Int>>> {
+object Day2Func : Solution<List<Pair<Day2Func.Direction, Int>>>() {
   override val name = "day2"
   override val parser = Parser.lines.mapItems { line -> line.cut(" ", Direction::valueOf, String::toInt) }
 

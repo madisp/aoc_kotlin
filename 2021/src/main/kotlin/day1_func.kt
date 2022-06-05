@@ -1,10 +1,11 @@
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day1Func.run()
 }
 
-object Day1Func : Solution<List<Int>> {
+object Day1Func : Solution<List<Int>>() {
   override val name = "day1"
   override val parser = Parser.intLines
 

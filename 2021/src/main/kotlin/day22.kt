@@ -4,14 +4,16 @@ import utils.Component4.Y
 import utils.Component4.Z
 import utils.Parser
 import utils.Point3i
+import utils.Solution
 import utils.Vec4i
+import utils.flipped
 import utils.mapItems
 
 fun main() {
   Day22.run()
 }
 
-object Day22 : Solution<List<Day22.Command>> {
+object Day22 : Solution<List<Day22.Command>>() {
   override val name = "day22"
   override val parser = Parser.lines
     .mapItems { line ->

@@ -1,12 +1,14 @@
 import utils.Grid
 import utils.Parser
+import utils.Solution
 import utils.Vec2i
+import utils.wrap
 
 fun main() {
   Day25Imp.run()
 }
 
-object Day25Imp : Solution<Grid> {
+object Day25Imp : Solution<Grid>() {
   override val name = "day25"
 
   private const val EMPTY = 0

@@ -1,10 +1,12 @@
 import utils.Grid
+import utils.Solution
+import utils.startsWith
 
 fun main() {
   Day3.run()
 }
 
-object Day3 : Solution<Grid> {
+object Day3 : Solution<Grid>() {
   override val name = "day3"
   override val parser = Grid.singleDigits
 

@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.Solution
 import utils.cut
 import utils.mapItems
 
@@ -6,7 +7,7 @@ fun main() {
   Day8Imp.run()
 }
 
-object Day8Imp : Solution<List<Day8Imp.Key>> {
+object Day8Imp : Solution<List<Day8Imp.Key>>() {
   override val name = "day8"
   override val parser = Parser.lines.mapItems {
     it.cut("|") { input, output -> Key(input.split(' '), output.split(' ')) }

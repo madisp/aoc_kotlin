@@ -1,5 +1,6 @@
 import utils.Parser
 import utils.Segment
+import utils.Solution
 import utils.Vec2i
 import utils.mapItems
 
@@ -7,7 +8,7 @@ fun main() {
   Day5Func.run()
 }
 
-object Day5Func : Solution<List<Segment>> {
+object Day5Func : Solution<List<Segment>>() {
   override val name = "day5"
   override val parser = Parser.lines
     .mapItems(Segment::parse)

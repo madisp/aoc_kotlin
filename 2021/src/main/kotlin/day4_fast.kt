@@ -1,5 +1,6 @@
 import utils.Grid
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day4Fast.run()
@@ -13,7 +14,7 @@ object Day4All {
   }
 }
 
-object Day4Fast : Solution<Pair<List<Int>, List<Grid>>> {
+object Day4Fast : Solution<Pair<List<Int>, List<Grid>>>() {
   override val name = "day4"
   override val parser = Parser.compoundList(Parser.ints, Grid.table)
 

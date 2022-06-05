@@ -1,6 +1,7 @@
 import utils.Grid
 import utils.MutableGrid
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day20Fast.run()
@@ -14,7 +15,7 @@ object Day20All {
   }
 }
 
-object Day20Fast : Solution<Pair<Grid, List<Int>>> {
+object Day20Fast : Solution<Pair<Grid, List<Int>>>() {
   override val name = "day20"
   override val parser = Parser { input ->
     val (lookupString, imageString) = input.split("\n\n", limit = 2)

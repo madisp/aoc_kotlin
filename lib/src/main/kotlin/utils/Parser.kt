@@ -11,6 +11,7 @@ fun interface Parser<In> {
     val lines = Parser { it.split('\n').filter(String::isNotBlank) }
     val ints = Parser { it.trim().split(',').map { num -> num.trim().toInt() } }
     val intLines = lines.mapItems { it.toInt() }
+    val chars = Parser { it.trim().toCharArray().toList() }
 
     /**
      * combine two parsers into one, separate by a delimiter

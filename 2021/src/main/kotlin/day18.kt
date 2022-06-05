@@ -1,11 +1,12 @@
 import utils.Parser
+import utils.Solution
 import utils.mapItems
 
 fun main() {
   Day18Func.run()
 }
 
-object Day18Func : Solution<List<Day18Func.Tree>> {
+object Day18Func : Solution<List<Day18Func.Tree>>() {
   override val name = "day18"
   override val parser = Parser.lines.mapItems { Tree.from(it).first }
 

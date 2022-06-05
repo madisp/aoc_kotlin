@@ -1,11 +1,12 @@
 import utils.Parser
+import utils.Solution
 import utils.cut
 
 fun main() {
   Day24Imp.run(skipTest = true)
 }
 
-object Day24Imp : Solution<List<List<Day24Imp.Insn>>> {
+object Day24Imp : Solution<List<List<Day24Imp.Insn>>>() {
   override val name = "day24"
 
   private const val DIGITS = 14

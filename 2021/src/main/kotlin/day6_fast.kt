@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day6Fast.run()
@@ -12,7 +13,7 @@ object Day6All {
   }
 }
 
-object Day6Fast : Solution<LongArray> {
+object Day6Fast : Solution<LongArray>() {
   override val name = "day6"
   override val parser = Parser { input ->
     val fishies = LongArray(9) { 0L }

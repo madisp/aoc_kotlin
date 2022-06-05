@@ -1,11 +1,13 @@
 import utils.Parser
+import utils.Solution
 import utils.mapItems
+import utils.withLCounts
 
 fun main() {
   Day14Imp.run()
 }
 
-object Day14Imp : Solution<Pair<Day14Imp.Polymer, List<Pair<String, String>>>> {
+object Day14Imp : Solution<Pair<Day14Imp.Polymer, List<Pair<String, String>>>>() {
   override val name = "day14"
   override val parser = Parser { input ->
     val (polymer, ruleLines) = input.split("\n\n")

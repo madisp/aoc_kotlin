@@ -1,11 +1,12 @@
 import utils.Grid
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day4Imp.run()
 }
 
-object Day4Imp : Solution<Pair<List<Int>, List<Grid>>> {
+object Day4Imp : Solution<Pair<List<Int>, List<Grid>>>() {
   override val name = "day4"
   override val parser = Parser.compoundList(Parser.ints, Grid.table)
 

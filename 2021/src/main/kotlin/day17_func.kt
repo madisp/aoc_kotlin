@@ -1,10 +1,11 @@
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day17Func.run()
 }
 
-object Day17Func : Solution<Day17Func.Rectangle> {
+object Day17Func : Solution<Day17Func.Rectangle>() {
   override val name = "day17"
   override val parser = Parser { input ->
     val (xeq, yeq) = input.removePrefix("target area: ")

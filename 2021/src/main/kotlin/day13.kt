@@ -1,13 +1,14 @@
 import utils.Grid
 import utils.MutableGrid
 import utils.Parser
+import utils.Solution
 import utils.Vec2i
 
 fun main() {
   Day13.run()
 }
 
-object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>> {
+object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
   override val name = "day13"
   override val parser = Parser { input ->
     val (ptsLines, insnLines) = input.split("\n\n", limit = 2)

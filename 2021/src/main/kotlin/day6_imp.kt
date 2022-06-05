@@ -1,10 +1,12 @@
 import utils.Parser
+import utils.Solution
+import utils.withLCounts
 
 fun main() {
   Day6Imp.run()
 }
 
-object Day6Imp : Solution<Map<Int, Long>> {
+object Day6Imp : Solution<Map<Int, Long>>() {
   override val name = "day6"
   override val parser = Parser.ints.map { it.withLCounts() }
 

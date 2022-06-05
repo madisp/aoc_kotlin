@@ -1,11 +1,12 @@
 import utils.Parser
+import utils.Solution
 import utils.mapItems
 
 fun main() {
   Day12Imp.run()
 }
 
-object Day12Imp : Solution<Map<String, List<String>>> {
+object Day12Imp : Solution<Map<String, List<String>>>() {
   override val name = "day12"
   override val parser = Parser.lines.mapItems {
       val (start, end) = it.split('-', limit = 2)

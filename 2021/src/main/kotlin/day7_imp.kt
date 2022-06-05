@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.Solution
 import kotlin.math.abs
 
 fun main() {
@@ -6,7 +7,7 @@ fun main() {
   Day7Imp.run()
 }
 
-object Day7Imp : Solution<List<Int>> {
+object Day7Imp : Solution<List<Int>>() {
   override val name = "day7"
   override val parser = Parser.ints
 

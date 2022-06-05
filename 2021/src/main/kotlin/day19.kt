@@ -2,13 +2,17 @@ import utils.Mat4i
 import utils.Parser
 import utils.Point3i
 import utils.ROTS
+import utils.Solution
 import utils.Vec4i
+import utils.product
+import utils.productIndexed
+import utils.withCounts
 
 fun main() {
   Day19.run()
 }
 
-object Day19 : Solution<List<Day19.Scanner>> {
+object Day19 : Solution<List<Day19.Scanner>>() {
   override val name = "day19"
   override val parser = Parser { input ->
     input.split("\n\n").map { scannerIn ->

@@ -1,11 +1,12 @@
 import utils.Parser
+import utils.Solution
 import utils.mapItems
 
 fun main() {
   Day21.run()
 }
 
-object Day21 : Solution<Day21.State> {
+object Day21 : Solution<Day21.State>() {
   override val name = "day21"
   override val parser = Parser.lines
     .mapItems { it.split(":").last().trim() }

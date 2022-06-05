@@ -2,6 +2,7 @@ import utils.Segment
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import utils.Parser
+import utils.Solution
 import utils.mapItems
 
 fun main() {
@@ -19,7 +20,7 @@ object Day5All {
   }
 }
 
-object Day5Fast: Solution<List<Segment>> {
+object Day5Fast: Solution<List<Segment>>() {
   override val name = "day5"
   override val parser = Parser.lines
     .mapItems(Segment::parse)

@@ -1,4 +1,5 @@
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day12Fast.run()
@@ -12,7 +13,7 @@ object Day12All {
   }
 }
 
-object Day12Fast : Solution<Day12Fast.Vertex> {
+object Day12Fast : Solution<Day12Fast.Vertex>() {
   override val name = "day12"
   override val parser = Parser { input ->
     val vertices = mutableMapOf<String, Vertex>()

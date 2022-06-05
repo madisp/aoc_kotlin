@@ -1,3 +1,5 @@
+package utils
+
 object Utils
 
 fun readFile(name: String): String {

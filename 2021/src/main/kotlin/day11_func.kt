@@ -1,11 +1,13 @@
 import utils.Grid
+import utils.Solution
 import utils.Vec2i
+import utils.withCounts
 
 fun main() {
   Day11Func.run()
 }
 
-object Day11Func : Solution<Grid> {
+object Day11Func : Solution<Grid>() {
   override val name = "day11"
   override val parser = Grid.singleDigits
 

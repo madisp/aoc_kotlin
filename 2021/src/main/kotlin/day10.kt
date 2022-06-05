@@ -1,11 +1,12 @@
 import utils.Parser
+import utils.Solution
 import java.math.BigDecimal
 
 fun main() {
   Day10.run()
 }
 
-object Day10 : Solution<List<String>> {
+object Day10 : Solution<List<String>>() {
   override val name = "day10"
   override val parser = Parser.lines
 

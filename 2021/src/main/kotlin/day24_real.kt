@@ -1,10 +1,11 @@
 import utils.Parser
+import utils.Solution
 
 fun main() {
   Day24Real.run(skipTest = true)
 }
 
-object Day24Real : Solution<String> {
+object Day24Real : Solution<String>() {
   override val name = "day24"
   override val parser = Parser { it }
 

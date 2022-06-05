@@ -1,12 +1,13 @@
 import Day23.Cell.EMPTY
 import utils.Parser
 import utils.Point3i
+import utils.Solution
 
 fun main() {
   Day23.run()
 }
 
-object Day23 : Solution<Day23.Burrow> {
+object Day23 : Solution<Day23.Burrow>() {
   override val name = "day23"
   override val parser = Parser.lines.map { lines ->
 

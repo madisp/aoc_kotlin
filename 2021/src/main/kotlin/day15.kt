@@ -1,4 +1,5 @@
 import utils.Grid
+import utils.Solution
 import utils.Vec2i
 import java.util.PriorityQueue
 
@@ -6,7 +7,7 @@ fun main() {
   Day15.run()
 }
 
-object Day15 : Solution<Grid> {
+object Day15 : Solution<Grid>() {
   override val name = "day15"
   override val parser = Grid.singleDigits
 

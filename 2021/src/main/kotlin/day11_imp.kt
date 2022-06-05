@@ -1,12 +1,13 @@
 import utils.Grid
 import utils.MutableGrid
+import utils.Solution
 import utils.Vec2i
 
 fun main() {
   Day11Imp.run()
 }
 
-object Day11Imp : Solution<Grid> {
+object Day11Imp : Solution<Grid>() {
   override val name = "day11"
   override val parser = Grid.singleDigits
 

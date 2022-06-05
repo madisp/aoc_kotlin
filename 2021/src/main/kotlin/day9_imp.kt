@@ -1,12 +1,13 @@
 import utils.Grid
 import utils.Parser
+import utils.Solution
 import utils.mapItems
 
 fun main() {
   Day9Imp.run()
 }
 
-object Day9Imp : Solution<Grid> {
+object Day9Imp : Solution<Grid>() {
   override val name = "day9"
   override val parser = Grid.singleDigits.map { it.borderWith(9) }
 

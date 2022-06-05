@@ -1,11 +1,13 @@
 import utils.Grid
 import utils.Parser
+import utils.Solution
+import utils.wrap
 
 fun main() {
   Day25Func.run()
 }
 
-object Day25Func : Solution<Grid> {
+object Day25Func : Solution<Grid>() {
   override val name = "day25"
 
   private const val EMPTY = 0
