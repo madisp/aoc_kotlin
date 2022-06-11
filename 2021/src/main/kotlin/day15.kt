@@ -1,7 +1,7 @@
+import utils.Graph
 import utils.Grid
 import utils.Solution
 import utils.Vec2i
-import java.util.PriorityQueue
 
 fun main() {
   Day15.run()
@@ -10,8 +10,6 @@ fun main() {
 object Day15 : Solution<Grid>() {
   override val name = "day15"
   override val parser = Grid.singleDigits
-
-  data class Item(val coord: Vec2i, val risk: Int)
 
   override fun part1(input: Grid): Int {
     return solve(input)
@@ -30,27 +28,14 @@ object Day15 : Solution<Grid>() {
   }
 
   private fun solve(input: Grid): Int {
+    val start = Vec2i(0, 0)
     val end = Vec2i(input.width - 1, input.height - 1)
 
-    val visited = mutableSetOf<Vec2i>()
-    val queue = PriorityQueue<Item>(compareBy { it.risk })
-    queue.add(Item(Vec2i(0, 0), 0))
+    val graph = Graph<Vec2i, Int>(
+      edgeFn = { node -> node.adjacent.filter { it in input }.map { input[it] to it } },
+      weightFn = { it }
+    )
 
-    while (queue.isNotEmpty()) {
-      val (coord, currentRisk) = queue.remove()
-      if (coord in visited) continue
-
-      if (coord == end) {
-        return currentRisk
-      }
-
-      visited.add(coord)
-
-      coord.adjacent.filter { it in input }.forEach {
-        queue.add(Item(it, currentRisk + input[it]))
-      }
-    }
-
-    throw IllegalStateException("Should not happen, is there a path from start -> end")
+    return graph.shortestPath(start, end)
   }
 }
