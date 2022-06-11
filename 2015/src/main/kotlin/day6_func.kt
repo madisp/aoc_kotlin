@@ -17,7 +17,7 @@ object Day6Func : Solution<List<Day6Func.Opcode>>() {
   enum class Insn(val desc: String, val applyBool: (Int) -> Int, val applyNumeric: (Int) -> Int) {
     on("turn on", { 1 }, { it + 1 }),
     off("turn off", { 0 }, { maxOf(it - 1, 0) }),
-    toggle("toggle", { if (it == 0) 1 else 0 }, { it + 2 });
+    toggle("toggle", { it xor 0b1 }, { it + 2 });
 
     companion object {
       fun parse(input: String): Pair<Insn, String> {
