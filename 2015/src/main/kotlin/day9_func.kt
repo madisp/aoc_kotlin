@@ -1,8 +1,8 @@
 import utils.Graph
 import utils.Parser
 import utils.Solution
-import utils.cut
 import utils.mapItems
+import utils.triplicut
 
 fun main() {
   Day9Func.run()
@@ -11,17 +11,18 @@ fun main() {
 object Day9Func : Solution<Graph<String, Int>>() {
   override val name = "day9"
   override val parser = Parser.lines.mapItems { line ->
-    val (cities, dist) = line.cut(" = ")
-    val (a, b) = cities.cut(" to ")
-    Triple(a, b, dist.toInt())
+    line.triplicut(" to ", " = ")
   }.map { list ->
-    val graph = list.flatMap { (a, b, dist) ->
+    val bidirectional = list.flatMap { (a, b, dist) ->
       listOf(Triple(a, b, dist), Triple(b, a, dist))
-    }.groupBy { (src, _, _) -> src }
+    }
+    val edges = bidirectional.groupBy { (src, _, _) -> src }.mapValues { (_, v) ->
+      v.map { (_, city, dist) -> dist.toInt() to city }
+    }
     Graph(
-      edgeFn = { node -> graph[node]?.map { it.third to it.second } ?: emptyList() },
+      edgeFn = { node -> edges[node] ?: emptyList() },
       weightFn = { it },
-      nodes = graph.keys
+      nodes = edges.keys
     )
   }
 

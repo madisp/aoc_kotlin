@@ -41,6 +41,12 @@ fun <T, U> Parser<List<T>>.mapItems(fn: (T) -> U): Parser<List<U>> {
   return Parser { this.invoke(it).map(fn) }
 }
 
+fun String.triplicut(d1: String, d2: String): Triple<String, String, String> {
+  val (ab, c) = cut(d2)
+  val (a, b) = ab.cut(d1)
+  return Triple(a, b, c)
+}
+
 fun String.cut(delimiter: String = ","): Pair<String, String> {
   val idx = indexOf(delimiter)
   require(idx != -1)
