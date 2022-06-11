@@ -6,6 +6,8 @@ fun readFile(name: String): String {
   return Utils.javaClass.getResourceAsStream("/$name.txt").readBytes().toString(Charsets.UTF_8)
 }
 
+fun <A, B> Pair<A, A>.map(fn: (A) -> B): Pair<B, B> = fn(first) to fn(second)
+
 /**
  * Merge a list of pairs into a map. If items are present with the same key multiple times then they will be
  * reduced according to the collision function.
