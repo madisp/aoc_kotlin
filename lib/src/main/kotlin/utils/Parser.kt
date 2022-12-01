@@ -12,6 +12,7 @@ fun interface Parser<In> {
     val ints = Parser { it.trim().split(',').map { num -> num.trim().toInt() } }
     val intLines = lines.mapItems { it.toInt() }
     val chars = Parser { it.trim().toCharArray().toList() }
+    val blocks = Parser { it.split("\n\n").map(String::trim).filter(String::isNotBlank) }
 
     /**
      * combine two parsers into one, separate by a delimiter
@@ -39,6 +40,10 @@ fun interface Parser<In> {
 
 fun <T, U> Parser<List<T>>.mapItems(fn: (T) -> U): Parser<List<U>> {
   return Parser { this.invoke(it).map(fn) }
+}
+
+fun <T> Parser<List<String>>.parseItems(parser: Parser<T>): Parser<List<T>> {
+  return mapItems { item -> parser.invoke(item) }
 }
 
 fun String.triplicut(d1: String, d2: String): Triple<String, String, String> {
