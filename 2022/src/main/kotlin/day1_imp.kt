@@ -22,25 +22,11 @@ object Day1Imp : Solution<List<List<Int>>>() {
   }
 
   override fun part2(input: List<List<Int>>): Int {
-    val largestSums = mutableListOf<Int>()
+    val sums = mutableListOf<Int>()
     input.forEach { calories ->
-      val sum = calories.sum()
-      var biggerCount = 0
-      largestSums.forEach { calories2 ->
-        if (calories2 >= sum) {
-          biggerCount++
-        }
-      }
-      if (biggerCount < 3) {
-        largestSums.add(sum)
-      }
+      sums.add(calories.sum())
     }
-
-    var answer = 0
-    largestSums.sortDescending()
-    (0 until 3).forEach { i ->
-      answer += largestSums[i]
-    }
-    return answer
+    sums.sortDescending()
+    return sums[0] + sums[1] + sums[2]
   }
 }
