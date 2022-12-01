@@ -33,26 +33,27 @@ object Day1Fast : Solution<List<IntArray>>() {
   }
 
   override fun part2(input: List<IntArray>): Int {
-    val threeLargest = IntArray(3) { 0 }
-    var answer = 0
+    var smallest = 0
+    var r1 = 0
+    var r2 = 0
 
     input.forEach { calories ->
       val sum = calories.sum()
+      if (smallest < sum) {
+        smallest = sum
 
-      var smallestIndex = -1
-
-      for (i in 0 until 3) {
-        if (sum > threeLargest[i] && (smallestIndex == -1 || threeLargest[i] < threeLargest[smallestIndex])) {
-          smallestIndex = i
+        // rebalance smallest between r1 and r2
+        if (smallest > r1) {
+          smallest = r1
+          r1 = sum
+        }
+        if (smallest > r2) {
+          val r3 = r2
+          r2 = smallest
+          smallest = r3
         }
       }
-
-      if (smallestIndex != -1) {
-        answer -= threeLargest[smallestIndex]
-        threeLargest[smallestIndex] = sum
-        answer += sum
-      }
     }
-    return answer
+    return smallest + r1 + r2
   }
 }
