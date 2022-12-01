@@ -12,4 +12,4 @@ typealias Fast = List<IntArray>
 
 @Suppress("unused")
 @State(Scope.Benchmark)
-open class Day1 : DayBench<Func, Imp, Fast>("day1", Day1Func, Day1Imp, Day1Fast)
+open class Day1 : Bench3<Func, Imp, Fast>("day1", Day1Func, Day1Imp, Day1Fast)
