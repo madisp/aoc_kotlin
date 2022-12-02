@@ -1,5 +1,8 @@
 package utils
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 object Utils
 
 fun readFile(name: String): String {
@@ -102,4 +105,8 @@ fun Int.wrap(max: Int): Int {
   } else {
     (max + (this % max)) % max
   }
+}
+
+fun badInput(): Nothing {
+  throw IllegalArgumentException("bad input")
 }
