@@ -19,7 +19,7 @@ object Day2Fast : Solution<IntArray>() {
 
   override fun part1(input: IntArray): Long {
     // packed nibbles of scores
-    val lookup = 69302580714
+    val lookup = 0x69302580714
     var score = 0L
     input.forEach {
       score += (lookup ushr (it shl 2)) and 15
