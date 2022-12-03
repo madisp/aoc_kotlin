@@ -9,7 +9,7 @@ import org.openjdk.jmh.annotations.State
 
 typealias D2Func = List<Pair<Play, Char>>
 typealias D2Imp = D2Func
-typealias D2Fast = IntArray
+typealias D2Fast = LongArray
 
 @Suppress("unused")
 @State(Scope.Benchmark)

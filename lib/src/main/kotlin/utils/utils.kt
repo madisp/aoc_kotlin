@@ -1,8 +1,5 @@
 package utils
 
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
-
 object Utils
 
 fun readFile(name: String): String {
@@ -95,6 +92,20 @@ fun <T> Collection<T>.startsWith(other: Collection<T>): Boolean {
     }
   }
   return true
+}
+
+fun String.split(): Pair<String, String> {
+  val mid = length / 2
+  if (mid * 2 != length) {
+    badInput()
+  }
+  return substring(0, mid) to substring(mid)
+}
+
+fun <T> Collection<T>.split(): Pair<Collection<T>, Collection<T>> {
+  val halfSize = size / 2
+  if (halfSize * 2 != size) { badInput() }
+  return take(halfSize) to drop(halfSize)
 }
 
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
