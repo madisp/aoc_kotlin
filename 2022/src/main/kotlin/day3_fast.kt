@@ -36,9 +36,7 @@ object Day3Fast : Solution<List<String>>() {
       var mask = 0L
       var linemask = 0L
 
-      for (char in input[i].toCharArray()) { linemask = linemask or (1L shl char.priority) }
-      mask = linemask
-      linemask = 0
+      for (char in input[i].toCharArray()) { mask = mask or (1L shl char.priority) }
       for (char in input[i + 1].toCharArray()) { linemask = linemask or (1L shl char.priority) }
       mask = mask and linemask
       linemask = 0
