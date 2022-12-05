@@ -26,6 +26,7 @@ abstract class Solution<In> {
     val (input, parseTime) = measureTimedValue {
       parse(readFile(name))
     }
+    val part2Input = parse(readFile(name))
 
     if (!header.isNullOrBlank()) {
       println("==== $header ====")
@@ -38,9 +39,8 @@ abstract class Solution<In> {
     }
 
     if (!skipTest) {
-      val testInput = parse(readFile("${name}_test"))
-      val test1 = part1(testInput)
-      val test2 = part2(testInput)
+      val test1 = part1(parse(readFile("${name}_test")))
+      val test2 = part2(parse(readFile("${name}_test")))
       println("---- test ----")
       if (skipPart1) {
         println("$test2")
@@ -61,7 +61,7 @@ abstract class Solution<In> {
     }
 
     val (secondAnswer, secondTime) = measureTimedValue {
-      part2(input)
+      part2(part2Input)
     }
     val prefix = if (skipPart1) "" else "part2: "
     println("${prefix}${secondAnswer} ($secondTime)")
