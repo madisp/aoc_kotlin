@@ -5,19 +5,18 @@ import utils.badInput
 import utils.mapItems
 
 fun main() {
-  Day5Imp.run()
+  Day5Func.run()
 }
 
-typealias Day5Input = Pair<List<MutableList<Char>>, List<Insn>>
+typealias Day5Input = Pair<List<List<Char>>, List<Insn>>
 
-val stackParser: Parser<List<MutableList<Char>>> = GGrid.chars().map { grid ->
+val stackParser: Parser<List<List<Char>>> = GGrid.chars().map { grid ->
   val stackCount = (grid.width + 1) / 4
   List(stackCount) { i ->
     grid[1 + i * 4].values
       .filter { !it.isWhitespace() }
       .dropLast(1)
       .reversed()
-      .toMutableList()
   }
 }
 
@@ -47,7 +46,7 @@ data class Insn(
   }
 }
 
-object Day5Imp : Solution<Day5Input>() {
+object Day5Func : Solution<Day5Input>() {
   override val name = "day5"
   override val parser = Parser.compound(stackParser, insnParser)
 
@@ -63,28 +62,25 @@ object Day5Imp : Solution<Day5Input>() {
 
   private fun solve(input: Day5Input, crateMover9001: Boolean) {
     val (stacks, insns) = input
-    for (insn in insns) {
-      simulate(stacks, insn, crateMover9001)
-    }
+    val stacked = insns.fold(stacks) { s, insn -> simulate(s, insn, crateMover9001) }
 
-    val answ = buildString {
-      for (stack in stacks) {
-        append(stack.last())
-      }
-    }
+    val answ = stacked.map { it.last() }.joinToString("")
     println(answ)
   }
 
-  private fun simulate(stacks: List<MutableList<Char>>, insn: Insn, crateMover9001: Boolean) {
+  private fun simulate(stacks: List<List<Char>>, insn: Insn, crateMover9001: Boolean): List<List<Char>> {
     if (stacks[insn.from].size < insn.count) {
       badInput()
     }
     val crane = stacks[insn.from].takeLast(insn.count).let {
       if (crateMover9001) it.reversed() else it
     }
-    for (i in 0 until insn.count) {
-      stacks[insn.from].removeLast()
+    return stacks.mapIndexed { i, stack ->
+      when (i) {
+        insn.from -> stack.dropLast(insn.count)
+        insn.to -> stack + crane
+        else -> stack
+      }
     }
-    stacks[insn.to].addAll(crane)
   }
 }
