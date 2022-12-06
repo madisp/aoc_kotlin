@@ -1,3 +1,4 @@
+import utils.GGrid
 import utils.Parser
 import utils.Solution
 import utils.badInput
@@ -9,27 +10,18 @@ fun main() {
 
 typealias Day5Input = Pair<List<MutableList<Char>>, List<Insn>>
 
-val stackParser = Parser { input ->
-  val stackLines = input.lines().takeWhile { '[' in it }
-  val lines = input.lines().drop(stackLines.size)
-
-  val stackCount = lines.first().split(" ").filter { it.isNotBlank() }.maxOf { it.trim().toInt() }
-
-  val stacks = List<MutableList<Char>>(stackCount) { mutableListOf() }
-
-  stackLines.reversed().forEach { line ->
-    for (i in 0 until stackCount) {
-      val idx = 1 + i * 4
-      if (idx in line.indices && !line[idx].isWhitespace()) {
-        stacks[i].add(line[idx])
-      }
-    }
+val stackParser: Parser<List<MutableList<Char>>> = GGrid.chars().map { grid ->
+  val stackCount = (grid.width + 1) / 4
+  List(stackCount) { i ->
+    grid[1 + i * 4].values
+      .filter { !it.isWhitespace() }
+      .dropLast(1)
+      .reversed()
+      .toMutableList()
   }
-
-  stacks
 }
 
-val insnParser = Parser.lines.mapItems { line -> Insn.fromLine(line) }
+val insnParser = Parser.lines.mapItems(Insn.Companion::fromLine)
 
 fun printStacks(stacks: List<List<Char>>) {
   val height = stacks.maxOf { it.size }
@@ -57,10 +49,7 @@ data class Insn(
 
 object Day5Imp : Solution<Day5Input>() {
   override val name = "day5"
-  override val parser = Parser {
-    val (stacks, insns) = it.split("\n\n")
-    stackParser(stacks) to insnParser(insns)
-  }
+  override val parser = Parser.compound(stackParser, insnParser)
 
   override fun part1(input: Day5Input): Int {
     solve(input, false)

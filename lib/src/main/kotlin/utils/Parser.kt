@@ -20,7 +20,8 @@ fun interface Parser<In> {
     fun <R1, R2> compound(first: Parser<R1>, second: Parser<R2>): Parser<Pair<R1, R2>> = compound("\n\n", first, second)
     fun <R1, R2> compound(delimiter: String, first: Parser<R1>, second: Parser<R2>): Parser<Pair<R1, R2>> {
       return Parser { input ->
-        input.cut(delimiter, { first(it) }, { second(it) })
+        val (p1, p2) = input.split(delimiter, limit = 2)
+        first(p1) to second(p2)
       }
     }
 
@@ -74,6 +75,7 @@ fun <Left, Right> String.cut(p1: (String) -> Left, p2: (String) -> Right) = cut(
 fun <Left, Right> String.cut(delimiter: String, p1: (String) -> Left, p2: (String) -> Right): Pair<Left, Right> {
   val idx = indexOf(delimiter)
   require(idx != -1)
+
   return p1(substring(0, idx).trim()) to p2(substring(idx + delimiter.length).trim())
 }
 
