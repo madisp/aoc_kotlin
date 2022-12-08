@@ -12,14 +12,14 @@ open class Grid(
 
   open class Column(private val grid: Grid, private val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
-    val cells: Collection<Pair<Vec2i, Int>> get() = (0 until grid.height).map { y -> Vec2i(x, y) to grid[x][y] }
-    val values: Collection<Int> get() = (0 until grid.height).map { y -> grid[x][y] }
+    val cells: List<Pair<Vec2i, Int>> get() = (0 until grid.height).map { y -> Vec2i(x, y) to grid[x][y] }
+    val values: List<Int> get() = (0 until grid.height).map { y -> grid[x][y] }
   }
 
   open class Row(private val grid: Grid, private val y: Int) {
     operator fun get(x: Int) = grid.get(x, y)
-    val cells: Collection<Pair<Vec2i, Int>> get() = (0 until grid.width).map { x -> Vec2i(x, y) to grid[x][y] }
-    val values: Collection<Int> get() = (0 until grid.width).map { x -> grid[x][y] }
+    val cells: List<Pair<Vec2i, Int>> get() = (0 until grid.width).map { x -> Vec2i(x, y) to grid[x][y] }
+    val values: List<Int> get() = (0 until grid.width).map { x -> grid[x][y] }
   }
 
   init {
@@ -28,17 +28,17 @@ open class Grid(
     }
   }
 
-  val coords: Collection<Vec2i> get() = (0 until height).flatMap { y ->
+  val coords: List<Vec2i> get() = (0 until height).flatMap { y ->
     (0 until width).map { x ->
       Vec2i(x, y)
     }
   }
 
-  val cells: Collection<Pair<Vec2i, Int>> get() = coords.map { it to this[it] }
-  val values: Collection<Int> get() = arr.asList()
+  val cells: List<Pair<Vec2i, Int>> get() = coords.map { it to this[it] }
+  val values: List<Int> get() = arr.asList()
 
-  val columns: Collection<Column> get() = (0 until width).map { this[it] }
-  val rows: Collection<Row> get() = (0 until height).map { getRow(it) }
+  open val columns: List<Column> get() = (0 until width).map { this[it] }
+  open val rows: List<Row> get() = (0 until height).map { getRow(it) }
 
   operator fun contains(c: Vec2i) = c.x in (0 until width) && c.y in (0 until height)
 
@@ -59,7 +59,7 @@ open class Grid(
     }
   }
 
-  fun map(fn: (Vec2i, Int) -> Int) = Grid(
+  open fun map(fn: (Vec2i, Int) -> Int) = Grid(
     IntArray(arr.size) { i -> fn(Vec2i(i % width, i / width), arr[i]) },
     width,
     height

@@ -1,6 +1,7 @@
 import utils.Grid
 import utils.Solution
 import utils.Vec2i
+import utils.takeWhileInclusive
 
 fun main() {
   Day8Imp.run()
@@ -23,10 +24,10 @@ object Day8Imp : Solution<Grid>() {
 
   private fun scenicScore(coord: Vec2i, grid: Grid): Int {
     val height = grid[coord]
-    val left = getAscending2(height, grid.getRow(coord.y).values.take(coord.x).reversed())
-    val right = getAscending2(height, grid.getRow(coord.y).values.drop(coord.x + 1))
-    val up = getAscending2(height, grid[coord.x].values.take(coord.y).reversed())
-    val down = getAscending2(height, grid[coord.x].values.drop(coord.y + 1))
+    val left = getVisibleDistance(height, grid.rows[coord.y].values.take(coord.x).reversed())
+    val right = getVisibleDistance(height, grid.rows[coord.y].values.drop(coord.x + 1))
+    val up = getVisibleDistance(height, grid[coord.x].values.take(coord.y).reversed())
+    val down = getVisibleDistance(height, grid[coord.x].values.drop(coord.y + 1))
     return left * right * up * down
   }
 
@@ -42,14 +43,7 @@ object Day8Imp : Solution<Grid>() {
     return ret
   }
 
-  private fun getAscending2(anchor: Int, trees: Collection<Int>): Int {
-    var count = 0
-    for (i in trees) {
-      count++
-      if (i >= anchor) {
-        break
-      }
-    }
-    return count
+  private fun getVisibleDistance(anchor: Int, trees: Collection<Int>): Int {
+    return trees.takeWhileInclusive { it < anchor }.count()
   }
 }

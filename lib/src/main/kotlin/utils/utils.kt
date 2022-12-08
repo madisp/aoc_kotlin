@@ -94,6 +94,16 @@ fun <T> Collection<T>.startsWith(other: Collection<T>): Boolean {
   return true
 }
 
+inline fun <reified T> Iterable<T>.takeWhileInclusive(predicate: (T) -> Boolean): List<T> {
+  val list = ArrayList<T>()
+  for (item in this) {
+    list.add(item)
+    if (!predicate(item))
+      break
+  }
+  return list
+}
+
 fun String.split(): Pair<String, String> {
   val mid = length / 2
   if (mid * 2 != length) {

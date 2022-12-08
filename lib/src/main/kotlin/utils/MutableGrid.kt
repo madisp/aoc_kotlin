@@ -9,6 +9,11 @@ class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr
     operator fun set(x: Int, value: Int) = grid.set(x, y, value)
   }
 
+  override val columns: List<MutableColumn> get() = (0 until width).map { this[it] }
+  override val rows: List<Row> get() = (0 until height).map { this.getRow(it) }
+
+  override fun map(fn: (Vec2i, Int) -> Int): MutableGrid = super.map(fn).toMutable()
+
   override operator fun get(x: Int) = MutableColumn(this, x)
   override fun getRow(y: Int) = MutableRow(this, y)
 
