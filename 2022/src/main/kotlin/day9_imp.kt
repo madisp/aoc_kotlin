@@ -3,7 +3,6 @@ import utils.Solution
 import utils.Vec2i
 import utils.badInput
 import utils.cut
-import kotlin.math.abs
 import kotlin.math.sign
 
 fun main() {
@@ -16,8 +15,6 @@ enum class Direction(val delta: Vec2i) {
   DOWN(Vec2i(0, -1)),
   LEFT(Vec2i(-1, 0))
 }
-
-fun Vec2i.applyDirection(d: Direction) = this + d.delta
 
 object Day9Imp : Solution<List<Direction>>() {
   override val name = "day9"
@@ -37,7 +34,7 @@ object Day9Imp : Solution<List<Direction>>() {
   }
 
   private fun rubberBand(tail: Vec2i, head: Vec2i): Vec2i {
-    if (abs(tail.x - head.x) < 2 && abs(tail.y - head.y) < 2) {
+    if (tail in head.grow()) {
       // tail doesn't move
       return Vec2i(0, 0)
     }
@@ -58,10 +55,9 @@ object Day9Imp : Solution<List<Direction>>() {
     tailPositions.add(knots.last())
 
     for (move in input) {
-      knots[0] = knots[0].applyDirection(move)
+      knots[0] = knots[0] + move.delta
       for (i in 1 until knots.size) {
-        val d = rubberBand(knots[i], knots[i - 1])
-        knots[i] = knots[i] + d
+        knots[i] = knots[i] + rubberBand(knots[i], knots[i - 1])
       }
       tailPositions.add(knots.last())
     }

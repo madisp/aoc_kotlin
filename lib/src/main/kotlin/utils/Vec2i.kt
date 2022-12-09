@@ -10,8 +10,8 @@ data class Vec2i(val x: Int, val y: Int) {
 
   val surrounding get() = grow().filter { (x, y) -> x != this.x || y != this.y }
 
-  fun grow() = (x - 1 .. x + 1).flatMap { nx ->
-    (y - 1 .. y + 1).map { ny ->
+  fun grow(amount: Int = 1) = (x - amount .. x + amount).flatMap { nx ->
+    (y - amount .. y + amount).map { ny ->
       Vec2i(nx, ny)
     }
   }
