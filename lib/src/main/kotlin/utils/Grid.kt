@@ -10,6 +10,8 @@ open class Grid(
         Vec2i(index % width, index / width)
       ) }, width, height)
 
+  constructor(width: Int, height: Int, value: Int) : this(width, height, { value })
+
   open class Column(private val grid: Grid, private val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
     val cells: List<Pair<Vec2i, Int>> get() = (0 until grid.height).map { y -> Vec2i(x, y) to grid[x][y] }
@@ -68,15 +70,18 @@ open class Grid(
   fun toMutable() = MutableGrid(arr.clone(), width, height)
 
   fun toDigitString(): String {
-    return (0 until height).map { y ->
-      (0 until width).map { x ->
-        get(x, y).also {
-          if (it > 10) {
-            throw IllegalStateException("cannot serialize to digit string! Cell at x=$x y=$y is $it")
-          }
-        }
-      }.joinToString("")
-    }.joinToString("\n")
+    return toString { (x, y), value ->
+      if (value > 10) {
+        throw IllegalStateException("cannot serialize to digit string! Cell at x=$x y=$y is $value")
+      }
+      value.toString()
+    }
+  }
+
+  fun toString(mapFn: (Vec2i, Int) -> String): String {
+    return (0 until height).joinToString("\n") { y ->
+      (0 until width).joinToString("") { x -> mapFn(Vec2i(x, y), this[x][y]) }
+    }
   }
 
   override fun equals(other: Any?): Boolean {
