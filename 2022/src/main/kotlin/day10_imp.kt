@@ -44,7 +44,7 @@ object Day10Imp : Solution<List<Day10Imp.Insn>>() {
     return answ
   }
 
-  override fun part2(input: List<Insn>): Number? {
+  override fun part2(input: List<Insn>): String {
     val screen = Grid(40, 6, 0).toMutable()
     var clock = 0
     var x = 1
@@ -60,7 +60,6 @@ object Day10Imp : Solution<List<Day10Imp.Insn>>() {
       clock += 1
     }
 
-    println(screen.toString { _, v -> if (v == 1) "#" else " " })
-    return 0
+    return screen.toString { _, v -> if (v == 1) "#" else " " }
   }
 }

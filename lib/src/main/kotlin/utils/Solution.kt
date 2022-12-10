@@ -13,8 +13,8 @@ import kotlin.time.measureTimedValue
 abstract class Solution<In> {
   abstract val name: String
   abstract val parser: Parser<In>
-  open fun part1(input: In): Number? = null
-  open fun part2(input: In): Number? = null
+  open fun part1(input: In): Any? = null
+  open fun part2(input: In): Any? = null
 
   @OptIn(ExperimentalTime::class) fun run(
   header: String? = null,
@@ -39,8 +39,12 @@ abstract class Solution<In> {
     }
 
     if (!skipTest) {
-      val test1 = part1(parse(readFile("${name}_test")))
-      val test2 = part2(parse(readFile("${name}_test")))
+      val test1 = part1(parse(readFile("${name}_test"))).let {
+        if (it is String) "\n$it\n" else it
+      }
+      val test2 = part2(parse(readFile("${name}_test"))).let {
+        if (it is String) "\n$it\n" else it
+      }
       println("---- test ----")
       if (skipPart1) {
         println("$test2")
@@ -57,14 +61,24 @@ abstract class Solution<In> {
       val (firstAnswer, firstTime) = measureTimedValue {
         part1(input)
       }
-      println("part1: $firstAnswer ($firstTime)")
+      if (firstAnswer is String) {
+        println("part1 ($firstTime):")
+        println(firstAnswer)
+      } else {
+        println("part1: $firstAnswer ($firstTime)")
+      }
     }
 
     val (secondAnswer, secondTime) = measureTimedValue {
       part2(part2Input)
     }
-    val prefix = if (skipPart1) "" else "part2: "
-    println("${prefix}${secondAnswer} ($secondTime)")
+    if (secondAnswer is String) {
+      println("part2 ($secondTime):")
+      println(secondAnswer)
+    } else {
+      val prefix = if (skipPart1) "" else "part2: "
+      println("${prefix}${secondAnswer} ($secondTime)")
+    }
 
     println()
   }
