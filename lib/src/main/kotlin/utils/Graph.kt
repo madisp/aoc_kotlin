@@ -4,7 +4,7 @@ import java.util.PriorityQueue
 
 class Graph<Node, Edge>(
   val edgeFn: (Node) -> List<Pair<Edge, Node>>,
-  val weightFn: (Edge) -> Int,
+  val weightFn: (Edge) -> Int = { 1 },
   val nodes: Set<Node>? = null
 ) {
   fun shortestPath(start: Node, end: Node): Int {

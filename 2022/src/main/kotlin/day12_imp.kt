@@ -6,10 +6,10 @@ import utils.Vec2i
 import java.lang.IllegalStateException
 
 fun main() {
-  Day12.run()
+  Day12Imp.run()
 }
 
-object Day12 : Solution<GGrid<Char>>() {
+object Day12Imp : Solution<GGrid<Char>>() {
   override val name = "day12"
   override val parser = Parser { GGrid.chars(' ')(it.trim()) }
 
@@ -28,27 +28,33 @@ object Day12 : Solution<GGrid<Char>>() {
     val g = Graph<Node, Edge>(
       edgeFn = { v ->
         val h1 = height(input[v.p])
-        v.p.adjacent.filter { it in input }.map {
-          val height = height(input[it])
-          val node = Node(it, height)
-          val edge = Edge(maxOf(height - h1, 0))
 
-          edge to node
-        }.filter { (edge, _) -> edge.weight <= 1 }
-      },
-      weightFn = { 1 }
+        // grab 4-way adjacent squares to the coordinate...
+        v.p.adjacent
+          // ...that are still in the input...
+          .filter { it in input }
+          .map {
+            val height = height(input[it])
+            val node = Node(it, height)
+            val edge = Edge(maxOf(height - h1, 0))
+
+            edge to node
+          }
+          // ...and are either lower or no more higher than 1
+          .filter { (edge, _) -> edge.weight <= 1 }
+      }
     )
 
     val starts = input.cells.filter { (_, c) -> c in startChars }.map { it.first }
     val end = input.cells.first { (_, c) -> c == 'E' }.first
 
-    return starts.minOf { start ->
+    return starts.mapNotNull { start ->
       try {
         g.shortestPath(Node(start, 0), Node(end, height('E')))
       } catch (e: IllegalStateException) {
-        Integer.MAX_VALUE // no path
+        null
       }
-    }
+    }.minOrNull()!!
   }
 
   override fun part1(input: GGrid<Char>): Int = solve(input, setOf('S'))
