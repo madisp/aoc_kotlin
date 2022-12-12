@@ -12,7 +12,7 @@ fun main() {
 
 object Day12Imp : Solution<Grid<Char>>() {
   override val name = "day12"
-  override val parser = Parser(String::trim).mapParser(Parser.chargrid)
+  override val parser = Parser(String::trim).mapParser(Parser.charGrid)
 
   data class Node(val p: Vec2i, val height: Int)
   data class Edge(val weight: Int)

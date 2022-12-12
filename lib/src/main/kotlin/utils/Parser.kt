@@ -14,7 +14,7 @@ fun interface Parser<In> {
     val chars = Parser { it.trim().toCharArray().toList() }
     val blocks = Parser { it.split("\n\n").map(String::trim).filter(String::isNotBlank) }
     val digitGrid = IntGrid.singleDigits
-    val chargrid = Grid.chars()
+    val charGrid = Grid.chars()
 
     /**
      * combine two parsers into one, separate by a delimiter
