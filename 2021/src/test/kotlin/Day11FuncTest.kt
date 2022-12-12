@@ -1,10 +1,10 @@
 import Day11Func.evolve
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import utils.Grid
+import utils.IntGrid
 
 class Day11FuncTest {
-  val input = Grid.singleDigits("""
+  val input = IntGrid.singleDigits("""
     5483143223
     2745854711
     5264556173

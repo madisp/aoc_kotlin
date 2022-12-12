@@ -1,4 +1,4 @@
-import utils.GGrid
+import utils.Grid
 import utils.Parser
 import utils.Solution
 import utils.badInput
@@ -10,7 +10,7 @@ fun main() {
 
 typealias Day5Input = Pair<List<List<Char>>, List<Insn>>
 
-val stackParser: Parser<List<List<Char>>> = GGrid.chars().map { grid ->
+val stackParser: Parser<List<List<Char>>> = Grid.chars().map { grid ->
   val stackCount = (grid.width + 1) / 4
   List(stackCount) { i ->
     grid[1 + i * 4].values

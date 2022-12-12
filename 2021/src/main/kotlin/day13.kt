@@ -1,5 +1,5 @@
-import utils.Grid
-import utils.MutableGrid
+import utils.IntGrid
+import utils.MutableIntGrid
 import utils.Parser
 import utils.Solution
 import utils.Vec2i
@@ -8,7 +8,7 @@ fun main() {
   Day13.run()
 }
 
-object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
+object Day13 : Solution<Pair<IntGrid, List<Day13.FoldInsn>>>() {
   override val name = "day13"
   override val parser = Parser { input ->
     val (ptsLines, insnLines) = input.split("\n\n", limit = 2)
@@ -21,7 +21,7 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
     val w = pts.maxOf { it.x } + 1
     val h = pts.maxOf { it.y } + 1
 
-    val grid = MutableGrid(IntArray(w * h), w, h).apply {
+    val grid = MutableIntGrid(IntArray(w * h), w, h).apply {
       pts.forEach { this[it] = 1 }
     }
 
@@ -34,11 +34,11 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
       }
     }
 
-    return@Parser (grid as Grid) to insns
+    return@Parser (grid as IntGrid) to insns
   }
 
-  fun foldH(grid: Grid, location: Int): Grid {
-    return MutableGrid(IntArray(grid.width * location), grid.width, location).apply {
+  fun foldH(grid: IntGrid, location: Int): IntGrid {
+    return MutableIntGrid(IntArray(grid.width * location), grid.width, location).apply {
       coords.forEach { c ->
         val mc = Vec2i(c.x, location + (location - c.y))
         this[c] = grid[c] + if (mc in grid) grid[mc] else 0
@@ -46,8 +46,8 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
     }
   }
 
-  fun foldV(grid: Grid, location: Int): Grid {
-    return MutableGrid(IntArray(location * grid.height), location, grid.height).apply {
+  fun foldV(grid: IntGrid, location: Int): IntGrid {
+    return MutableIntGrid(IntArray(location * grid.height), location, grid.height).apply {
       coords.forEach { c ->
         val mc = Vec2i(location + (location - c.x), c.y)
         this[c] = grid[c] + if (mc in grid) grid[mc] else 0
@@ -55,7 +55,7 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
     }
   }
 
-  fun fold(grid: Grid, insn: FoldInsn): Grid {
+  fun fold(grid: IntGrid, insn: FoldInsn): IntGrid {
     if (insn.horizontal) {
       return foldH(grid, insn.location)
     } else {
@@ -65,12 +65,12 @@ object Day13 : Solution<Pair<Grid, List<Day13.FoldInsn>>>() {
 
   data class FoldInsn(val horizontal: Boolean, val location: Int)
 
-  override fun part1(input: Pair<Grid, List<FoldInsn>>): Int {
+  override fun part1(input: Pair<IntGrid, List<FoldInsn>>): Int {
     val folded = fold(input.first, input.second.first())
     return folded.values.count { it != 0 }
   }
 
-  override fun part2(input: Pair<Grid, List<FoldInsn>>): Int {
+  override fun part2(input: Pair<IntGrid, List<FoldInsn>>): Int {
     val result = input.second.fold(input.first) { grid, insn -> fold(grid, insn) }
 
     for (y in 0 until result.height) {

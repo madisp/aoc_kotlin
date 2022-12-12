@@ -1,18 +1,18 @@
 package utils
 
-class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr, width, height) {
-  class MutableColumn(private val grid: MutableGrid, private val x: Int) : Column(grid, x) {
+class MutableIntGrid(private val arr: IntArray, width: Int, height: Int) : IntGrid(arr, width, height) {
+  class MutableColumn(private val grid: MutableIntGrid, private val x: Int) : Column(grid, x) {
     operator fun set(y: Int, value: Int) = grid.set(x, y, value)
   }
 
-  class MutableRow(private val grid: MutableGrid, private val y: Int) : Row(grid, y) {
+  class MutableRow(private val grid: MutableIntGrid, private val y: Int) : Row(grid, y) {
     operator fun set(x: Int, value: Int) = grid.set(x, y, value)
   }
 
   override val columns: List<MutableColumn> get() = (0 until width).map { this[it] }
   override val rows: List<Row> get() = (0 until height).map { this.getRow(it) }
 
-  override fun map(fn: (Vec2i, Int) -> Int): MutableGrid = super.map(fn).toMutable()
+  override fun map(fn: (Vec2i, Int) -> Int): MutableIntGrid = super.map(fn).toMutable()
 
   override operator fun get(x: Int) = MutableColumn(this, x)
   override fun getRow(y: Int) = MutableRow(this, y)
@@ -31,9 +31,9 @@ class MutableGrid(private val arr: IntArray, width: Int, height: Int) : Grid(arr
     this[c2] = value
   }
 
-  fun copyTo(target: MutableGrid) {
+  fun copyTo(target: MutableIntGrid) {
     System.arraycopy(arr, 0, target.arr, 0, arr.size)
   }
 
-  fun clone(): MutableGrid = MutableGrid(arr.clone(), width, height)
+  fun clone(): MutableIntGrid = MutableIntGrid(arr.clone(), width, height)
 }

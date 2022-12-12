@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 import utils.Vec2i
@@ -45,7 +45,7 @@ object Day10Imp : Solution<List<Day10Imp.Insn>>() {
   }
 
   override fun part2(input: List<Insn>): String {
-    val screen = Grid(40, 6, 0).toMutable()
+    val screen = IntGrid(40, 6, 0).toMutable()
     var clock = 0
     var x = 1
 

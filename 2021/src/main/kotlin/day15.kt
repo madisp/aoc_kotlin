@@ -1,5 +1,5 @@
 import utils.Graph
-import utils.Grid
+import utils.IntGrid
 import utils.Solution
 import utils.Vec2i
 
@@ -7,16 +7,16 @@ fun main() {
   Day15.run()
 }
 
-object Day15 : Solution<Grid>() {
+object Day15 : Solution<IntGrid>() {
   override val name = "day15"
-  override val parser = Grid.singleDigits
+  override val parser = IntGrid.singleDigits
 
-  override fun part1(input: Grid): Int {
+  override fun part1(input: IntGrid): Int {
     return solve(input)
   }
 
-  override fun part2(input: Grid): Number? {
-    val wide = Grid(input.width * 5, input.height * 5) { (x, y) ->
+  override fun part2(input: IntGrid): Number? {
+    val wide = IntGrid(input.width * 5, input.height * 5) { (x, y) ->
       val dist = (x / input.width) + (y / input.height)
       val orig = input[x % input.width][y % input.height]
       val new = orig + dist
@@ -27,7 +27,7 @@ object Day15 : Solution<Grid>() {
     return solve(wide)
   }
 
-  private fun solve(input: Grid): Int {
+  private fun solve(input: IntGrid): Int {
     val start = Vec2i(0, 0)
     val end = Vec2i(input.width - 1, input.height - 1)
 

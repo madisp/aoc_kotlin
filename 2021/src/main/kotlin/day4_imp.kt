@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 
@@ -6,22 +6,22 @@ fun main() {
   Day4Imp.run()
 }
 
-object Day4Imp : Solution<Pair<List<Int>, List<Grid>>>() {
+object Day4Imp : Solution<Pair<List<Int>, List<IntGrid>>>() {
   override val name = "day4"
-  override val parser = Parser.compoundList(Parser.ints, Grid.table)
+  override val parser = Parser.compoundList(Parser.ints, IntGrid.table)
 
-  override fun part1(input: Pair<List<Int>, List<Grid>>): Int {
+  override fun part1(input: Pair<List<Int>, List<IntGrid>>): Int {
     val (numbers, boards) = input
     return boardWinTimes(numbers, boards).minByOrNull { it.first }!!.second
   }
 
-  override fun part2(input: Pair<List<Int>, List<Grid>>): Int {
+  override fun part2(input: Pair<List<Int>, List<IntGrid>>): Int {
     val (numbers, boards) = input
     return boardWinTimes(numbers, boards).maxByOrNull { it.first }!!.second
   }
 
   // given a list of numbers and a list of boards calculates the turn win times and winning scores for each board
-  private fun boardWinTimes(numbers: List<Int>, boards: List<Grid>): List<Pair<Int, Int>> {
+  private fun boardWinTimes(numbers: List<Int>, boards: List<IntGrid>): List<Pair<Int, Int>> {
     val takenNumbers = mutableSetOf<Int>()
     val boardsList = mutableListOf(*boards.toTypedArray())
     val winningBoards = mutableListOf<Pair<Int, Int>>()
@@ -40,12 +40,12 @@ object Day4Imp : Solution<Pair<List<Int>, List<Grid>>>() {
     return winningBoards
   }
 
-  private fun Grid.winning(marked: Set<Int>): Boolean {
+  private fun IntGrid.winning(marked: Set<Int>): Boolean {
     return rows.any { row -> row.values.all { it in marked } } || columns.any { col -> col.values.all { it in marked } }
   }
 
 
-  private fun Grid.score(marked: Set<Int>): Int {
+  private fun IntGrid.score(marked: Set<Int>): Int {
     return (values.toSet() - marked).sum() * marked.last()
   }
 }

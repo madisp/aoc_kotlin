@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 import utils.Vec2i
@@ -28,7 +28,7 @@ object Day6Func : Solution<List<Day6Func.Opcode>>() {
   }
 
   data class Opcode(val insn: Insn, val p1: Vec2i, val p2: Vec2i) {
-    fun apply(grid: Grid, part2: Boolean): Grid {
+    fun apply(grid: IntGrid, part2: Boolean): IntGrid {
       val xr = minOf(p1.x, p2.x) .. maxOf(p1.x, p2.x)
       val yr = minOf(p1.y, p2.y) .. maxOf(p1.y, p2.y)
       return grid.map { (x, y), v ->
@@ -50,14 +50,14 @@ object Day6Func : Solution<List<Day6Func.Opcode>>() {
   }
 
   override fun part1(input: List<Opcode>): Int {
-    val grid = Grid(1000, 1000) { 0 }
+    val grid = IntGrid(1000, 1000) { 0 }
     return input.fold(grid) { it, op -> op.apply(it, false) }
       .cells
       .count { (_, v) -> v == 1 }
   }
 
   override fun part2(input: List<Opcode>): Int {
-    val grid = Grid(1000, 1000) { 0 }
+    val grid = IntGrid(1000, 1000) { 0 }
     return input.fold(grid) { it, op -> op.apply(it, true) }
       .cells
       .sumOf { (_, v) -> v }

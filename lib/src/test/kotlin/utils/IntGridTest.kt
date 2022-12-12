@@ -3,14 +3,14 @@ package utils
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class GridTest {
+class IntGridTest {
   @Test fun testParse() {
     val input = """
       123
       456
     """.trimIndent()
 
-    val grid = Grid.singleDigits(input)
+    val grid = IntGrid.singleDigits(input)
 
     assertThat(grid.width).isEqualTo(3)
     assertThat(grid.height).isEqualTo(2)
@@ -28,7 +28,7 @@ class GridTest {
       56
     """.trimIndent()
 
-    val grid = Grid.singleDigits(input)
+    val grid = IntGrid.singleDigits(input)
 
     assertThat(grid.width).isEqualTo(2)
     assertThat(grid.height).isEqualTo(3)
@@ -45,7 +45,7 @@ class GridTest {
       5678
     """.trimIndent()
 
-    val grid = Grid.singleDigits(input)
+    val grid = IntGrid.singleDigits(input)
 
     assertThat(grid[Vec2i(0, 0)]).isEqualTo(1)
     assertThat(grid[Vec2i(3, 0)]).isEqualTo(4)
@@ -59,7 +59,7 @@ class GridTest {
       5678
     """.trimIndent()
 
-    val grid = Grid.singleDigits(input)
+    val grid = IntGrid.singleDigits(input)
 
     assertThat(grid[0][0]).isEqualTo(1)
     assertThat(grid[3][0]).isEqualTo(4)
@@ -72,7 +72,7 @@ class GridTest {
       1234
       5678
     """.trimIndent()
-    val grid = Grid.singleDigits(input)
+    val grid = IntGrid.singleDigits(input)
 
     assertThat(Vec2i(0, 0) in grid).isTrue()
     assertThat(Vec2i(-1, 0) in grid).isFalse()
@@ -87,7 +87,7 @@ class GridTest {
       456
       789
     """.trimIndent()
-    val grid = Grid.singleDigits(input).map { (x, y), _ -> x }
+    val grid = IntGrid.singleDigits(input).map { (x, y), _ -> x }
 
     assertThat(grid.toDigitString()).isEqualTo("""
       012
@@ -102,7 +102,7 @@ class GridTest {
       456
       789
     """.trimIndent()
-    val grid = Grid.singleDigits(input).map { (x, y), _ -> y }
+    val grid = IntGrid.singleDigits(input).map { (x, y), _ -> y }
 
     assertThat(grid.toDigitString()).isEqualTo("""
       000
@@ -117,7 +117,7 @@ class GridTest {
       345
       678
     """.trimIndent()
-    val grid = Grid.singleDigits(input).map { _, v -> v + 1 }
+    val grid = IntGrid.singleDigits(input).map { _, v -> v + 1 }
 
     assertThat(grid.toDigitString()).isEqualTo("""
       123
@@ -132,7 +132,7 @@ class GridTest {
       345
       678
     """.trimIndent()
-    val grid = Grid.singleDigits(input).map { _, v -> v + 1 }
+    val grid = IntGrid.singleDigits(input).map { _, v -> v + 1 }
 
     assertThat(grid.borderWith(0).toDigitString()).isEqualTo("""
       00000
@@ -149,7 +149,7 @@ class GridTest {
       345
       678
     """.trimIndent()
-    val grid = Grid.singleDigits(input).map { _, v -> v + 1 }
+    val grid = IntGrid.singleDigits(input).map { _, v -> v + 1 }
 
     assertThat(grid.borderWith(0, borderWidth = 2).toDigitString()).isEqualTo("""
       0000000

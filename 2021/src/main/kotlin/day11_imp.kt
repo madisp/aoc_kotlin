@@ -1,5 +1,5 @@
-import utils.Grid
-import utils.MutableGrid
+import utils.IntGrid
+import utils.MutableIntGrid
 import utils.Solution
 import utils.Vec2i
 
@@ -7,11 +7,11 @@ fun main() {
   Day11Imp.run()
 }
 
-object Day11Imp : Solution<Grid>() {
+object Day11Imp : Solution<IntGrid>() {
   override val name = "day11"
-  override val parser = Grid.singleDigits
+  override val parser = IntGrid.singleDigits
 
-  fun evolve(grid: MutableGrid): Int {
+  fun evolve(grid: MutableIntGrid): Int {
     val flashing = ArrayDeque<Vec2i>()
     val flashed = mutableSetOf<Vec2i>()
 
@@ -38,7 +38,7 @@ object Day11Imp : Solution<Grid>() {
     return flashed.size
   }
 
-  override fun part1(input: Grid): Int {
+  override fun part1(input: IntGrid): Int {
     val grid = input.toMutable()
     var totalFlashes = 0
     repeat(100) {
@@ -47,7 +47,7 @@ object Day11Imp : Solution<Grid>() {
     return totalFlashes
   }
 
-  override fun part2(input: Grid): Int {
+  override fun part2(input: IntGrid): Int {
     val grid = input.toMutable()
     for (day in 1 .. Integer.MAX_VALUE) {
       if (evolve(grid) == 100) {

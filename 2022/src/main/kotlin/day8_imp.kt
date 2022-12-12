@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Solution
 import utils.Vec2i
 import utils.takeWhileInclusive
@@ -7,22 +7,22 @@ fun main() {
   Day8Imp.run()
 }
 
-object Day8Imp : Solution<Grid>() {
+object Day8Imp : Solution<IntGrid>() {
   override val name = "day8"
-  override val parser = Grid.singleDigits
+  override val parser = IntGrid.singleDigits
 
-  override fun part1(input: Grid): Int {
+  override fun part1(input: IntGrid): Int {
     val rows = input.rows.flatMap { row -> getAscending(row.cells) + getAscending(row.cells.reversed()) }
     val cols = input.columns.flatMap { col -> getAscending(col.cells) + getAscending(col.cells.reversed()) }
     val trees = (rows + cols).distinct().sortedBy { it.y * 10 + it.x }
     return trees.count()
   }
 
-  override fun part2(input: Grid): Int {
+  override fun part2(input: IntGrid): Int {
     return input.coords.maxOf { scenicScore(it, input) }
   }
 
-  private fun scenicScore(coord: Vec2i, grid: Grid): Int {
+  private fun scenicScore(coord: Vec2i, grid: IntGrid): Int {
     val height = grid[coord]
     val left = getVisibleDistance(height, grid.rows[coord.y].values.take(coord.x).reversed())
     val right = getVisibleDistance(height, grid.rows[coord.y].values.drop(coord.x + 1))

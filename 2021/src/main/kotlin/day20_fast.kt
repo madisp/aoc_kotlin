@@ -1,5 +1,5 @@
-import utils.Grid
-import utils.MutableGrid
+import utils.IntGrid
+import utils.MutableIntGrid
 import utils.Parser
 import utils.Solution
 
@@ -15,7 +15,7 @@ object Day20All {
   }
 }
 
-object Day20Fast : Solution<Pair<Grid, List<Int>>>() {
+object Day20Fast : Solution<Pair<IntGrid, List<Int>>>() {
   override val name = "day20"
   override val parser = Parser { input ->
     val (lookupString, imageString) = input.split("\n\n", limit = 2)
@@ -26,12 +26,12 @@ object Day20Fast : Solution<Pair<Grid, List<Int>>>() {
     val gridW = gridLines.first().length
     val gridH = gridLines.size
 
-    val grid = Grid(gridW, gridH) { (x, y) -> if (gridLines[y][x] == '#') 1 else 0 }
+    val grid = IntGrid(gridW, gridH) { (x, y) -> if (gridLines[y][x] == '#') 1 else 0 }
 
     return@Parser grid to lookup
   }
 
-  fun enhance(input: Grid, output: MutableGrid, lookup: List<Int>) {
+  fun enhance(input: IntGrid, output: MutableIntGrid, lookup: List<Int>) {
     val padding = lookup[if (input[0][0] == 0) 0 else 511]
 
     val width = input.width
@@ -64,22 +64,22 @@ object Day20Fast : Solution<Pair<Grid, List<Int>>>() {
     }
   }
 
-  override fun part1(input: Pair<Grid, List<Int>>): Int {
+  override fun part1(input: Pair<IntGrid, List<Int>>): Int {
     val output = solve(input, 2)
     return output.values.count { it != 0 }
   }
 
-  override fun part2(input: Pair<Grid, List<Int>>): Int {
+  override fun part2(input: Pair<IntGrid, List<Int>>): Int {
     val output = solve(input, 50)
     return output.values.count { it != 0 }
   }
 
-  private fun solve(input: Pair<Grid, List<Int>>, days: Int): MutableGrid {
+  private fun solve(input: Pair<IntGrid, List<Int>>, days: Int): MutableIntGrid {
     val b1 = input.first.borderWith(0, days + 1).toMutable()
     val w = b1.width
     val h = b1.height
 
-    val b2 = Grid(w, h) { 0 }.toMutable()
+    val b2 = IntGrid(w, h) { 0 }.toMutable()
 
     repeat(days) { day ->
       if (day % 2 == 0) {

@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 
@@ -14,29 +14,29 @@ object Day4All {
   }
 }
 
-object Day4Fast : Solution<Pair<List<Int>, List<Grid>>>() {
+object Day4Fast : Solution<Pair<List<Int>, List<IntGrid>>>() {
   override val name = "day4"
-  override val parser = Parser.compoundList(Parser.ints, Grid.table)
+  override val parser = Parser.compoundList(Parser.ints, IntGrid.table)
 
-  override fun part1(input: Pair<List<Int>, List<Grid>>): Int {
+  override fun part1(input: Pair<List<Int>, List<IntGrid>>): Int {
     val (numbers, boards) = input
     return solve(numbers, boards).first
   }
 
-  override fun part2(input: Pair<List<Int>, List<Grid>>): Int {
+  override fun part2(input: Pair<List<Int>, List<IntGrid>>): Int {
     val (numbers, boards) = input
     return solve(numbers, boards).second
   }
 
   // given a list of numbers and a list of boards returns the score of the first winner and the last winner
-  private fun solve(numbers: List<Int>, boards: List<Grid>): Pair<Int, Int> {
+  private fun solve(numbers: List<Int>, boards: List<IntGrid>): Pair<Int, Int> {
     // build a lookup table of number -> position
     val numberPos = IntArray(numbers.maxOrNull()!! + 1)
     numbers.forEachIndexed { index, number -> numberPos[number] = index }
 
     // round index to board, we'll use this to get values
-    var first = Integer.MAX_VALUE to Grid.EMPTY
-    var last = Integer.MIN_VALUE to Grid.EMPTY
+    var first = Integer.MAX_VALUE to IntGrid.EMPTY
+    var last = Integer.MIN_VALUE to IntGrid.EMPTY
 
     for (board in boards) {
       var winningRound = Integer.MAX_VALUE
@@ -58,7 +58,7 @@ object Day4Fast : Solution<Pair<List<Int>, List<Grid>>>() {
       if (winningRound > last.first) last = winningRound to board
     }
 
-    fun score(state: Pair<Int, Grid>): Int {
+    fun score(state: Pair<Int, IntGrid>): Int {
       val (round, board) = state
       var sum = 0
       for (num in board.values) {

@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 import utils.Vec2i
@@ -8,7 +8,7 @@ fun main() {
   Day25Imp.run()
 }
 
-object Day25Imp : Solution<Grid>() {
+object Day25Imp : Solution<IntGrid>() {
   override val name = "day25"
 
   private const val EMPTY = 0
@@ -19,9 +19,9 @@ object Day25Imp : Solution<Grid>() {
     .replace('.', '0')
     .replace('>', '1')
     .replace('v', '2')
-  }.map { Grid.singleDigits(it) }
+  }.map { IntGrid.singleDigits(it) }
 
-  override fun part1(input: Grid): Number? {
+  override fun part1(input: IntGrid): Number? {
     val grid = input.toMutable()
 
     var steps = 0
@@ -72,7 +72,7 @@ object Day25Imp : Solution<Grid>() {
     return steps
   }
 
-  fun Grid.print() {
+  fun IntGrid.print() {
     for (y in 0 until height) {
       for (x in 0 until width) {
         print(when (this[x][y]) {

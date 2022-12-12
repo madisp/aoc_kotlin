@@ -1,17 +1,15 @@
-import utils.Grid
-import utils.Parser
+import utils.IntGrid
 import utils.Solution
-import utils.mapItems
 
 fun main() {
   Day9Imp.run()
 }
 
-object Day9Imp : Solution<Grid>() {
+object Day9Imp : Solution<IntGrid>() {
   override val name = "day9"
-  override val parser = Grid.singleDigits.map { it.borderWith(9) }
+  override val parser = IntGrid.singleDigits.map { it.borderWith(9) }
 
-  override fun part1(input: Grid): Int {
+  override fun part1(input: IntGrid): Int {
     var sum = 0
 
     for (y in 1 until input.height - 1) {
@@ -28,7 +26,7 @@ object Day9Imp : Solution<Grid>() {
     return sum
   }
 
-  override fun part2(input: Grid): Number? {
+  override fun part2(input: IntGrid): Number? {
     val visited = Array(input.height) { BooleanArray(input.width) { false } }
 
     // recursively 4-way-fill at x + y and return the number of cells filled

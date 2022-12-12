@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 import utils.wrap
@@ -7,7 +7,7 @@ fun main() {
   Day25Func.run()
 }
 
-object Day25Func : Solution<Grid>() {
+object Day25Func : Solution<IntGrid>() {
   override val name = "day25"
 
   private const val EMPTY = 0
@@ -18,9 +18,9 @@ object Day25Func : Solution<Grid>() {
     .replace('.', '0')
     .replace('>', '1')
     .replace('v', '2')
-  }.map { Grid.singleDigits(it) }
+  }.map { IntGrid.singleDigits(it) }
 
-  private fun tryMove(grid: Grid, type: Int): Grid {
+  private fun tryMove(grid: IntGrid, type: Int): IntGrid {
     val xAxis = type == EAST
     return grid.map { coord, value ->
       if (value == type) {
@@ -38,12 +38,12 @@ object Day25Func : Solution<Grid>() {
     }
   }
 
-  fun step(grid: Grid): Grid {
+  fun step(grid: IntGrid): IntGrid {
     return tryMove(tryMove(grid, EAST), SOUTH)
   }
 
-  override fun part1(input: Grid): Number? {
-    return generateSequence(Grid.EMPTY to input) { it.second to step(it.second) }
+  override fun part1(input: IntGrid): Number? {
+    return generateSequence(IntGrid.EMPTY to input) { it.second to step(it.second) }
       .takeWhile { it.first != it.second }
       .count()
   }

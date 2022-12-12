@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Solution
 
 fun main() {
@@ -13,9 +13,9 @@ object Day11All {
   }
 }
 
-object Day11Fast : Solution<Grid>() {
+object Day11Fast : Solution<IntGrid>() {
   override val name = "day11"
-  override val parser = Grid.singleDigits
+  override val parser = IntGrid.singleDigits
 
   fun evolve(grid: IntArray): Int {
     val sz = 10
@@ -66,7 +66,7 @@ object Day11Fast : Solution<Grid>() {
     return flashes
   }
 
-  override fun part1(input: Grid): Int {
+  override fun part1(input: IntGrid): Int {
     val grid = input.values.toIntArray()
     var totalFlashes = 0
     repeat(100) {
@@ -75,7 +75,7 @@ object Day11Fast : Solution<Grid>() {
     return totalFlashes
   }
 
-  override fun part2(input: Grid): Int {
+  override fun part2(input: IntGrid): Int {
     val grid = input.values.toIntArray()
     for (day in 1 .. Integer.MAX_VALUE) {
       if (evolve(grid) == 100) {

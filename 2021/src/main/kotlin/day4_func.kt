@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Parser
 import utils.Solution
 
@@ -6,11 +6,11 @@ fun main() {
   Day4Func.run()
 }
 
-object Day4Func : Solution<Pair<List<Int>, List<Grid>>>() {
+object Day4Func : Solution<Pair<List<Int>, List<IntGrid>>>() {
   override val name = "day4"
-  override val parser = Parser.compoundList(Parser.ints, Grid.table)
+  override val parser = Parser.compoundList(Parser.ints, IntGrid.table)
 
-  override fun part1(input: Pair<List<Int>, List<Grid>>): Int {
+  override fun part1(input: Pair<List<Int>, List<IntGrid>>): Int {
     val (numbers, boards) = input
 
     return numbers.indices.asSequence()
@@ -20,7 +20,7 @@ object Day4Func : Solution<Pair<List<Int>, List<Grid>>>() {
       .let { (numbers, board) -> board.score(numbers) }
   }
 
-  override fun part2(input: Pair<List<Int>, List<Grid>>): Number? {
+  override fun part2(input: Pair<List<Int>, List<IntGrid>>): Number? {
     val (numbers, boards) = input
 
     return numbers.indices.asSequence()
@@ -30,12 +30,12 @@ object Day4Func : Solution<Pair<List<Int>, List<Grid>>>() {
       .let { (numbers, board) -> board.score(numbers) }
   }
 
-  private fun Grid.winning(marked: Set<Int>): Boolean {
+  private fun IntGrid.winning(marked: Set<Int>): Boolean {
     return rows.any { row -> row.values.all { it in marked } } || columns.any { col -> col.values.all { it in marked } }
   }
 
 
-  private fun Grid.score(marked: Set<Int>): Int {
+  private fun IntGrid.score(marked: Set<Int>): Int {
     return (values.toSet() - marked).sum() * marked.last()
   }
 }

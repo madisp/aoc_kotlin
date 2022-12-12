@@ -13,6 +13,8 @@ fun interface Parser<In> {
     val intLines = lines.mapItems { it.toInt() }
     val chars = Parser { it.trim().toCharArray().toList() }
     val blocks = Parser { it.split("\n\n").map(String::trim).filter(String::isNotBlank) }
+    val digitGrid = IntGrid.singleDigits
+    val chargrid = Grid.chars()
 
     /**
      * combine two parsers into one, separate by a delimiter
@@ -37,6 +39,10 @@ fun interface Parser<In> {
       }
     }
   }
+}
+
+fun <T> Parser<String>.mapParser(parser: Parser<T>): Parser<T> {
+  return Parser { input -> parser(this(input)) }
 }
 
 fun <T, U> Parser<List<T>>.mapItems(fn: (T) -> U): Parser<List<U>> {

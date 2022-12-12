@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.Solution
 import utils.startsWith
 
@@ -6,11 +6,11 @@ fun main() {
   Day3.run()
 }
 
-object Day3 : Solution<Grid>() {
+object Day3 : Solution<IntGrid>() {
   override val name = "day3"
-  override val parser = Grid.singleDigits
+  override val parser = IntGrid.singleDigits
 
-  override fun part1(input: Grid): Int {
+  override fun part1(input: IntGrid): Int {
     val gamma = (0 until input.width).map { index ->
       getPop(input[index].values).first
     }.joinToString(separator = "").toInt(2)
@@ -22,7 +22,7 @@ object Day3 : Solution<Grid>() {
     return gamma * epsilon
   }
 
-  override fun part2(input: Grid): Int {
+  override fun part2(input: IntGrid): Int {
     val oxygen = generateSequence(emptyList<Int>() to input.rows) { (mask, rows) ->
       if (mask.size == input.width) return@generateSequence null
       val newMask = mask + getPop(rows.map { it[mask.size] }).first

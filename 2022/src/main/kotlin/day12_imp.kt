@@ -1,17 +1,18 @@
-import utils.GGrid
+import utils.Grid
 import utils.Graph
 import utils.Parser
 import utils.Solution
 import utils.Vec2i
+import utils.mapParser
 import java.lang.IllegalStateException
 
 fun main() {
   Day12Imp.run()
 }
 
-object Day12Imp : Solution<GGrid<Char>>() {
+object Day12Imp : Solution<Grid<Char>>() {
   override val name = "day12"
-  override val parser = Parser { GGrid.chars(' ')(it.trim()) }
+  override val parser = Parser(String::trim).mapParser(Parser.chargrid)
 
   data class Node(val p: Vec2i, val height: Int)
   data class Edge(val weight: Int)
@@ -24,7 +25,7 @@ object Day12Imp : Solution<GGrid<Char>>() {
     }
   }
 
-  private fun solve(input: GGrid<Char>, startChars: Set<Char>): Int {
+  private fun solve(input: Grid<Char>, startChars: Set<Char>): Int {
     val g = Graph<Node, Edge>(
       edgeFn = { v ->
         val h1 = height(input[v.p])
@@ -57,6 +58,6 @@ object Day12Imp : Solution<GGrid<Char>>() {
     }.minOrNull()!!
   }
 
-  override fun part1(input: GGrid<Char>): Int = solve(input, setOf('S'))
-  override fun part2(input: GGrid<Char>): Int = solve(input, setOf('S', 'a'))
+  override fun part1(input: Grid<Char>): Int = solve(input, setOf('S'))
+  override fun part2(input: Grid<Char>): Int = solve(input, setOf('S', 'a'))
 }
