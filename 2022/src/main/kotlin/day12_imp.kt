@@ -55,7 +55,7 @@ object Day12Imp : Solution<Grid<Char>>() {
       } catch (e: IllegalStateException) {
         null
       }
-    }.minOrNull()!!
+    }.min()
   }
 
   override fun part1(input: Grid<Char>): Int = solve(input, setOf('S'))
