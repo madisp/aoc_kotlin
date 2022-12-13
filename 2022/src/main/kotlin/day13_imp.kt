@@ -3,10 +3,10 @@ import utils.Solution
 import utils.badInput
 
 fun main() {
-  Day13.run()
+  Day13Imp.run()
 }
 
-object Day13 : Solution<List<Pair<Day13.Fragment.Packet, Day13.Fragment.Packet>>>() {
+object Day13Imp : Solution<List<Pair<Day13Imp.Fragment.Packet, Day13Imp.Fragment.Packet>>>() {
   override val name = "day13"
 
   sealed class Fragment : Comparable<Fragment> {
