@@ -66,7 +66,7 @@ object Day13Imp : Solution<List<Pair<Day13Imp.Fragment.Packet, Day13Imp.Fragment
   }
 
   override fun part2(input: List<Pair<Fragment.Packet, Fragment.Packet>>): Int {
-    val dividers = listOf(Fragment.parse("[[2]]"), Fragment.parse("[[6]]")).map { it.first }
+    val dividers = listOf("[[2]]", "[[6]]").map { Fragment.parse(it).first }
     val packets = (input.flatMap { listOf(it.first, it.second) } + dividers).sorted()
     return packets.indices.filter { i -> packets[i] in dividers }
       .also { require(it.size == 2) }
