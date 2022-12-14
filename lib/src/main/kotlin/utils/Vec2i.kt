@@ -37,6 +37,11 @@ data class Segment(val start: Vec2i, val end: Vec2i) {
 
   val slope: Int get() = (end.y - start.y) / (end.x - start.x)
 
+  val points: List<Vec2i> get() = when {
+    isVertical -> (minOf(start.y, end.y) .. maxOf(start.y, end.y)).map { y -> Vec2i(start.x, y) }
+    else -> (minOf(start.x, end.x) .. maxOf(start.x, end.x)).map { x -> get(x) }
+  }
+
   operator fun get(x: Int): Vec2i {
     if (isVertical) {
       throw IllegalStateException("Can not get point by x for a vertical line")
