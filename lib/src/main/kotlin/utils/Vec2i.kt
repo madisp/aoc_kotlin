@@ -1,5 +1,7 @@
 package utils
 
+import kotlin.math.abs
+
 data class Vec2i(val x: Int, val y: Int) {
   val adjacent get() = listOf(
     copy(x = x - 1),
@@ -17,6 +19,10 @@ data class Vec2i(val x: Int, val y: Int) {
   }
 
   operator fun plus(other: Vec2i) = Vec2i(this.x + other.x, this.y + other.y)
+
+  fun manhattanDistanceTo(other: Vec2i): Int {
+    return (abs(other.x - x) + abs(other.y - y))
+  }
 
   companion object {
     fun parse(str: String, delimiter: String = ","): Vec2i {
