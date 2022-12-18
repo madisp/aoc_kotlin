@@ -2,13 +2,26 @@ package utils
 
 import kotlin.math.abs
 
+@Suppress("FunctionName")
 fun Point3i(x: Int, y: Int, z: Int) = Vec4i(x, y, z, 1)
+@Suppress("FunctionName")
 fun Vec3i(x: Int, y: Int, z: Int) = Vec4i(x, y, z, 0)
 
 enum class Component4 { X, Y, Z, W }
 
 data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
   operator fun minus(o: Vec4i) = Vec4i(x - o.x, y - o.y, z - o.z, w - o.w)
+
+  operator fun plus(o: Vec4i) = Vec4i(x + o.x, y + o.y, z + o.z, w + o.w)
+
+  val adjacent get() = listOf(
+    copy(x = x - 1),
+    copy(x = x + 1),
+    copy(y = y - 1),
+    copy(y = y + 1),
+    copy(z = z - 1),
+    copy(z = z + 1)
+  )
 
   operator fun get(c: Component4): Int {
     return when (c) {
