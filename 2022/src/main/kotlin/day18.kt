@@ -1,3 +1,4 @@
+import utils.MutableIntSpace
 import utils.Parser
 import utils.Solution
 import utils.Point3i
@@ -15,41 +16,31 @@ object Day18 : Solution<Set<Vec4i>>() {
     Point3i(x + 1, y + 1, z + 1)
   }.map(List<Vec4i>::toSet)
 
-  override fun part1(input: Set<Vec4i>): Int {
-    val space = Array(25) { Array(25) { IntArray(25) { 0 } } }
-
-    for (cube in input) {
-      space[cube.x][cube.y][cube.z] = 1
+  private fun makeSpace(input: Set<Vec4i>) = MutableIntSpace(
+    input.maxOf { it.x } + 2,
+    input.maxOf { it.y } + 2,
+    input.maxOf { it.z } + 2) {
+      if (it in input) 1 else 0 // init known blocks to 1
     }
 
-    return input.flatMap { it.adjacent }.sumOf { 1 - space[it.x][it.y][it.z] }
+  override fun part1(input: Set<Vec4i>): Int {
+    val space = makeSpace(input)
+    return input.flatMap { it.adjacent }.sumOf { 1 - space[it] }
   }
 
   override fun part2(input: Set<Vec4i>): Int {
-    val sz = 25
-    val space = Array(sz) { Array(sz) { IntArray(sz) { 0 } } }
+    val space = makeSpace(input)
 
-    for (cube in input) {
-      space[cube.x][cube.y][cube.z] = 1
-    }
-
-    // fill outer area with twos using 6-way fill
+    // fill outer area with tows using 6-way fill
     val queue = ArrayDeque<Vec4i>()
     queue.add(Point3i(0, 0, 0))
     while (queue.isNotEmpty()) {
       val p = queue.removeFirst()
-
-      if (p.x !in 0 until sz || p.y !in 0 until sz || p.z !in 0 until sz) {
-        continue
-      }
-      if (space[p.x][p.y][p.z] != 0) {
-        continue
-      }
-
-      space[p.x][p.y][p.z] = 2
-      queue.addAll(p.adjacent)
+      if (space[p] != 0) continue
+      space[p] = 2
+      queue.addAll(p.adjacent.filter { it in space })
     }
 
-    return input.flatMap { it.adjacent }.sumOf { space[it.x][it.y][it.z] ushr 1 }
+    return input.flatMap { it.adjacent }.sumOf { space[it] ushr 1 }
   }
 }
