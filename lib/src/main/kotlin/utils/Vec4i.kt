@@ -14,6 +14,8 @@ data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
 
   operator fun plus(o: Vec4i) = Vec4i(x + o.x, y + o.y, z + o.z, w + o.w)
 
+  operator fun times(v: Int) = Vec4i(x * v, y * v, z * v, w * v)
+
   val adjacent get() = listOf(
     copy(x = x - 1),
     copy(x = x + 1),
@@ -42,7 +44,7 @@ data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
   }
 
   override fun toString(): String {
-    return "${if (w == 1) 'p' else 'v'}($x,$y,$z)"
+    return "($x,$y,$z,$w)"
   }
 
   fun distanceSqr(o: Vec4i): Int {
