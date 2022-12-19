@@ -34,7 +34,22 @@ object Day19 : Solution<List<Day19.Blueprint>>() {
     geode(Component4.W, Vec4i(0, 0, 0, 1)),
   }
 
-  data class Blueprint(val costs: Map<Resource, Vec4i>)
+  data class Blueprint(val costs: Map<Resource, Vec4i>) {
+    fun computeMaxRobots() = Vec4i(
+      costs.values.maxOf { it.x },
+      costs.values.maxOf { it.y },
+      costs.values.maxOf { it.z },
+      Integer.MAX_VALUE, // produce as many geode bots as possible
+    )
+  }
+
+  class Context(
+    val bp: Blueprint,
+    val cache: MutableMap<State, Int>,
+    val maxRobots: Vec4i,
+    val maxTime: Int,
+    val maxGeodeBotsAt: IntArray,
+  )
 
   data class State(val timePassed: Int, val robots: Vec4i, val resources: Vec4i) {
     companion object {
@@ -56,31 +71,51 @@ object Day19 : Solution<List<Day19.Blueprint>>() {
 
   private val Vec4i.isPositive: Boolean get() = x >= 0 && y >= 0 && z >= 0 && w >= 0
 
-  private fun bestGeodes(blueprint: Blueprint, state: State, cache: MutableMap<State, Int>, maxTime: Int): Int {
-    val cached = cache[state]
+  private fun bestGeodes(ctx: Context, state: State): Int {
+    val cached = ctx.cache[state]
     if (cached != null) {
       return cached
     }
 
-    if (state.timePassed == maxTime) {
+    if (state.timePassed == ctx.maxTime) {
       return state.resources[geode.c]
+    }
+
+    val maxGBots = ctx.maxGeodeBotsAt[state.timePassed]
+    if (state.robots.w < maxGBots - 1) {
+      return 0 // not worth exploring as we are so much behind
+    } else if (state.robots.w > maxGBots) {
+      ctx.maxGeodeBotsAt[state.timePassed] = state.robots.w
     }
 
     // choose which robot to build
     val opts = Resource.values().reversed().filter {
-      (state.resources - blueprint.costs[it]!!).isPositive
+      (state.resources - ctx.bp.costs[it]!!).isPositive && state.robots[it.c] < ctx.maxRobots[it.c]
     } + null
 
-    val geodes = opts.maxOf {
-      bestGeodes(blueprint, step(blueprint, state, it), cache, maxTime)
+    // if you can build a geode bot, greedily build it?
+    val geodes = if (opts.first() == geode) {
+      bestGeodes(ctx, step(ctx.bp, state, geode))
+    } else {
+      opts.maxOf {
+        bestGeodes(ctx, step(ctx.bp, state, it))
+      }
     }
-    cache[state] = geodes
+    ctx.cache[state] = geodes
     return geodes
   }
 
   override fun part1(input: List<Blueprint>): Int {
     return input.mapIndexed { idx, bp -> idx to bp }.parallelStream().map { (idx, bp) ->
-      (idx + 1) * bestGeodes(bp, State.INITIAL, HashMap(), 24).also { println("$idx done, best: $it") }
+      val ctx = Context(bp, HashMap(), bp.computeMaxRobots(), 24, IntArray(24) { 0 })
+      (idx + 1) * bestGeodes(ctx, State.INITIAL)
     }.reduce { a, b -> a + b }.get()
+  }
+
+  override fun part2(input: List<Blueprint>): Int {
+    return input.take(3).parallelStream().map { bp ->
+      val ctx = Context(bp, HashMap(), bp.computeMaxRobots(), 32, IntArray(32) { 0 })
+      bestGeodes(ctx, State.INITIAL)
+    }.reduce { a, b -> a * b }.get()
   }
 }
