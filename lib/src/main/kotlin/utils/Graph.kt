@@ -8,6 +8,10 @@ class Graph<Node, Edge>(
   val nodes: Set<Node>? = null
 ) {
   fun shortestPath(start: Node, end: Node): Int {
+    return shortestPath(start) { it == end }.first
+  }
+
+  fun shortestPath(start: Node, end: (Node) -> Boolean): Pair<Int, Node> {
     val visited = mutableSetOf<Node>()
     val queue = PriorityQueue<Pair<Node, Int>>(compareBy { it.second })
     queue.add(start to 0)
@@ -16,8 +20,8 @@ class Graph<Node, Edge>(
       val (node, currentRisk) = queue.remove()
       if (node in visited) continue
 
-      if (node == end) {
-        return currentRisk
+      if (end(node)) {
+        return currentRisk to node
       }
 
       visited.add(node)
