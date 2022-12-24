@@ -38,6 +38,10 @@ open class Grid<T>(
     }
   }
 
+  fun bounds(test: (T) -> Boolean): Pair<Vec2i, Vec2i> {
+    return cells.filter { (_, v) -> test(v) }.map { it.first }.bounds
+  }
+
   val cells: Collection<Pair<Vec2i, T>> get() = coords.map { it to this[it] }
   val values: Collection<T> get() = arr.asList()
 

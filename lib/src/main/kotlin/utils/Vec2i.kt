@@ -33,6 +33,10 @@ data class Vec2i(val x: Int, val y: Int) {
   }
 }
 
+val Collection<Vec2i>.bounds: Pair<Vec2i, Vec2i> get() {
+  return Vec2i(minOf { it.x }, minOf { it.y }) to Vec2i(maxOf { it.x }, maxOf { it.y })
+}
+
 data class Segment(val start: Vec2i, val end: Vec2i) {
   companion object {
     fun parse(str: String, delimiter: String = "->"): Segment {
