@@ -37,11 +37,7 @@ object Day24 : Solution<Pair<Day24.Context, List<Day24.Blizzard>>>() {
   }
 
   data class Blizzard(val pos: Vec2i, val dir: Direction) {
-    fun move(w: Int, h: Int): Blizzard {
-      val newPos = pos + dir.v
-      val wrapped = Vec2i((newPos.x + w) % w, (newPos.y + h) % h)
-      return Blizzard(wrapped, dir)
-    }
+    fun move(bounds: Vec2i) = Blizzard((pos + dir.v + bounds) % bounds, dir)
   }
 
   data class State(val pos: Vec2i, val blizzards: List<Blizzard>)
@@ -68,10 +64,11 @@ object Day24 : Solution<Pair<Day24.Context, List<Day24.Blizzard>>>() {
   }
 
   private fun makeGraph(ctx: Context): Graph<State, Unit> {
+    val bounds = Vec2i(ctx.width, ctx.height)
     val graph = Graph<State, Unit>(
       edgeFn = { state ->
         // move blizzards by 1
-        val newBlizzards = state.blizzards.map { b -> b.move(ctx.width, ctx.height) }
+        val newBlizzards = state.blizzards.map { b -> b.move(bounds) }
         val blizzCoords = newBlizzards.map { it.pos }.toSet()
 
         // try out all possible moves

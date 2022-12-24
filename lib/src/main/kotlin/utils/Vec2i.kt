@@ -22,6 +22,8 @@ data class Vec2i(val x: Int, val y: Int) {
 
   operator fun div(scalar: Int) = Vec2i(this.x / scalar, this.y / scalar)
 
+  operator fun rem(other: Vec2i) = Vec2i(this.x % other.x, this.y % other.y)
+
   fun manhattanDistanceTo(other: Vec2i): Int {
     return (abs(other.x - x) + abs(other.y - y))
   }
