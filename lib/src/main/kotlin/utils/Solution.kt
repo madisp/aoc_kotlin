@@ -20,7 +20,8 @@ abstract class Solution<In> {
   header: String? = null,
   printParseTime: Boolean = true,
   skipTest: Boolean = false,
-  skipPart1: Boolean = false
+  skipPart1: Boolean = false,
+  skipPart2: Boolean = false,
   ) {
     val parse = parser
     val (input, parseTime) = measureTimedValue {
@@ -65,19 +66,22 @@ abstract class Solution<In> {
         println("part1 ($firstTime):")
         println(firstAnswer)
       } else {
-        println("part1: $firstAnswer ($firstTime)")
+        val prefix = if (skipPart2) "" else "part1: "
+        println("${prefix}$firstAnswer ($firstTime)")
       }
     }
 
-    val (secondAnswer, secondTime) = measureTimedValue {
-      part2(part2Input)
-    }
-    if (secondAnswer is String) {
-      println("part2 ($secondTime):")
-      println(secondAnswer)
-    } else {
-      val prefix = if (skipPart1) "" else "part2: "
-      println("${prefix}${secondAnswer} ($secondTime)")
+    if (!skipPart2) {
+      val (secondAnswer, secondTime) = measureTimedValue {
+        part2(part2Input)
+      }
+      if (secondAnswer is String) {
+        println("part2 ($secondTime):")
+        println(secondAnswer)
+      } else {
+        val prefix = if (skipPart1) "" else "part2: "
+        println("${prefix}${secondAnswer} ($secondTime)")
+      }
     }
 
     println()
