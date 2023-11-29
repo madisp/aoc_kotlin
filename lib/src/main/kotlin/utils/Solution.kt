@@ -1,6 +1,6 @@
 package utils
 
-import kotlin.time.ExperimentalTime
+import java.util.Locale
 import kotlin.time.measureTimedValue
 
 /**
@@ -16,18 +16,20 @@ abstract class Solution<In> {
   open fun part1(input: In): Any? = null
   open fun part2(input: In): Any? = null
 
-  @OptIn(ExperimentalTime::class) fun run(
-  header: String? = null,
-  printParseTime: Boolean = true,
-  skipTest: Boolean = false,
-  skipPart1: Boolean = false,
-  skipPart2: Boolean = false,
+  fun run(
+    header: String? = null,
+    printParseTime: Boolean = true,
+    skipTest: Boolean = true,
+    skipPart1: Boolean = false,
+    skipPart2: Boolean = false,
   ) {
     val parse = parser
+    val day = name.lowercase(Locale.US).removePrefix("day").split('_')[0].trimStart('0').trim().toInt()
+    val year = readFile("year").trim().toInt()
     val (input, parseTime) = measureTimedValue {
-      parse(readFile(name))
+      parse(readInput(year, day))
     }
-    val part2Input = parse(readFile(name))
+    val part2Input = parse(readInput(year, day))
 
     if (!header.isNullOrBlank()) {
       println("==== $header ====")
