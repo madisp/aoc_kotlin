@@ -38,7 +38,7 @@ object Day25 : Solution<List<String>>() {
         } else if (bit == 4L) {
           append("-")
           num += 5
-        } else if {
+        } else {
           append(bit.toString())
         }
         num /= 5L

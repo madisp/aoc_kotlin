@@ -6,8 +6,8 @@ pluginManagement {
     gradlePluginPortal()
   }
   plugins {
-    kotlin("jvm") version "1.7.21"
-    id("me.champeau.jmh") version "0.6.8"
+    kotlin("jvm") version "1.9.21"
+    id("me.champeau.jmh") version "0.7.2"
   }
 }
 
