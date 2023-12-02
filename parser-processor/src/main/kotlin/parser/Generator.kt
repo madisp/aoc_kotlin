@@ -107,7 +107,7 @@ private fun StringBuilder.emitField(
           append("${i}val ${node.name} = ${prop.type.fqcn}.valueOf(${inputExpr})\n")
         }
         TypeType.CLASS -> {
-          append("${i}val ${node.name} = parse${prop.type.name}(${inputExpr})\n")
+          append("${i}val ${node.name} = parse${prop.type.name.substringAfterLast('.')}(${inputExpr})\n")
         }
         else -> {
           throw IllegalStateException("Unsupported parsing type ${prop.type} for $type.${node.name}")
@@ -140,7 +140,7 @@ private fun StringBuilder.emitRepeat(
       } else if (argType.fqcn == "kotlin.String") {
         // nothing to do
       } else {
-        append("$i  .map { parse${argType.name}(it) }\n")
+        append("$i  .map { parse${argType.name.substringAfterLast('.')}(it) }\n")
       }
     }
 

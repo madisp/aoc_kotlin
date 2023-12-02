@@ -7,21 +7,24 @@ import parser.TypeType
 class TypeBuilder(
   val file: KSFile,
   val type: TypeType,
-  val name: String,
+  val qualifiedName: String,
   val packageName: String? = null,
   // following fields are filled later:
   var pattern: Node? = null,
   val props: MutableMap<String, PropBuilder> = mutableMapOf(),
   val genericArguments: MutableList<TypeBuilder> = mutableListOf(),
 ) {
-  fun build(): Type = Type(
-    type = type,
-    name = name,
-    packageName = packageName,
-    pattern = pattern,
-    props = props.mapValues { (_, p) ->  p.build() },
-    genericArguments = genericArguments.map { it.build() },
-  )
+  fun build(): Type {
+    val name = if (packageName == null) qualifiedName else qualifiedName.substring(packageName.length + 1)
+    return Type(
+      type = type,
+      name = name,
+      packageName = packageName,
+      pattern = pattern,
+      props = props.mapValues { (_, p) -> p.build() },
+      genericArguments = genericArguments.map { it.build() },
+    )
+  }
 }
 
 class PropBuilder(

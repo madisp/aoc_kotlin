@@ -102,14 +102,14 @@ class ParserProcessor(
           TypeBuilder(
             file,
             TypeType.CLASS,
-            decl.simpleName.asString(),
+            decl.qualifiedName?.asString() ?: decl.simpleName.asString(),
             decl.packageName.asString().takeIf { it.isNotBlank() },
             genericArguments = propType.arguments.mapNotNull { typeArg ->
               val typeArgType = typeArg.type?.resolve() ?: return@mapNotNull null
               TypeBuilder(
                 file,
                 if (Modifier.ENUM in typeArgType.declaration.modifiers) TypeType.ENUM else TypeType.CLASS,
-                typeArgType.declaration.simpleName.asString(),
+                typeArgType.declaration.qualifiedName?.asString() ?: typeArgType.declaration.simpleName.asString(),
                 typeArgType.declaration.packageName.asString().takeIf { it.isNotBlank() },
               )
             }.toMutableList(),
