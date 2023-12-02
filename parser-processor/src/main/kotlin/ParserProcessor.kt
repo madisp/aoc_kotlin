@@ -1,4 +1,3 @@
-import com.google.devtools.ksp.getConstructors
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
@@ -18,8 +17,8 @@ import parser.parse
 import java.io.PrintWriter
 
 class ParserProcessor(
-  val log: KSPLogger,
-  val codeGenerator: CodeGenerator,
+  private val log: KSPLogger,
+  private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
   override fun process(resolver: Resolver): List<KSAnnotated> {
     val syms = resolver.getSymbolsWithAnnotation("utils.Parse")
@@ -79,7 +78,7 @@ class ParserProcessor(
         return null
       }
 
-      log.warn("Processing ${classDeclaration.qualifiedName?.asString()}")
+      log.info("Processing ${classDeclaration.qualifiedName?.asString()}")
 
       val tb = TypeBuilder(
         file,
@@ -91,11 +90,8 @@ class ParserProcessor(
       classDeclaration.annotations.extractPattern(log) { tb.pattern = parse(it) }
 
       primaryCtor.parameters.forEach { prop ->
-        log.warn("prop: $prop")
-
         val propType = prop.type.resolve()
         val decl = propType.declaration
-        log.warn("decl: ${propType.declaration.javaClass}")
 
         if (decl !is KSClassDeclaration) {
           throw IllegalStateException("prop $prop is not a class for type $classDeclaration")
@@ -121,7 +117,6 @@ class ParserProcessor(
         )
 
         prop.annotations.extractPattern(log) {
-          log.warn("Attaching pattern $it to prop $name")
           pb.pattern = parse(it)
         }
 
@@ -132,7 +127,6 @@ class ParserProcessor(
         val pb = tb.props[prop.simpleName.asString()] ?: return@forEach
 
         prop.annotations.extractPattern(log) {
-          log.warn("Attaching pattern $it to prop ${prop.simpleName.asString()}")
           pb.pattern = parse(it)
         }
       }
@@ -145,9 +139,7 @@ class ParserProcessor(
 }
 
 private fun Sequence<KSAnnotation>.extractPattern(log: KSPLogger, act: (String) -> Unit) {
-  log.warn("Looking for anno...")
   forEach { anno ->
-    log.warn("anno: $anno")
     if (anno.annotationType.resolve().declaration.qualifiedName?.asString() == "utils.Parse") {
       anno.arguments.first { it.name?.getShortName() == "pattern" }.value?.toString()?.let(act)
     }
