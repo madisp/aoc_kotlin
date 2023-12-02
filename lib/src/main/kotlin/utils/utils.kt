@@ -1,6 +1,7 @@
 package utils
 
 import java.io.File
+import java.io.IOException
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -34,6 +35,11 @@ fun readInput(year: Int, day: Int): String {
       .header("Cookie", cookie)
       .build()
     val resp = client.send(request, HttpResponse.BodyHandlers.ofInputStream())
+
+    if (resp.statusCode() >= 400) {
+      throw IOException("Request to AoC servers failed, status=${resp.statusCode()}")
+    }
+
     resp.body().use { input ->
       file.outputStream().use { output ->
         input.copyTo(output, bufferSize = 8192)
