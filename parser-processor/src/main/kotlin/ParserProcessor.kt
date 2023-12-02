@@ -79,10 +79,12 @@ class ParserProcessor(
         return null
       }
 
+      log.warn("Processing ${classDeclaration.qualifiedName?.asString()}")
+
       val tb = TypeBuilder(
         file,
         TypeType.CLASS,
-        classDeclaration.simpleName.asString(),
+        classDeclaration.qualifiedName?.asString() ?: classDeclaration.simpleName.asString(),
         classDeclaration.packageName.asString().takeIf { it.isNotBlank() },
       )
 

@@ -134,7 +134,14 @@ private fun StringBuilder.emitRepeat(
   val prop = type.props[field] ?: throw IllegalStateException("No prop $field in $type")
   when (prop.type.fqcn) {
     "kotlin.collections.List" -> {
-      append("$i  .map { parse${prop.type.genericArguments.first().name}(it) }\n")
+      val argType = prop.type.genericArguments.first()
+      if (argType.fqcn == "kotlin.Int") {
+        append("$i  .map { it.toInt() }\n")
+      } else if (argType.fqcn == "kotlin.String") {
+        // nothing to do
+      } else {
+        append("$i  .map { parse${argType.name}(it) }\n")
+      }
     }
 
     "kotlin.collections.Map" -> {
@@ -167,7 +174,15 @@ private fun StringBuilder.emitRepeat(
 
 fun generateParser(type: Type): String {
   return buildString {
-    append("fun parse${type.name}(input: String): $type {\n")
+
+    val funName = if ('.' in type.name) {
+      val sep = type.name.lastIndexOf('.')
+      "${type.name.substring(0, sep)}.parse${type.name.substring(sep + 1)}"
+    } else {
+      "parse${type.name}"
+    }
+
+    append("fun $funName(input: String): $type {\n")
 
     emitParseBody(1, type)
 

@@ -1,3 +1,4 @@
+import utils.Parse
 import utils.Parser
 import utils.Solution
 import utils.mapItems
@@ -8,17 +9,11 @@ fun main() {
 
 object Day16 : Solution<List<Day16.Valve>>() {
   override val name = "day16"
-  override val parser = Parser.lines.mapItems { line ->
-    val (name, flowRate, valves) = line.split("Valve ",
-      " has flow rate=",
-      "; tunnels lead to valves ",
-      "; tunnel leads to valve ")
-      .map { it.trim() }
-      .filter { it.isNotBlank() }
+  override val parser = Parser.lines
+    .mapItems { it.replace("tunnel leads to valve", "tunnels lead to valves") }
+    .mapItems(::parseValve)
 
-    Valve(name, flowRate.toInt(), valves.split(", "))
-  }
-
+  @Parse("Valve {name} has flow rate={flowRate}; tunnels lead to valves {r ', ' out}")
   data class Valve(val name: String, val flowRate: Int, val out: List<String>)
 
   data class CacheKeyP1(val releasedPressure: Int, val curTime: Int, val curNode: String, val openValves: String)
