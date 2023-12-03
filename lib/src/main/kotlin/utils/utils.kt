@@ -7,6 +7,7 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
+import java.util.Arrays
 
 object Utils
 
@@ -83,6 +84,27 @@ operator fun <T> List<T>.times(other: List<T>): List<Pair<T, T>> {
     other.map { second ->
       first to second
     }
+  }
+}
+
+val <T> List<T>.permutations: Sequence<List<T>> get() {
+  val indices = IntArray(size) { it }
+  val list = MutableList(size) { this[it] }
+  return generateSequence(list as List<T>) {
+    val f = (size - 2 downTo 0).firstOrNull { indices[it] < indices[it + 1] } ?: return@generateSequence null
+
+    val n = (f + 1 until size).filter { indices[it] > indices[f] }.minBy { indices[it] }
+
+    indices[f] = indices[n].also {
+      indices[n] = indices[f]
+    }
+
+    Arrays.sort(indices, f + 1, size)
+
+    list.clear()
+    indices.mapTo(list) { this[it] }
+
+    list
   }
 }
 

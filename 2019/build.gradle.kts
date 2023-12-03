@@ -1,10 +1,14 @@
 plugins {
   kotlin("jvm")
   id("me.champeau.jmh")
+  id("com.google.devtools.ksp")
 }
 
 dependencies {
   implementation(project(":lib"))
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC")
+
+  ksp(project(":parser-processor"))
 
   testImplementation("junit:junit:4.13.2")
   testImplementation("com.google.truth:truth:1.1.3")

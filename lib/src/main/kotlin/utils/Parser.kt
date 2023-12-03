@@ -10,7 +10,9 @@ fun interface Parser<In> {
   companion object {
     val lines = Parser { it.split('\n').map { it.trim() }.filter(String::isNotBlank) }
     val ints = Parser { it.trim().split(',').map { num -> num.trim().toInt() } }
+    val longs = Parser { it.trim().split(',').map { num -> num.trim().toLong() } }
     val intLines = lines.mapItems { it.toInt() }
+    val longLines = lines.mapItems { it.toLong() }
     val chars = Parser { it.trim().toCharArray().toList() }
     val blocks = Parser { it.split("\n\n").map(String::trim).filter(String::isNotBlank) }
     val digitGrid = IntGrid.singleDigits
