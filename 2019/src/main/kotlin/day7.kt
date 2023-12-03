@@ -29,7 +29,7 @@ object Day7 : Solution<LongArray>() {
               chan.send(phase)
               chan.send(acc)
             }
-            run(chan).first()
+            run(chan::receive).first()
           }
         }
       }
@@ -46,7 +46,7 @@ object Day7 : Solution<LongArray>() {
             load(input)
           }
           val output = withContext(Dispatchers.Default) {
-            computer.run(chan)
+            computer.run(chan::receive)
           }
 
           Triple(chan, computer, output)

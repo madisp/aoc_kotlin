@@ -16,18 +16,14 @@ object Day9 : Solution<LongArray>() {
   override fun part1(input: LongArray): Long = runBlocking {
     Computer().run {
       load(input)
-      val chan = Channel<Long>()
-      launch { chan.send(1) }
-      run(chan).last()
+      run(input = { 1L }).last()
     }
   }
 
   override fun part2(input: LongArray): Long = runBlocking {
     Computer().run {
       load(input)
-      val chan = Channel<Long>()
-      launch { chan.send(2) }
-      run(chan).last()
+      run(input = { 2L }).last()
     }
   }
 }

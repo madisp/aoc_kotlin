@@ -1,4 +1,3 @@
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -20,7 +19,7 @@ class Computer(
     program.copyInto(memory, destinationOffset = address)
   }
 
-  suspend fun run(input: Channel<Long>, debug: Boolean = false): Flow<Long> = flow {
+  suspend fun run(input: suspend () -> Long = { 0L }, debug: Boolean = false): Flow<Long> = flow {
     while (true) {
       val insn = decode(memory, ip)
 
@@ -36,7 +35,7 @@ class Computer(
           memory[o(register, insn, 2)] = v(memory, register, insn, 0) * v(memory, register, insn, 1)
         }
         Op.GET -> {
-          memory[o(register, insn, 0)] = input.receive()
+          memory[o(register, insn, 0)] = input()
         }
         Op.PUT -> {
           emit(v(memory, register, insn, 0))

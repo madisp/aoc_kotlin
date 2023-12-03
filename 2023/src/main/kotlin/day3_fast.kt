@@ -3,6 +3,7 @@ import utils.IntGrid
 import utils.Parser
 import utils.Solution
 import utils.Vec2i
+import utils.borderWith
 
 fun main() {
   Day3_fast.run(skipTest = false)
@@ -23,7 +24,7 @@ object Day3All {
 
 object Day3_fast : Solution<Grid<Char>>() {
   override val name = "day3"
-  override val parser = Parser.charGrid
+  override val parser = Parser.charGrid.map { it.borderWith('.') }
 
   override fun part1(input: Grid<Char>): Int {
     var sum = 0

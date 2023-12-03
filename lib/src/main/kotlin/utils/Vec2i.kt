@@ -18,6 +18,10 @@ data class Vec2i(val x: Int, val y: Int) {
     }
   }
 
+  fun rotateCw() = Vec2i(y, -x)
+
+  fun rotateCcw() = Vec2i(-y, x)
+
   operator fun plus(other: Vec2i) = Vec2i(this.x + other.x, this.y + other.y)
 
   operator fun div(scalar: Int) = Vec2i(this.x / scalar, this.y / scalar)

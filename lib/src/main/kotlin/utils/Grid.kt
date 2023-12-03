@@ -45,8 +45,8 @@ open class Grid<T>(
   val cells: Collection<Pair<Vec2i, T>> get() = coords.map { it to this[it] }
   val values: Collection<T> get() = arr.asList()
 
-  val columns: Collection<Column<T>> get() = (0 until width).map { this[it] }
-  val rows: Collection<Row<T>> get() = (0 until height).map { getRow(it) }
+  open val columns: Collection<Column<T>> get() = (0 until width).map { this[it] }
+  open val rows: Collection<Row<T>> get() = (0 until height).map { getRow(it) }
 
   operator fun contains(c: Vec2i) = c.x in (0 until width) && c.y in (0 until height)
 
@@ -93,6 +93,11 @@ inline fun <reified T> Grid<T>.borderWith(value: T, borderWidth: Int = 1): Grid<
       this[x - borderWidth][y - borderWidth]
     }
   }
+}
+
+inline fun <reified T> Grid<T>.toMutable(): MutableGrid<T> {
+  val arr = Array(width * height) { this[Vec2i(it % width, it / width)] }
+  return MutableGrid(arr, width, height)
 }
 
 inline fun <T, reified R> Grid<T>.map(fn: (Vec2i, T) -> R) = createGrid(width, height) { pos -> fn(pos, this[pos.x][pos.y]) }

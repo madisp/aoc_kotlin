@@ -1,5 +1,3 @@
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import utils.Parser
 import utils.Solution
@@ -17,7 +15,7 @@ object Day2 : Solution<LongArray>() {
     cpu.load(input)
     cpu.memory[1] = 12
     cpu.memory[2] = 2
-    cpu.run(Channel())
+    cpu.run()
 
     return@runBlocking cpu.memory[0]
   }
@@ -32,7 +30,7 @@ object Day2 : Solution<LongArray>() {
         cpu.load(input)
         cpu.memory[1] = x
         cpu.memory[2] = y
-        cpu.run(Channel())
+        cpu.run()
         if (cpu.memory[0] == 19690720L) {
           return@runBlocking x * 100 + y
         }
