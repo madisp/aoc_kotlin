@@ -70,7 +70,7 @@ open class Grid<T>(
     inline fun <reified T> empty() = Grid<T>(emptyArray(), 0, 0)
 
     fun chars(padChar: Char = ' ') = Parser { input ->
-      val lines = input.split("\n").filter { it.isNotBlank() }
+      val lines = input.split("\n").filter { it.isNotEmpty() }
       val height = lines.size
       require(height > 0)
 
