@@ -23,16 +23,16 @@ object Day3 : Solution<Grid<Char>>() {
 
   private fun partNums(grid: Grid<Char>): Set<PartNum> {
     val nums = grid.cells.filter { (p, c) ->
-      c.isDigit() && p.surrounding.any { it in grid.coords && grid[it].isSymbol() }
+        c.isDigit() && p.surrounding.any { it in grid.coords && grid[it].isSymbol() }
       }.map { (p, _) ->
-      val start = (p.x downTo 0).takeWhile { x -> grid[x][p.y].isDigit() }.last()
-      val end = (p.x until grid.width).takeWhile { x -> grid[x][p.y].isDigit() }.last()
-      val chars = (start..end).map { x -> grid[x][p.y] }
-      PartNum(
-        chars.joinToString("").toInt(),
-        Vec2i(start, p.y),
-        Vec2i(end, p.y),
-      )
+        val start = (p.x downTo 0).takeWhile { x -> grid[x][p.y].isDigit() }.last()
+        val end = (p.x until grid.width).takeWhile { x -> grid[x][p.y].isDigit() }.last()
+        val chars = (start..end).map { x -> grid[x][p.y] }
+        PartNum(
+          chars.joinToString("").toInt(),
+          Vec2i(start, p.y),
+          Vec2i(end, p.y),
+        )
       }.toSet()
     return nums
   }
