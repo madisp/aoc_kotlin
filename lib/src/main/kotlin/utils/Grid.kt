@@ -14,13 +14,13 @@ open class Grid<T>(
   val height: Int
 ) {
 
-  open class Column<T>(private val grid: Grid<T>, private val x: Int) {
+  open class Column<T>(private val grid: Grid<T>, val x: Int) {
     operator fun get(y: Int) = grid.get(x, y)
     val cells: Collection<Pair<Vec2i, T>> get() = (0 until grid.height).map { y -> Vec2i(x, y) to grid[x][y] }
     val values: Collection<T> get() = (0 until grid.height).map { y -> grid[x][y] }
   }
 
-  open class Row<T>(private val grid: Grid<T>, private val y: Int) {
+  open class Row<T>(private val grid: Grid<T>, val y: Int) {
     operator fun get(x: Int) = grid.get(x, y)
     val cells: Collection<Pair<Vec2i, T>> get() = (0 until grid.width).map { x -> Vec2i(x, y) to grid[x][y] }
     val values: Collection<T> get() = (0 until grid.width).map { x -> grid[x][y] }
@@ -70,7 +70,7 @@ open class Grid<T>(
     inline fun <reified T> empty() = Grid<T>(emptyArray(), 0, 0)
 
     fun chars(padChar: Char = ' ') = Parser { input ->
-      val lines = input.split("\n")
+      val lines = input.split("\n").filter { it.isNotBlank() }
       val height = lines.size
       require(height > 0)
 
