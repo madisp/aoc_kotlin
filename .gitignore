@@ -3,5 +3,5 @@
 /.gradle/
 *.iml
 */build/
-*/src/main/resources
+*/src/main/resources/day*.txt
 cookie.txt
