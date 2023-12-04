@@ -93,21 +93,21 @@ private fun StringBuilder.emitField(
   val prop = type.props[node.name] ?: throw IllegalStateException("No prop ${node.name} in $type")
   when (prop.type.fqcn) {
     "kotlin.String" -> {
-      append("${i}val ${node.name} = ${inputExpr}\n")
+      append("${i}val ${node.name} = ${inputExpr}.trim()\n")
     }
 
     "kotlin.Int" -> {
-      append("${i}val ${node.name} = ${inputExpr}.toInt()\n")
+      append("${i}val ${node.name} = ${inputExpr}.trim().toInt()\n")
     }
 
     // fall back to parser
     else -> {
       when (prop.type.type) {
         TypeType.ENUM -> {
-          append("${i}val ${node.name} = ${prop.type.fqcn}.valueOf(${inputExpr})\n")
+          append("${i}val ${node.name} = ${prop.type.fqcn}.valueOf(${inputExpr}.trim())\n")
         }
         TypeType.CLASS -> {
-          append("${i}val ${node.name} = parse${prop.type.name.substringAfterLast('.')}(${inputExpr})\n")
+          append("${i}val ${node.name} = parse${prop.type.name.substringAfterLast('.')}(${inputExpr}.trim())\n")
         }
         else -> {
           throw IllegalStateException("Unsupported parsing type ${prop.type} for $type.${node.name}")
@@ -135,12 +135,17 @@ private fun StringBuilder.emitRepeat(
   when (prop.type.fqcn) {
     "kotlin.collections.List" -> {
       val argType = prop.type.genericArguments.first()
-      if (argType.fqcn == "kotlin.Int") {
-        append("$i  .map { it.toInt() }\n")
-      } else if (argType.fqcn == "kotlin.String") {
-        // nothing to do
-      } else {
-        append("$i  .map { parse${argType.name.substringAfterLast('.')}(it) }\n")
+      append("$i  .filter { it.isNotBlank() }\n")
+      when (argType.fqcn) {
+          "kotlin.Int" -> {
+            append("$i  .map { it.trim().toInt() }\n")
+          }
+          "kotlin.String" -> {
+            append("$i  .map { it.trim() }\n")
+          }
+          else -> {
+            append("$i  .map { parse${argType.name.substringAfterLast('.')}(it.trim()) }\n")
+          }
       }
     }
 

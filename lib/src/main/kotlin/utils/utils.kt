@@ -216,6 +216,17 @@ fun <T> Collection<T>.split(): Pair<Collection<T>, Collection<T>> {
 
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
 
+fun Int.pow(n: Int): Int {
+  var value = 1
+  require (n >= 0) {
+    "Cannot do int pow with negative exponent"
+  }
+  repeat(n) {
+    value *= 2
+  }
+  return value
+}
+
 fun Int.wrap(max: Int): Int {
   return if (this > 0) {
     this % max
