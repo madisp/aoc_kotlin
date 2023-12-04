@@ -1,9 +1,7 @@
 import utils.Grid
 import utils.IntGrid
-import utils.Parser
 import utils.Solution
 import utils.Vec2i
-import utils.borderWith
 
 fun main() {
   Day3_fast.run(skipTest = false)
@@ -24,7 +22,7 @@ object Day3All {
 
 object Day3_fast : Solution<Grid<Char>>() {
   override val name = "day3"
-  override val parser = Parser.charGrid.map { it.borderWith('.') }
+  override val parser = Grid.chars(oobBehaviour = Grid.OobBehaviour.Default('.'))
 
   override fun part1(input: Grid<Char>): Int {
     var sum = 0
@@ -38,23 +36,21 @@ object Day3_fast : Solution<Grid<Char>>() {
         if (c.isDigit()) {
           if (start == null) {
             // left here
-            if (p.x - 1 >= 0) {
-              if (input[p.x - 1][p.y].isSymbol()) {
-                isAdjacent = true
-              } else if (p.y - 1 >= 0 && input[p.x - 1][p.y - 1].isSymbol()) {
-                isAdjacent = true
-              } else if (p.y + 1 < input.height - 1 && input[p.x - 1][p.y + 1].isSymbol()) {
-                isAdjacent = true
-              }
+            if (input[p.x - 1][p.y].isSymbol()) {
+              isAdjacent = true
+            } else if (p.y - 1 >= 0 && input[p.x - 1][p.y - 1].isSymbol()) {
+              isAdjacent = true
+            } else if (p.y + 1 < input.height - 1 && input[p.x - 1][p.y + 1].isSymbol()) {
+              isAdjacent = true
             }
             start = p
           }
           curNum = curNum * 10 + (c - '0')
           // up and down here
           if (!isAdjacent) {
-            if (p.y - 1 >= 0 && input[p.x][p.y - 1].isSymbol()) {
+            if (input[p.x][p.y - 1].isSymbol()) {
               isAdjacent = true
-            } else if (p.y + 1 < input.height - 1 && input[p.x][p.y + 1].isSymbol()) {
+            } else if (input[p.x][p.y + 1].isSymbol()) {
               isAdjacent = true
             }
           }
@@ -64,9 +60,9 @@ object Day3_fast : Solution<Grid<Char>>() {
             if (!isAdjacent) {
               if (input[p.x][p.y].isSymbol()) {
                 isAdjacent = true
-              } else if (p.y - 1 >= 0 && input[p.x][p.y - 1].isSymbol()) {
+              } else if (input[p.x][p.y - 1].isSymbol()) {
                 isAdjacent = true
-              } else if (p.y + 1 < input.height - 1 && input[p.x][p.y + 1].isSymbol()) {
+              } else if (input[p.x][p.y + 1].isSymbol()) {
                 isAdjacent = true
               }
             }
