@@ -1,7 +1,7 @@
 import utils.Parser
 import utils.Solution
 import utils.mapItems
-import utils.pow
+import utils.pow2
 
 fun main() {
   Day4Imp.run(skipTest = false)
@@ -22,7 +22,7 @@ object Day4Imp : Solution<List<Day4Imp.Card>>() {
   ) {
     val score: Pair<Int, Int> get() {
       val count = numbers.count { winning[it] }
-      val score = if (count == 0) 0 else 2.pow(count - 1)
+      val score = if (count == 0) 0 else pow2(count - 1)
       return count to score
     }
   }

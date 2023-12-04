@@ -216,13 +216,15 @@ fun <T> Collection<T>.split(): Pair<Collection<T>, Collection<T>> {
 
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
 
+inline fun pow2(n: Int): Int = 2 shl (n - 1)
+
 fun Int.pow(n: Int): Int {
   var value = 1
   require (n >= 0) {
     "Cannot do int pow with negative exponent"
   }
   repeat(n) {
-    value *= 2
+    value *= this
   }
   return value
 }

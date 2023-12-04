@@ -2,7 +2,7 @@ import utils.Parse
 import utils.Parser
 import utils.Solution
 import utils.mapItems
-import utils.pow
+import utils.pow2
 
 fun main() {
   Day4.run(skipTest = false)
@@ -20,7 +20,7 @@ object Day4 : Solution<List<Day4.Card>>() {
   ) {
     val score: Pair<Int, Int> get() {
       val count = (winning.toSet() intersect numbers.toSet()).count()
-      val score = if (count == 0) 0 else 2.pow(count - 1)
+      val score = if (count == 0) 0 else pow2(count - 1)
       return count to score
     }
   }
