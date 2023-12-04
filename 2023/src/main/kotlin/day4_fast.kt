@@ -32,7 +32,6 @@ object Day4Imp : Solution<List<Day4Imp.Card>>() {
   }
 
   override fun part2(input: List<Card>): Int {
-    var score = 0L
     val counts = IntArray(input.size) { 1 }
 
     input.indices.forEach { i ->
@@ -41,12 +40,6 @@ object Day4Imp : Solution<List<Day4Imp.Card>>() {
       (0 until count).forEach {
         counts[i + it + 1] += counts[i]
       }
-
-      val cardScore = if (count == 0) 0 else {
-        counts[i].pow(count - 1)
-      }
-
-      score += cardScore
     }
 
     return counts.sum()
