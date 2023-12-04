@@ -13,4 +13,14 @@ class CollectionsTest {
       "ABC", "ACB", "BAC", "BCA", "CAB", "CBA"
     ).inOrder()
   }
+
+  @Test
+  fun testCombinations() {
+    val list = listOf('A', 'B', 'C')
+    val combinations = list.combinations.map { it.joinToString(separator = "") }.toList()
+
+    assertThat(combinations).containsExactly(
+      "", "C", "B", "BC", "A", "AC", "AB", "ABC"
+    ).inOrder()
+  }
 }

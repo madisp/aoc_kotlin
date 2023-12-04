@@ -101,7 +101,7 @@ class ParserProcessor(
         val pb = PropBuilder(
           TypeBuilder(
             file,
-            TypeType.CLASS,
+            if (Modifier.ENUM in decl.modifiers) TypeType.ENUM else TypeType.CLASS,
             decl.qualifiedName?.asString() ?: decl.simpleName.asString(),
             decl.packageName.asString().takeIf { it.isNotBlank() },
             genericArguments = propType.arguments.mapNotNull { typeArg ->

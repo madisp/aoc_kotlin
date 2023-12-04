@@ -90,7 +90,7 @@ operator fun <T> List<T>.times(other: List<T>): List<Pair<T, T>> {
 val <T> List<T>.permutations: Sequence<List<T>> get() {
   val indices = IntArray(size) { it }
   val list = MutableList(size) { this[it] }
-  return generateSequence(list as List<T>) {
+  return generateSequence(list as List<T>) { _ ->
     val f = (size - 2 downTo 0).firstOrNull { indices[it] < indices[it + 1] } ?: return@generateSequence null
 
     val n = (f + 1 until size).filter { indices[it] > indices[f] }.minBy { indices[it] }
@@ -105,6 +105,32 @@ val <T> List<T>.permutations: Sequence<List<T>> get() {
     indices.mapTo(list) { this[it] }
 
     list
+  }
+}
+
+val <T> List<T>.combinations: Sequence<List<T>> get() {
+  val list = MutableList(size) { this[it] }
+  val take = BooleanArray(size) { false }
+  return generateSequence(emptyList()) { _ ->
+    val lastFalse = take.lastIndexOf(false)
+    if (lastFalse == -1) {
+      return@generateSequence null
+    }
+
+    // flip lastFalse to true, following items to false
+    take[lastFalse] = true
+    (lastFalse + 1 until take.size).forEach {
+      take[it] = false
+    }
+
+    list.clear()
+    (0 .. lastFalse).forEach { i ->
+      if (take[i]) {
+        list.add(this[i])
+      }
+    }
+
+    return@generateSequence list
   }
 }
 

@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="true" type="JetRunConfigurationType">
     <shortenClasspath name="NONE" />
-    <option name="VM_PARAMETERS" value="-Xms16g -Xmx16g -XX:+AlwaysPreTouch" />
+    <option name="VM_PARAMETERS" value="-Xms16g -Xmx16g" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
