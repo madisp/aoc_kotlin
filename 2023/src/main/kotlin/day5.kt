@@ -33,15 +33,9 @@ object Day5 : Solution<Day5.Input>() {
     val length: Long,
   )
 
-  private fun map(num: Long, rule: MapRule): Long {
-    require (num in rule.srcRangeStart until (rule.srcRangeStart + rule.length)) {
-      "$num out of range for $rule!"
-    }
-    return (num - rule.srcRangeStart + rule.dstRangeStart)
-  }
-
   private fun mapRange(range: LongRange, mapRule: MapRule): LongRange {
-    return map(range.first, mapRule) .. map(range.last, mapRule)
+    val off = mapRule.dstRangeStart - mapRule.srcRangeStart
+    return range.first + off .. range.last + off
   }
 
   private fun applyRule(range: LongRange, mapRule: MapRule): Pair<LongRange?, List<LongRange>> {
