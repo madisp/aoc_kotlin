@@ -53,9 +53,8 @@ object Day5 : Solution<Day5.Input>() {
   private tailrec fun solve(
     state: String,
     nums: List<LongRange>,
-    mapping: Map<String, RuleTable>,
   ): List<LongRange> {
-    val map = mapping[state] ?: return nums
+    val map = input.rules[state] ?: return nums
 
     val newNums = map.rules.fold(emptyList<LongRange>() to nums) { (mapped, unmapped), rule ->
       val applied = unmapped.map { applyRule(it, rule) }
@@ -64,16 +63,16 @@ object Day5 : Solution<Day5.Input>() {
       newMapped to newUnmapped
     }
 
-    return solve(map.dst, newNums.first + newNums.second, mapping)
+    return solve(map.dst, newNums.first + newNums.second)
   }
 
   override fun part1(input: Input): Long {
     val inputRanges = input.nums.map { it..it }
-    return solve("seed", inputRanges, input.rules).minOf { it.first }
+    return solve("seed", inputRanges).minOf { it.first }
   }
 
   override fun part2(input: Input): Long {
     val inputRanges = input.nums.chunked(2).map { (start, len) -> start until (start + len) }
-    return solve("seed", inputRanges, input.rules).minOf { it.first }
+    return solve("seed", inputRanges).minOf { it.first }
   }
 }

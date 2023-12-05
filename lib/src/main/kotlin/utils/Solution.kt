@@ -10,11 +10,12 @@ import kotlin.time.measureTimedValue
  * - turns input In into answer Number for two parts
  * - provides a helper [run] method to run and benchmark a solution
  */
-abstract class Solution<In> {
+abstract class Solution<In : Any> {
   abstract val name: String
   abstract val parser: Parser<In>
   open fun part1(input: In): Any? = null
   open fun part2(input: In): Any? = null
+  lateinit var input: In
 
   fun run(
     header: String? = null,
@@ -26,7 +27,7 @@ abstract class Solution<In> {
     val parse = parser
     val day = name.lowercase(Locale.US).removePrefix("day").split('_')[0].trimStart('0').trim().toInt()
     val year = readFile("year").trim().toInt()
-    val (input, parseTime) = measureTimedValue {
+    val (part1Input, parseTime) = measureTimedValue {
       parse(readInput(year, day))
     }
     val part2Input = parse(readInput(year, day))
@@ -41,11 +42,15 @@ abstract class Solution<In> {
       println()
     }
 
-    if (!skipTest) {
-      val test1 = part1(parse(readFile("${name}_test"))).let {
+    val testInput = try { readFile("${name}_test") } catch (_: Throwable) { null }
+
+    if (!skipTest && testInput != null) {
+      input = parse(testInput)
+      val test1 = part1(input).let {
         if (it is String) "\n$it\n" else it
       }
-      val test2 = part2(parse(readFile("${name}_test"))).let {
+      input = parse(testInput)
+      val test2 = part2(input).let {
         if (it is String) "\n$it\n" else it
       }
       println("---- test ----")
@@ -61,6 +66,7 @@ abstract class Solution<In> {
     }
 
     if (!skipPart1) {
+      input = part1Input
       val (firstAnswer, firstTime) = measureTimedValue {
         part1(input)
       }
@@ -74,8 +80,9 @@ abstract class Solution<In> {
     }
 
     if (!skipPart2) {
+      input = part2Input
       val (secondAnswer, secondTime) = measureTimedValue {
-        part2(part2Input)
+        part2(input)
       }
       if (secondAnswer is String) {
         println("part2 ($secondTime):")
