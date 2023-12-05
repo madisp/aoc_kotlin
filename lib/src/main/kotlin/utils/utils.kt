@@ -237,6 +237,30 @@ fun Int.wrap(max: Int): Int {
   }
 }
 
+/**
+ * Split the range into a triplet of ranges:
+ * - intersection of the two ranges
+ * - list of ranges in the first range but not the second
+ */
+infix fun LongRange.tesselateWith(other: LongRange): Pair<LongRange?, List<LongRange>> {
+  val intersection = (maxOf(first, other.first) .. minOf(last, other.last))
+  val left = (first .. minOf(last, other.first - 1))
+  val right = (maxOf(first, other.last + 1) .. last)
+  return intersection.takeIf { !it.isEmpty() } to listOf(left, right).filter { !it.isEmpty() }
+}
+
+/**
+ * Split the range into a triplet of ranges:
+ * - intersection of the two ranges
+ * - list of ranges in the first range but not the second
+ */
+infix fun IntRange.tesselateWith(other: IntRange): Pair<IntRange?, List<IntRange>> {
+  val intersection = (maxOf(first, other.first) .. minOf(last, other.last))
+  val left = (first .. minOf(last, other.first - 1))
+  val right = (maxOf(first, other.last + 1) .. last)
+  return intersection.takeIf { !it.isEmpty() } to listOf(left, right).filter { !it.isEmpty() }
+}
+
 fun badInput(): Nothing {
   throw IllegalArgumentException("bad input")
 }

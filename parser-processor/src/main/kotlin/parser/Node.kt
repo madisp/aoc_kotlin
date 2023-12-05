@@ -65,6 +65,8 @@ private fun leaf(token: Token.Expression): LeafNode {
   }
 }
 
+private val String.escaped: String get() = replace("\n", "\\n")
+
 private fun readToken(input: String, index: Int): Pair<Token, Int> {
   val part = input.substring(index)
   return if (part.startsWith('{')) {
@@ -72,9 +74,9 @@ private fun readToken(input: String, index: Int): Pair<Token, Int> {
     if (end == -1) {
       throw Exception("Unclosed expression starting at $index")
     }
-    Token.Expression(part.substring(1, end)) to (index + end + 1)
+    Token.Expression(part.substring(1, end).escaped) to (index + end + 1)
   } else {
     val end = part.indexOf('{').takeIf { it != -1 } ?: part.length
-    Token.Literal(part.substring(0, end)) to (index + end)
+    Token.Literal(part.substring(0, end).escaped) to (index + end)
   }
 }

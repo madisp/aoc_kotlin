@@ -1,45 +1,37 @@
+import utils.Parse
 import utils.Parser
 import utils.Solution
-import utils.mapItems
+import utils.tesselateWith
 
 fun main() {
-  Day5.run(skipTest = false)
+  Day5.run()
 }
 
-object Day5 : Solution<Pair<List<Long>, List<Day5.SeedMap>>>() {
+object Day5 : Solution<Day5.Input>() {
   override val name = "day5"
-  override val parser = Parser.compound(
-    { it.removePrefix("seeds: ").split(' ').map { it.toLong() } },
-    Parser.blocks.mapItems { SeedMap.parse(it) }
+  override val parser = Parser { parseInput(it) }
+
+  @Parse("{state}s: {r ' ' nums}\n\n{r '\n\n' rules}")
+  data class Input(
+    val state: String,
+    val nums: List<Long>,
+    @Parse("{key}-{value}")
+    val rules: Map<String, RuleTable>,
   )
 
-  data class SeedMap(
-    val src: String,
+  // this is a bit ugly, line was {src}-to-{dst}, but we took {src} already as map key
+  @Parse("to-{dst} map:\n{r '\n' rules}")
+  data class RuleTable(
     val dst: String,
     val rules: List<MapRule>
-  ) {
-    companion object {
-      fun parse(input: String): SeedMap {
-        val lines = input.lines()
-        val (src, dst) = lines.first().trim().removeSuffix(" map:").split("-to-")
-        val rules = lines.drop(1).map { MapRule.parse(it.trim()) }
-        return SeedMap(src, dst, rules)
-      }
-    }
-  }
+  )
 
+  @Parse("{dstRangeStart} {srcRangeStart} {length}")
   data class MapRule(
     val dstRangeStart: Long,
     val srcRangeStart: Long,
     val length: Long,
-  ) {
-    companion object {
-      fun parse(input: String): MapRule {
-        val (dst, src, len) = input.split(" ").map { it.toLong() }
-        return MapRule(dst, src, len)
-      }
-    }
-  }
+  )
 
   private fun map(num: Long, rule: MapRule): Long {
     require (num in rule.srcRangeStart until (rule.srcRangeStart + rule.length)) {
@@ -52,81 +44,36 @@ object Day5 : Solution<Pair<List<Long>, List<Day5.SeedMap>>>() {
     return map(range.first, mapRule) .. map(range.last, mapRule)
   }
 
-  private fun mapTesselate(range: LongRange, mapRule: MapRule): Pair<LongRange?, List<LongRange>> {
+  private fun applyRule(range: LongRange, mapRule: MapRule): Pair<LongRange?, List<LongRange>> {
     val rule = mapRule.srcRangeStart until (mapRule.srcRangeStart + mapRule.length)
-
-    if (range.first > rule.last || range.last < rule.first) {
-      // case 1: nothing mapped
-      // range:            |------|
-      // rule:  |------|
-      // return mapped:null unmapped:|-------|
-      return null to listOf(range)
-    } else if (range.first in rule && range.last in rule) {
-      // case 2: everything mapped
-      // range:   |--|
-      // rule:  |------|
-      // return mapped:|--| unmapped:null
-      return mapRange(range, mapRule) to emptyList()
-    } else if (range.first < rule.first && range.last > rule.last) {
-      // case 3: something mapped
-      // range: |---------|
-      // rule:      |-|
-      // return mapped:|-| unmapped:|---|,|---|
-      return mapRange(rule, mapRule) to listOf(range.first until rule.first, rule.last + 1 .. range.last)
-    } else if (range.last > rule.last) {
-      // case 4: something mapped (split the range!)
-      // range:      |------|
-      // rule:  |------|
-      // return mapped:|-| unmapped:|------|
-      return mapRange(range.first .. rule.last, mapRule) to listOf(rule.last + 1 .. range.last)
-    } else {
-      // case 5: something mapped (split the range!)
-      // range: |------|
-      // rule:       |------|
-      // return mapped:|-| unmapped:|------|
-      return mapRange(rule.first .. range.last, mapRule) to listOf(range.first until rule.first)
-    }
+    val (intersect, unmapped) = range tesselateWith rule
+    return intersect?.let { mapRange(intersect, mapRule) } to unmapped
   }
 
-  private fun solveRanges(
-    inputMap: List<SeedMap>,
-    inputNums: List<LongRange>,
-  ): Long {
-    var nums = inputNums
-    val maps = inputMap.associateBy { it.src }
-    var state = "seed"
-    while (state != "location") {
-      val seedMap = maps[state]!!
+  private tailrec fun solve(
+    state: String,
+    nums: List<LongRange>,
+    mapping: Map<String, RuleTable>,
+  ): List<LongRange> {
+    val map = mapping[state] ?: return nums
 
-      val mapped = mutableListOf<LongRange>()
-      var unmapped = mutableListOf<LongRange>()
-      unmapped += nums
-
-      seedMap.rules.forEach { rule ->
-        val newUnmapped = mutableListOf<LongRange>()
-        unmapped.forEach { unmappedRange ->
-          val (ruleMapped, ruleUnmapped) = mapTesselate(unmappedRange, rule)
-          if (ruleMapped != null) {
-            mapped += ruleMapped
-          }
-          newUnmapped.addAll(ruleUnmapped)
-        }
-        unmapped = newUnmapped
-      }
-
-      nums = mapped + unmapped
-
-      state = seedMap.dst
+    val newNums = map.rules.fold(emptyList<LongRange>() to nums) { (mapped, unmapped), rule ->
+      val applied = unmapped.map { applyRule(it, rule) }
+      val newMapped = mapped + applied.mapNotNull { it.first }
+      val newUnmapped = applied.flatMap { it.second }
+      newMapped to newUnmapped
     }
 
-    return nums.minOf { it.first }
+    return solve(map.dst, newNums.first + newNums.second, mapping)
   }
 
-  override fun part1(input: Pair<List<Long>, List<SeedMap>>): Long {
-    return solveRanges(input.second, input.first.map { it .. it })
+  override fun part1(input: Input): Long {
+    val inputRanges = input.nums.map { it..it }
+    return solve("seed", inputRanges, input.rules).minOf { it.first }
   }
 
-  override fun part2(input: Pair<List<Long>, List<SeedMap>>): Long {
-    return solveRanges(input.second, input.first.chunked(2).map { (start, len) -> start until (start + len) })
+  override fun part2(input: Input): Long {
+    val inputRanges = input.nums.chunked(2).map { (start, len) -> start until (start + len) }
+    return solve("seed", inputRanges, input.rules).minOf { it.first }
   }
 }

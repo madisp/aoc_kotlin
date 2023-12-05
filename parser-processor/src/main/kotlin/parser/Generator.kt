@@ -100,6 +100,10 @@ private fun StringBuilder.emitField(
       append("${i}val ${node.name} = ${inputExpr}.trim().toInt()\n")
     }
 
+    "kotlin.Long" -> {
+      append("${i}val ${node.name} = ${inputExpr}.trim().toLong()\n")
+    }
+
     // fall back to parser
     else -> {
       when (prop.type.type) {
@@ -137,15 +141,18 @@ private fun StringBuilder.emitRepeat(
       val argType = prop.type.genericArguments.first()
       append("$i  .filter { it.isNotBlank() }\n")
       when (argType.fqcn) {
-          "kotlin.Int" -> {
-            append("$i  .map { it.trim().toInt() }\n")
-          }
-          "kotlin.String" -> {
-            append("$i  .map { it.trim() }\n")
-          }
-          else -> {
-            append("$i  .map { parse${argType.name.substringAfterLast('.')}(it.trim()) }\n")
-          }
+        "kotlin.Int" -> {
+          append("$i  .map { it.trim().toInt() }\n")
+        }
+        "kotlin.Long" -> {
+          append("$i  .map { it.trim().toLong() }\n")
+        }
+        "kotlin.String" -> {
+          append("$i  .map { it.trim() }\n")
+        }
+        else -> {
+          append("$i  .map { parse${argType.name.substringAfterLast('.')}(it.trim()) }\n")
+        }
       }
     }
 
