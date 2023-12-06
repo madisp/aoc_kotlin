@@ -20,7 +20,7 @@ abstract class Solution<In : Any> {
   fun run(
     header: String? = null,
     printParseTime: Boolean = true,
-    skipTest: Boolean = true,
+    skipTest: Boolean = false,
     skipPart1: Boolean = false,
     skipPart2: Boolean = false,
   ) {
