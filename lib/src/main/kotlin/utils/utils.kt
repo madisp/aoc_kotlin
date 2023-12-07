@@ -229,6 +229,17 @@ fun Int.pow(n: Int): Int {
   return value
 }
 
+fun Long.pow(n: Int): Long {
+  var value = 1L
+  require (n >= 0) {
+    "Cannot do long pow with negative exponent"
+  }
+  repeat(n) {
+    value *= this
+  }
+  return value
+}
+
 fun Int.wrap(max: Int): Int {
   return if (this > 0) {
     this % max
