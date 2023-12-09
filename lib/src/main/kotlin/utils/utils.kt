@@ -200,12 +200,25 @@ inline fun <reified T> Iterable<T>.takeWhileInclusive(predicate: (T) -> Boolean)
   return list
 }
 
+val String.parts: List<String> get() = split(" ").mapNotNull { it.trim().takeIf(String::isNotEmpty) }
+
 fun String.split(): Pair<String, String> {
   val mid = length / 2
   if (mid * 2 != length) {
     badInput()
   }
   return substring(0, mid) to substring(mid)
+}
+
+fun String.findAll(needle: String): List<Int> {
+  val out = mutableListOf<Int>()
+  var index = indexOf(needle, 0)
+  while (index < this.length && index != -1) {
+    out += index
+    index = indexOf(needle, index + needle.length)
+  }
+
+  return out
 }
 
 fun <T> Collection<T>.split(): Pair<Collection<T>, Collection<T>> {

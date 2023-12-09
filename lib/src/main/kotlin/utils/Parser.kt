@@ -11,6 +11,8 @@ fun interface Parser<In> {
     val lines = Parser { it.split('\n').map { it.trim() }.filter(String::isNotBlank) }
     val ints = Parser { it.trim().split(',').map { num -> num.trim().toInt() } }
     val longs = Parser { it.trim().split(',').map { num -> num.trim().toLong() } }
+    val spacedInts = Parser { it.parts.map(String::toInt) }
+    val spacedLongs = Parser { it.parts.map(String::toLong) }
     val intLines = lines.mapItems { it.toInt() }
     val longLines = lines.mapItems { it.toLong() }
     val chars = Parser { it.trim().toCharArray().toList() }
