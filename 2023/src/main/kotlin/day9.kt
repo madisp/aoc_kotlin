@@ -11,8 +11,8 @@ object Day9 : Solution<List<List<Long>>>() {
   override val parser = Parser.lines.mapItems { Parser.spacedLongs(it) }
 
   private fun expand(values: List<Long>): Pair<Long, Long> {
-    if (values.all { it == 0 }) {
-      return 0 to 0
+    if (values.all { it == 0L }) {
+      return 0L to 0L
     } else {
       val reduced = expand(values.windowed(2).map { (a, b) -> b - a })
       return values.last() + reduced.first to values.first() - reduced.second
