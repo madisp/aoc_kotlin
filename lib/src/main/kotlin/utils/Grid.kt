@@ -140,6 +140,12 @@ val Grid<Char>.debugString: String get() {
   return rows.map { it.values.joinToString("") }.joinToString("\n")
 }
 
+inline fun <reified T> Grid<T>.expand(factor: Int, fn: (Vec2i, T) -> Grid<T>): Grid<T> {
+  return createGrid(width * factor, height * factor) { p ->
+    fn(p / factor, this[p / factor])[p.x % factor][p.y % factor]
+  }
+}
+
 inline fun <reified T> Grid<T>.borderWith(value: T, borderWidth: Int = 1): Grid<T> {
   return createGrid<T>(width + borderWidth * 2, height + borderWidth * 2, oobBehaviour) { (x, y) ->
     if (x < borderWidth || y < borderWidth || x >= width + borderWidth || y >= height + borderWidth) {
