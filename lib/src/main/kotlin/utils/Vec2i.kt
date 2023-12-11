@@ -36,6 +36,8 @@ data class Vec2i(val x: Int, val y: Int) {
     return (abs(other.x - x) + abs(other.y - y))
   }
 
+  fun toVec2l() = Vec2l(x.toLong(), y.toLong())
+
   companion object {
     fun parse(str: String, delimiter: String = ","): Vec2i {
       return str.cut(delimiter, String::toInt, String::toInt, ::Vec2i)

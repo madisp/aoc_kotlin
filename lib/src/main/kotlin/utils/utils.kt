@@ -134,6 +134,49 @@ val <T> List<T>.combinations: Sequence<List<T>> get() {
   }
 }
 
+fun <T> List<T>.selections(count: Int): Sequence<List<T>> {
+  require (count <= size) {
+    "Cannot take $count items from a list of size $size"
+  }
+
+  val list = MutableList(size) { this[it] }
+  val take = BooleanArray(size) { it >= size - count }
+
+  return generateSequence(subList(size - count, size)) {
+    // find the last 1
+    val last = take.lastIndexOf(true)
+    // find the first preceding 0
+    val swap = take.asList().subList(0, last).lastIndexOf(false)
+    if (swap == -1) {
+      return@generateSequence null
+    }
+
+    // shift remaining items to the end of the list
+    val shiftCount = last - swap - 1
+    (size - shiftCount until size).forEach {
+      take[it] = true
+    }
+    (swap + 2 until size - shiftCount).forEach {
+      take[it] = false
+    }
+
+    take[swap] = true
+    take[swap + 1] = false
+
+    list.clear()
+    take.forEachIndexed { i, b ->
+      if (b) {
+        list.add(this[i])
+      }
+    }
+    return@generateSequence list
+  }
+}
+
+val <T> List<T>.pairs: Sequence<Pair<T, T>> get() {
+  return selections(2).map { (a, b) -> a to b }
+}
+
 fun <T> List<T>.product(other: List<T>): List<Pair<T, T>> = this * other
 
 inline fun <T, V> List<T>.product(other: List<T>, fn: (v1: T, v2: T) -> V): List<V> {

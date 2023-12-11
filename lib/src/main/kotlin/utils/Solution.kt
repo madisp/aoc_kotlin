@@ -13,9 +13,13 @@ import kotlin.time.measureTimedValue
 abstract class Solution<In : Any> {
   abstract val name: String
   abstract val parser: Parser<In>
+  lateinit var input: In
+
+  open fun part1(): Any? = part1(input)
+  open fun part2(): Any? = part2(input)
+
   open fun part1(input: In): Any? = null
   open fun part2(input: In): Any? = null
-  lateinit var input: In
 
   fun run(
     header: String? = null,
@@ -46,11 +50,11 @@ abstract class Solution<In : Any> {
 
     if (!skipTest && testInput != null) {
       input = parse(testInput)
-      val test1 = part1(input).let {
+      val test1 = part1().let {
         if (it is String) "\n$it\n" else it
       }
       input = parse(testInput)
-      val test2 = part2(input).let {
+      val test2 = part2().let {
         if (it is String) "\n$it\n" else it
       }
       println("---- test ----")
@@ -68,7 +72,7 @@ abstract class Solution<In : Any> {
     if (!skipPart1) {
       input = part1Input
       val (firstAnswer, firstTime) = measureTimedValue {
-        part1(input)
+        part1()
       }
       if (firstAnswer is String) {
         println("part1 ($firstTime):")
@@ -82,7 +86,7 @@ abstract class Solution<In : Any> {
     if (!skipPart2) {
       input = part2Input
       val (secondAnswer, secondTime) = measureTimedValue {
-        part2(input)
+        part2()
       }
       if (secondAnswer is String) {
         println("part2 ($secondTime):")
