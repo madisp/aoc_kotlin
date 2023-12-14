@@ -160,6 +160,10 @@ inline fun <reified T> Grid<T>.flipAxis(): Grid<T> {
   return createGrid<T>(height, width, oobBehaviour) { (x, y) -> this[y][x] }
 }
 
+inline fun <reified T> Grid<T>.rotateCw(): Grid<T> {
+  return createGrid<T>(height, width, oobBehaviour) { (x, y) -> this[y][width - x - 1] }
+}
+
 inline fun <reified T> Grid<T>.toMutable(): MutableGrid<T> {
   val arr = Array(width * height) { this[Vec2i(it % width, it / width)] }
   return MutableGrid(arr, width, height, oobBehaviour)
