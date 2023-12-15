@@ -13,8 +13,8 @@ object Day15 : Solution<List<String>>() {
     var reg = 0
     for (c in str) {
       reg += c.code
-      reg *= 17
-      reg %= 256
+      reg += (reg shl 4)
+      reg = reg and 255
     }
     return reg
   }
