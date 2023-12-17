@@ -1,4 +1,4 @@
-import utils.Grid
+import utils.IntGrid
 import utils.MutableIntGrid
 import utils.Parser
 import utils.Solution
@@ -8,11 +8,28 @@ fun main() {
   Day16Fast.run()
 }
 
-object Day16Fast : Solution<Grid<Char>>() {
+object Day16Fast : Solution<IntGrid>() {
   override val name = "day16"
-  override val parser = Parser.charGrid
+  override val parser = Parser.charGrid.map {
+    IntGrid(it.width, it.height) { p ->
+      when (it[p]) {
+        '.' -> AIR
+        '|' -> SPLITV
+        '-' -> SPLITH
+        '/' -> MIRROR_LR
+        '\\' -> MIRROR_RL
+        else -> throw IllegalArgumentException("Bad input char ${it[p]} at $p")
+      }
+    }
+  }
 
   private val directions = listOf(Vec2i.UP, Vec2i.DOWN, Vec2i.LEFT, Vec2i.RIGHT)
+
+  private const val AIR = 0
+  private const val SPLITV = 1
+  private const val SPLITH = 2
+  private const val MIRROR_LR = 3
+  private const val MIRROR_RL = 4
 
   private const val UP = 0
   private const val DOWN = 1
@@ -57,25 +74,25 @@ object Day16Fast : Solution<Grid<Char>>() {
 
       seen[nextLocation] = seen[nextLocation] or (1 shl direction)
       when (input[nextLocation]) {
-        '.' -> beams[beamsSize++] = nextLocationPacked or direction
-        '-' -> if (dir.y == 0) {
+        AIR -> beams[beamsSize++] = nextLocationPacked or direction
+        SPLITH -> if (dir.y == 0) {
           beams[beamsSize++] = nextLocationPacked or direction
         } else {
           beams[beamsSize++] = nextLocationPacked or LEFT
           beams[beamsSize++] = nextLocationPacked or RIGHT
         }
-        '|' -> if (dir.x == 0) {
+        SPLITV -> if (dir.x == 0) {
           beams[beamsSize++] = nextLocationPacked or direction
         } else {
           beams[beamsSize++] = nextLocationPacked or UP
           beams[beamsSize++] = nextLocationPacked or DOWN
         }
-        '\\' -> if (dir.y == 0) {
+        MIRROR_RL -> if (dir.y == 0) {
           beams[beamsSize++] = nextLocationPacked or cw[direction]
         } else {
           beams[beamsSize++] = nextLocationPacked or ccw[direction]
         }
-        '/' -> if (dir.y == 0) {
+        MIRROR_LR -> if (dir.y == 0) {
           beams[beamsSize++] = nextLocationPacked or ccw[direction]
         } else {
           beams[beamsSize++] = nextLocationPacked or cw[direction]
@@ -95,12 +112,13 @@ object Day16Fast : Solution<Grid<Char>>() {
     val inputs = mutableListOf<Int>()
     for (y in 0 until input.height) {
       inputs += (y + 1 shl 10) or RIGHT
-      inputs += (input.width + 1 shl 2) or (y + 1 shl 10) or RIGHT
+      inputs += (input.width + 1 shl 2) or (y + 1 shl 10) or LEFT
     }
     for (x in 0 until input.width) {
       inputs += (x + 1 shl 2) or DOWN
-      inputs += (x + 1 shl 2) or (input.height + 1 shl 10) or DOWN
+      inputs += (x + 1 shl 2) or (input.height + 1 shl 10) or UP
     }
+
     return inputs.maxOf { solve(it) }
   }
 }

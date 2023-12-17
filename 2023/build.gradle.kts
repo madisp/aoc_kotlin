@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
   implementation(project(":lib"))
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC")
 
   ksp(project(":parser-processor"))
 
