@@ -13,13 +13,8 @@ object Day18Fast : Solution<List<Day18.Line>>() {
   override val parser = Parser.lines.mapItems { Day18.parseLine(it) }
 
   private fun solve(insns: List<Day18.Instruction>): Long {
-    var y = 0L
-    var pts = 0L
-    var area = 0L
-    for (i in insns) {
-      area += i.direction.x * i.len * y
-      y += (i.direction.y * i.len)
-      pts += i.len
+    val (area, pts, _) = insns.fold(Triple(0L, 0L, 0L)) { (area, pts, y), i ->
+      Triple(area + i.direction.x * i.len * y, pts + i.len, y + i.direction.y * i.len)
     }
     return area.absoluteValue + (pts / 2) + 1
   }
@@ -28,8 +23,8 @@ object Day18Fast : Solution<List<Day18.Line>>() {
     val insns = input.map { line ->
       val direction = when (line.direction) {
         "R" -> Vec2l.RIGHT
-        "D" -> Vec2l.UP
-        "U" -> Vec2l.DOWN
+        "D" -> Vec2l.DOWN
+        "U" -> Vec2l.UP
         "L" -> Vec2l.LEFT
         else -> throw IllegalStateException("Unknown direction char ${line.direction}")
       }
