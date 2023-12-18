@@ -54,76 +54,45 @@ object Day18 : Solution<List<Day18.Line>>() {
     var sz = 0L
 
     sortedAreas.windowed(2).forEach { (top, bottom) ->
-      val topSz = countEdge(verts, hors, top)
-      val middleSz = if (bottom > top + 1) {
-        countInnerArea(verts, top + 1)
-      } else 0
-      sz += (topSz + middleSz * (bottom - top - 1))
+      sz += countFilled(verts, hors, top)
+      if (bottom > top + 1) {
+        sz += countFilled(verts, hors, top + 1) * (bottom - top - 1)
+      }
     }
 
     // add last bottom to the size
-    val bottomSz = countEdge(verts, hors, sortedAreas.last())
-    sz += bottomSz
+    sz += countFilled(verts, hors, sortedAreas.last())
 
     return sz
   }
 
-  private fun countInnerArea(verts: List<SegmentL>, y: Long): Long {
-    var sz = 0L
-
-    val topSq = verts.filter { y in minOf(it.start.y, it.end.y) .. maxOf(it.start.y, it.end.y) }.sortedBy { it.start.x }
-    var fill = true
-
-    for (i in 0 until topSq.size - 1) {
-      if (fill) {
-        // inner area
-        val s1 = topSq[i]
-        val s2 = topSq[i + 1]
-        sz += (s2.start.x - s1.start.x)
-      } else {
-        // count only left edge
-        sz += 1
-      }
-      fill = !fill
-    }
-    sz += 1 // add final right edge
-    return sz
-  }
-
-  private fun countEdge(verts: List<SegmentL>, hors: List<SegmentL>, y: Long): Long {
+  private fun countFilled(verts: List<SegmentL>, hors: List<SegmentL>, y: Long): Long {
     var sz = 0L
     val topSq = verts.filter { y in minOf(it.start.y, it.end.y) .. maxOf(it.start.y, it.end.y) }.sortedBy { it.start.x }
     val horiz = hors.filter { it.start.y == y }.toSet()
-
-    var count = 0
+    var fill = true
 
     for (i in 0 until topSq.size - 1) {
       val s1 = topSq[i]
       val s2 = topSq[i + 1]
-      if ((s1.start.y == y || s1.end.y == y) && (s2.start.y == y || s2.end.y == y)) {
-        if (SegmentL(Vec2l(s1.start.x, y), Vec2l(s2.start.x, y)) in horiz) {
-          sz += (s2.start.x - s1.start.x)
+      if ((s1.start.y == y || s1.end.y == y) && (s2.start.y == y || s2.end.y == y) && SegmentL(Vec2l(s1.start.x, y), Vec2l(s2.start.x, y)) in horiz) {
+        sz += (s2.start.x - s1.start.x)
 
-          val s1up = minOf(s1.start.y, s1.end.y) < y
-          val s2up = minOf(s2.start.y, s2.end.y) < y
-          if (s1up != s2up) {
-            count-- // don't flip the sign
-          }
-        } else {
-          if (count % 2 == 0) {
-            sz += (s2.start.x - s1.start.x)
-          } else sz += 1
+        val s1up = minOf(s1.start.y, s1.end.y) < y
+        val s2up = minOf(s2.start.y, s2.end.y) < y
+        if (s1up != s2up) {
+          // twist only, it doesn't change current fill state
+          fill = !fill
         }
       } else {
-        if (count % 2 == 0) {
+        if (fill) {
           sz += (s2.start.x - s1.start.x)
         } else sz += 1
       }
-      count++
+      fill = !fill
     }
 
-    // add the missing right edge
-    sz += 1
+    sz += 1 // add the final right edge
 
     return sz
   }
