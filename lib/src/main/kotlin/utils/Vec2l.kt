@@ -51,3 +51,41 @@ data class Vec2l(val x: Long, val y: Long) {
 val Collection<Vec2l>.bounds: Pair<Vec2l, Vec2l> get() {
   return Vec2l(minOf { it.x }, minOf { it.y }) to Vec2l(maxOf { it.x }, maxOf { it.y })
 }
+
+data class SegmentL(val start: Vec2l, val end: Vec2l) {
+  val isVertical = start.x == end.x
+  val isHorizontal = start.y == end.y
+
+  val slope: Long get() = (end.y - start.y) / (end.x - start.x)
+
+  val points: List<Vec2l> get() = when {
+    isVertical -> (minOf(start.y, end.y) .. maxOf(start.y, end.y)).map { y -> Vec2l(start.x, y) }
+    else -> (minOf(start.x, end.x) .. maxOf(start.x, end.x)).map { x -> get(x) }
+  }
+
+  operator fun get(x: Long): Vec2l {
+    if (isVertical) {
+      throw IllegalStateException("Can not get point by x for a vertical line")
+    }
+
+    val dx = (x - start.x)
+    val y = start.y + dx * slope
+    return Vec2l(x, y)
+  }
+
+  operator fun contains(p: Vec2l): Boolean {
+    if (p.y !in (minOf(start.y, end.y) .. maxOf(start.y, end.y))) {
+      return false
+    }
+    if (p.x !in (start.x .. end.x)) {
+      return false
+    }
+
+    // vertical line
+    if (end.x == start.x) {
+      return true // p.x is always start.x due to the bounds check above
+    } else {
+      return this[p.x] == p
+    }
+  }
+}
