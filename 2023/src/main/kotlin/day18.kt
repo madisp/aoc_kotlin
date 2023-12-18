@@ -27,20 +27,12 @@ object Day18 : Solution<List<Day18.Line>>() {
 
   private fun solve(insns: List<Instruction>): Long {
     var location = Vec2l(0, 0)
-    var min = location
-    var max = location
-
     val segments = mutableListOf<SegmentL>()
     val areas = mutableListOf<Long>()
 
     insns.forEach { insn ->
       segments.add(SegmentL(location, location + (insn.direction * insn.len)))
-
       location += (insn.direction * insn.len)
-
-      min = Vec2l(minOf(min.x, location.x), minOf(min.y, location.y))
-      max = Vec2l(maxOf(max.x, location.x), maxOf(max.y, location.y))
-
       if (insn.direction.x != 0L) {
         areas.add(location.y)
       }
