@@ -75,7 +75,8 @@ object Day18 : Solution<List<Day18.Line>>() {
     for (i in 0 until topSq.size - 1) {
       val s1 = topSq[i]
       val s2 = topSq[i + 1]
-      if ((s1.start.y == y || s1.end.y == y) && (s2.start.y == y || s2.end.y == y) && SegmentL(Vec2l(s1.start.x, y), Vec2l(s2.start.x, y)) in horiz) {
+      if (SegmentL(Vec2l(s1.start.x, y), Vec2l(s2.start.x, y)) in horiz) {
+        // always add segments on this line
         sz += (s2.start.x - s1.start.x)
 
         val s1up = minOf(s1.start.y, s1.end.y) < y
