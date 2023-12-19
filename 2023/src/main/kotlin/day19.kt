@@ -106,23 +106,26 @@ object Day19 : Solution<Pair<List<Day19.Workflow>, List<Vec4i>>>() {
     return Component4.entries.sumOf { result[it] }
   }
 
-  data class Node(val expr: Rule, val left: Node? = null, val right: Node? = null)
+  sealed interface Node {
+    data class Leaf(val accept: Boolean) : Node
+    data class Tree(val expr: Rule, val left: Node, val right: Node) : Node
+  }
 
-  private fun buildNode(workflows: Map<String, Workflow>, rules: List<Rule>): Node? {
+  private fun buildNode(workflows: Map<String, Workflow>, rules: List<Rule>): Node {
     if (rules.size == 1) {
       val rule = rules.last()
       require(rule is Rule.DefaultRule)
       return if (rule.target == "R" || rule.target == "A") {
-        Node(rule)
+        Node.Leaf(rule.target == "A")
       } else {
         buildNode(workflows, workflows[rule.target]!!.rules)
       }
     }
 
     val rule = rules.first()
-    return Node(
+    return Node.Tree(
       expr = rule,
-      left = workflows[rule.target]?.let { buildNode(workflows, it.rules) } ?: Node(Rule.DefaultRule(rule.target)),
+      left = workflows[rule.target]?.let { buildNode(workflows, it.rules) } ?: Node.Leaf(rule.target == "A"),
       right = buildNode(workflows, rules.drop(1)),
     )
   }
@@ -131,26 +134,25 @@ object Day19 : Solution<Pair<List<Day19.Workflow>, List<Vec4i>>>() {
   private fun Vec4i.coerceAtMost(i: Component4, value: Int) = copy(i, minOf(value, this[i]))
 
   private fun countVariants(node: Node, minimum: Vec4i, maximum: Vec4i): Long {
-    return when (val expr = node.expr) {
-      is Rule.DefaultRule -> {
-        when (expr.target) {
-          "A" -> {
-            val answ = (maximum - minimum + Vec4i(1, 1, 1, 1))
-            return Component4.entries.map { answ[it].toLong() }.reduce { a, b -> a * b }
+    return when (node) {
+      is Node.Leaf -> if (!node.accept) 0L else {
+        val answ = (maximum - minimum + Vec4i(1, 1, 1, 1))
+        Component4.entries.map { answ[it].toLong() }.reduce { a, b -> a * b }
+      }
+      is Node.Tree -> {
+        when (val expr = node.expr) {
+          is Rule.DefaultRule -> TODO("should not happen")
+          is Rule.GtRule -> {
+            val left = countVariants(node.left, minimum.coerceAtLeast(expr.varIndex, expr.constant + 1), maximum)
+            val right = countVariants(node.right, minimum, maximum.coerceAtMost(expr.varIndex, expr.constant))
+            left + right
           }
-          "R" -> 0L
-          else -> throw IllegalStateException("Leaf node not an A or R (${expr.target})")
+          is Rule.LtRule -> {
+            val left = countVariants(node.left, minimum, maximum.coerceAtMost(expr.varIndex, expr.constant - 1))
+            val right = countVariants(node.right, minimum.coerceAtLeast(expr.varIndex, expr.constant), maximum)
+            left + right
+          }
         }
-      }
-      is Rule.GtRule -> {
-        val left = countVariants(node.left!!, minimum.coerceAtLeast(expr.varIndex, expr.constant + 1), maximum)
-        val right = countVariants(node.right!!, minimum, maximum.coerceAtMost(expr.varIndex, expr.constant))
-        left + right
-      }
-      is Rule.LtRule -> {
-        val left = countVariants(node.left!!, minimum, maximum.coerceAtMost(expr.varIndex, expr.constant - 1))
-        val right = countVariants(node.right!!, minimum.coerceAtLeast(expr.varIndex, expr.constant), maximum)
-        left + right
       }
     }
   }
@@ -158,6 +160,6 @@ object Day19 : Solution<Pair<List<Day19.Workflow>, List<Vec4i>>>() {
   override fun part2(): Long {
     val workflows = input.first.associateBy { it.name }
     val root = buildNode(workflows, workflows["in"]!!.rules)
-    return countVariants(root!!, Vec4i(1, 1, 1, 1), Vec4i(4000, 4000, 4000, 4000))
+    return countVariants(root, Vec4i(1, 1, 1, 1), Vec4i(4000, 4000, 4000, 4000))
   }
 }
