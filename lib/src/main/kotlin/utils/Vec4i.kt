@@ -9,6 +9,28 @@ fun Vec3i(x: Int, y: Int, z: Int) = Vec4i(x, y, z, 0)
 
 enum class Component4 { X, Y, Z, W }
 
+val List<Vec4i>.bounds: Pair<Vec4i, Vec4i> get() {
+  var minX = Integer.MAX_VALUE
+  var minY = Integer.MAX_VALUE
+  var minZ = Integer.MAX_VALUE
+  var minW = Integer.MAX_VALUE
+  var maxX = Integer.MIN_VALUE
+  var maxY = Integer.MIN_VALUE
+  var maxZ = Integer.MIN_VALUE
+  var maxW = Integer.MIN_VALUE
+  for (p in this) {
+    minX = minOf(minX, p.x)
+    minY = minOf(minY, p.y)
+    minZ = minOf(minZ, p.z)
+    minW = minOf(minW, p.w)
+    maxX = maxOf(maxX, p.x)
+    maxY = maxOf(maxY, p.y)
+    maxZ = maxOf(maxZ, p.z)
+    maxW = maxOf(maxW, p.w)
+  }
+  return Vec4i(minX, minY, minZ, minW) to Vec4i(maxX, maxY, maxZ, maxW)
+}
+
 data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
   operator fun minus(o: Vec4i) = Vec4i(x - o.x, y - o.y, z - o.z, w - o.w)
 

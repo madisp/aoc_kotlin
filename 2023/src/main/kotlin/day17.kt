@@ -47,7 +47,13 @@ object Day17 : Solution<Grid<Char>>() {
       }
     )
 
-    return g.shortestPath(Node(Vec2i(0, 0), Vec2i(1, 1))) { it.location.x == input.width - 1 && it.location.y == input.height - 1 }.first
+    val end = Vec2i(input.width - 1, input.height - 1)
+
+    return g.shortestPath(
+      start = Node(Vec2i(0, 0), Vec2i(1, 1)),
+      heuristic = { node -> node.location.manhattanDistanceTo(end) },
+      end = { it.location == end },
+    ).first
   }
 
   override fun part1() = solve(1 .. 3)

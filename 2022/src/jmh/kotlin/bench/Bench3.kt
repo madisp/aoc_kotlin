@@ -5,7 +5,7 @@ import org.openjdk.jmh.infra.Blackhole
 import utils.Solution
 import utils.readFile
 
-abstract class Bench3<Func, Imp, Fast>(
+abstract class Bench3<Func : Any, Imp : Any, Fast : Any>(
   day: String,
   private val func: Solution<Func>,
   private val imp: Solution<Imp>,
