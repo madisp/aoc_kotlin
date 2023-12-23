@@ -24,6 +24,7 @@ fun readInput(year: Int, day: Int): String {
 
   if (!file.exists()) {
     val cookie = readFile("cookie").trim()
+    val ua = readFile("user-agent").trim()
     val client = HttpClient.newBuilder()
       .version(HttpClient.Version.HTTP_1_1)
       .followRedirects(HttpClient.Redirect.NORMAL)
@@ -34,6 +35,7 @@ fun readInput(year: Int, day: Int): String {
       .GET()
       .uri(URI("https://adventofcode.com/${year}/day/${day}/input"))
       .header("Cookie", cookie)
+      .header("User-Agent", ua)
       .build()
     val resp = client.send(request, HttpResponse.BodyHandlers.ofInputStream())
 

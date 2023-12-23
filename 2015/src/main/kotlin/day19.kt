@@ -66,8 +66,11 @@ object Day19 : Solution<Day19.Input>() {
     return generate(input.molecule, ruleMap).size
   }
 
+  /*
+   * may or may not finish in a reasonable amount of time, depending on how we luck out with the random shuffle
+   */
   override fun part2(input: Input): Int {
-    val rules = input.rules.sortedByDescending { it.output.length }
+    val rules = input.rules.shuffled()
     val g = Graph<String, Rule>(
       edgeFn = { molecule ->
         // try applying each rule
@@ -79,6 +82,6 @@ object Day19 : Solution<Day19.Input>() {
       }
     )
 
-    return g.dfs(input.molecule.toString()) { it == "e" }.size
+    return g.dfs(input.molecule.toString()) { it == "e" }.size - 1
   }
 }
