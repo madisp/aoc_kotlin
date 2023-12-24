@@ -1,21 +1,16 @@
-import com.microsoft.z3.Context
-import com.microsoft.z3.Expr
-import com.microsoft.z3.Solver
-import com.microsoft.z3.Status
 import utils.Parser
-import utils.Point3d
 import utils.SegmentD
 import utils.Solution
 import utils.Vec2d
-import utils.Vec3d
 import utils.Vec4d
-import utils.bounds
 import utils.cut
+import utils.eq
 import utils.map
+import utils.minus
 import utils.pairs
 import utils.parseItems
-import kotlin.math.absoluteValue
-import kotlin.math.sqrt
+import utils.times
+import utils.z3
 
 fun main() {
   Day24.run()
@@ -132,45 +127,35 @@ object Day24 : Solution<List<Day24.Ball>>() {
     // z_t - z_1 = dt1 * (zvel_1 - zvel_t)
     // x_t - x_2 = dt2 * (xvel_2 - xvel_t)
     // y_t - y_2 = dt2 * (yvel_2 - yvel_t)
-    // z_t - z_2 = dt2 * (zvel_2 - zvel_2)
+    // z_t - z_2 = dt2 * (zvel_2 - zvel_t)
     // x_t - x_3 = dt3 * (xvel_3 - xvel_t)
     // y_t - y_3 = dt3 * (yvel_3 - yvel_t)
     // z_t - z_3 = dt3 * (zvel_3 - zvel_t)
 
-    val context = Context()
-    val x_t = context.mkIntConst("x_t")
-    val y_t = context.mkIntConst("y_t")
-    val z_t = context.mkIntConst("z_t")
-    val xvel_t = context.mkIntConst("xvel_t")
-    val yvel_t = context.mkIntConst("yvel_t")
-    val zvel_t = context.mkIntConst("zvel_t")
-    val dt1 = context.mkIntConst("dt1")
-    val dt2 = context.mkIntConst("dt2")
-    val dt3 = context.mkIntConst("dt3")
+    return z3 {
+      val x_t = int("x_t")
+      val y_t = int("y_t")
+      val z_t = int("z_t")
+      val xvel_t = int("xvel_t")
+      val yvel_t = int("yvel_t")
+      val zvel_t = int("zvel_t")
+      val dt1 = int("dt1")
+      val dt2 = int("dt2")
+      val dt3 = int("dt3")
 
-    val dt = listOf(dt1, dt2, dt3)
+      val dt = listOf(dt1, dt2, dt3)
 
-    val solver = context.mkSolver()
+      val eqs = input.take(3).flatMapIndexed { idx, ball ->
+        listOf(
+          (x_t - ball.position.x.toLong()) eq (dt[idx] * (ball.velocity.x.toLong() - xvel_t)),
+          (y_t - ball.position.y.toLong()) eq (dt[idx] * (ball.velocity.y.toLong() - yvel_t)),
+          (z_t - ball.position.z.toLong()) eq (dt[idx] * (ball.velocity.z.toLong() - zvel_t)),
+        )
+      }
 
-    input.take(3).forEachIndexed { idx, ball ->
-      solver.add(
-        context.mkEq(
-          context.mkSub(x_t, context.mkInt(ball.position.x.toLong())),
-          context.mkMul(dt[idx], context.mkSub(context.mkInt(ball.velocity.x.toLong()), xvel_t))
-        ),
-        context.mkEq(
-          context.mkSub(y_t, context.mkInt(ball.position.y.toLong())),
-          context.mkMul(dt[idx], context.mkSub(context.mkInt(ball.velocity.y.toLong()), yvel_t))
-        ),
-        context.mkEq(
-          context.mkSub(z_t, context.mkInt(ball.position.z.toLong())),
-          context.mkMul(dt[idx], context.mkSub(context.mkInt(ball.velocity.z.toLong()), zvel_t))
-        ),
-      )
+      solve(eqs)
+
+      listOf(x_t, y_t, z_t).sumOf { getValue(it) }
     }
-
-    require(solver.check() == Status.SATISFIABLE)
-
-    return listOf(x_t, y_t, z_t).sumOf { solver.model.eval(it, false).toString().toLong() }
   }
 }
