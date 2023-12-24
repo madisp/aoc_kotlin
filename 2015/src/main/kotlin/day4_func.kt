@@ -12,11 +12,11 @@ object Day4Func : Solution<String>() {
 
   private val md5 = MessageDigest.getInstance("MD5")
 
-  override fun part1(input: String): Int {
+  override fun part1(): Int {
     return solve(input, "00000")
   }
 
-  override fun part2(input: String): Int {
+  override fun part2(): Int {
     return solve(input, "000000")
   }
 

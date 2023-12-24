@@ -22,23 +22,27 @@ class Prop(
   val type: Type,
 )
 
-private fun StringBuilder.emitParseBody(indent: Int, type: Type, inputExpr: String = "input") {
+private fun StringBuilder.emitParseBody(indent: Int, type: Type, inputExpr: String = "input"): Set<String> {
   val pattern = type.pattern ?: throw IllegalStateException("No pattern defined for $type")
 
   var tree = pattern
   var part = 0
   var curExpr = inputExpr
 
+  val props = mutableSetOf<String>()
+
   // walk the tree and emit parsing code
   while (tree !is LeafNode.Empty) {
     when (val node = tree) {
       is LeafNode.Repeat -> {
         emitRepeat(indent, node, curExpr, type)
+        props.add(node.field.name)
         // done with parsing
         tree = LeafNode.Empty
       }
       is LeafNode.Field -> {
         emitField(indent, node, curExpr, type)
+        props.add(node.name)
         // done with parsing
         tree = LeafNode.Empty
       }
@@ -64,8 +68,12 @@ private fun StringBuilder.emitParseBody(indent: Int, type: Type, inputExpr: Stri
               append("${i}// remove junk '${node.delim}'\n")
               append("${i}val r${part} = ${curExpr}.removePrefix(\"${node.delim}\")\n")
             }
-            is LeafNode.Field -> emitField(indent, left, "l${part}", type)
-            is LeafNode.Repeat -> emitRepeat(indent, left, "l${part}", type)
+            is LeafNode.Field -> emitField(indent, left, "l${part}", type).also {
+              props.add(left.name)
+            }
+            is LeafNode.Repeat -> emitRepeat(indent, left, "l${part}", type).also {
+              props.add(left.field.name)
+            }
           }
 
           curExpr = "r${part}"
@@ -79,6 +87,7 @@ private fun StringBuilder.emitParseBody(indent: Int, type: Type, inputExpr: Stri
       }
     }
   }
+  return props
 }
 
 private fun StringBuilder.emitField(
@@ -196,11 +205,11 @@ fun generateParser(type: Type): String {
 
     append("fun $funName(input: String): $type {\n")
 
-    emitParseBody(1, type)
+    val parsedProps = emitParseBody(1, type)
 
     append("  // construct return obj\n")
     append("  return $type(\n")
-    type.props.keys.forEach { prop ->
+    type.props.keys.filter { it in parsedProps }.forEach { prop ->
       append("    $prop = $prop,\n")
     }
     append("  )\n")

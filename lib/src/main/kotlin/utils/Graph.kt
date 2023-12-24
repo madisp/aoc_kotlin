@@ -36,7 +36,7 @@ class Graph<Node : Any, Edge: Any>(
     return emptyList()
   }
 
-  fun shortestPath(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, List<Node>> {
+  fun shortestPath(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, List<Pair<Node, Edge?>>> {
     return shortestPath(start, heuristic = heuristic, end = { it == end })
   }
 
@@ -44,10 +44,10 @@ class Graph<Node : Any, Edge: Any>(
     start: Node,
     heuristic: (Node) -> Int = { _ -> 0 },
     end: (Node) -> Boolean,
-  ): Pair<Int, List<Node>> {
+  ): Pair<Int, List<Pair<Node, Edge?>>> {
     val queue = PriorityQueue<Pair<Node, Int>>(compareBy { it.second })
     queue.add(start to 0)
-    val src = mutableMapOf<Node, Node?>(start to null)
+    val src = mutableMapOf<Node, Pair<Node, Edge>?>(start to null)
     val cost = mutableMapOf(start to 0)
 
     val counter = AtomicLong(0)
@@ -62,8 +62,13 @@ class Graph<Node : Any, Edge: Any>(
       }
 
       if (end(node)) {
-        val backtrace = generateSequence(node) { src[it] }.toList().reversed()
-        return cost[node]!! to backtrace
+        var btnode = src[node]
+        val bt = mutableListOf<Pair<Node, Edge?>>(node to null)
+        while (btnode != null) {
+          bt += btnode
+          btnode = src[btnode.first]
+        }
+        return cost[node]!! to bt
       }
 
       edgeFn(node).forEach { (edge, nextNode) ->
@@ -71,7 +76,7 @@ class Graph<Node : Any, Edge: Any>(
         val nextCost = cost[nextNode]
         if (nextCost == null || newNextCost < nextCost) {
           cost[nextNode] = newNextCost
-          src[nextNode] = node
+          src[nextNode] = node to edge
           queue.add(nextNode to (newNextCost + heuristic(nextNode)))
         }
       }

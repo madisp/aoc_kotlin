@@ -19,11 +19,11 @@ object Day3Func : Solution<List<Vec2i>>() {
   override val name = "day3"
   override val parser = Parser.chars.mapItems { it.toVec() }
 
-  override fun part1(input: List<Vec2i>): Int {
+  override fun part1(): Int {
     return getTrack(input).count()
   }
 
-  override fun part2(input: List<Vec2i>): Number? {
+  override fun part2(): Number? {
     val (santa, roboSanta) = input.withIndex()
       .partition { value -> value.index % 2 == 0 }
       .toList()

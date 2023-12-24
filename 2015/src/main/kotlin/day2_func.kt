@@ -23,11 +23,11 @@ object Day2Func : Solution<List<Box>>() {
     Box(l, w, h)
   }
 
-  override fun part1(input: List<Box>): Int {
+  override fun part1(): Int {
     return input.sumOf { it.area + it.slack}
   }
 
-  override fun part2(input: List<Box>): Number {
+  override fun part2(): Number {
     return input.sumOf { it.smallestPerimeter + it.volume }
   }
 }

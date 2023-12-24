@@ -49,14 +49,14 @@ object Day6Func : Solution<List<Day6Func.Opcode>>() {
     }
   }
 
-  override fun part1(input: List<Opcode>): Int {
+  override fun part1(): Int {
     val grid = IntGrid(1000, 1000) { 0 }
     return input.fold(grid) { it, op -> op.apply(it, false) }
       .cells
       .count { (_, v) -> v == 1 }
   }
 
-  override fun part2(input: List<Opcode>): Int {
+  override fun part2(): Int {
     val grid = IntGrid(1000, 1000) { 0 }
     return input.fold(grid) { it, op -> op.apply(it, true) }
       .cells

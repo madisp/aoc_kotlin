@@ -9,7 +9,7 @@ object Day5Func : Solution<List<String>>() {
   override val name = "day5"
   override val parser = Parser.lines
 
-  override fun part1(input: List<String>): Int {
+  override fun part1(): Int {
     return input
       .filter { word -> word.toCharArray().filter { it in setOf('a', 'e', 'i', 'o', 'u') }.count() >= 3 }
       .filter { word -> word.toCharArray().toList().windowed(size = 2).any { (a, b) -> a == b } }
@@ -17,7 +17,7 @@ object Day5Func : Solution<List<String>>() {
       .count()
   }
 
-  override fun part2(input: List<String>): Int {
+  override fun part2(): Int {
     return input
       .filter { word -> word.toCharArray().toList().windowed(size = 3).any { (a, _, b) -> a == b } }
       .filter { word ->

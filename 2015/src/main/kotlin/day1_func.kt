@@ -16,11 +16,11 @@ object Day1Func : Solution<List<Int>>() {
     }
   }
 
-  override fun part1(input: List<Int>): Int {
+  override fun part1(): Int {
     return input.sum()
   }
 
-  override fun part2(input: List<Int>): Int {
+  override fun part2(): Int {
     return input.asSequence().runningReduce { acc, item -> acc + item }
       .takeWhile { it > -1 }
       .count() + 1
