@@ -14,7 +14,6 @@ interface Z3Expr {
 }
 
 class Z3Int(
-  private val name: String,
   override val ctx: Context,
   override val expr: IntExpr,
 ) : Z3Expr
@@ -84,7 +83,7 @@ infix fun Z3Expr.eq(other: Z3Expr): Z3BoolExpr {
 class Z3Context(private val ctx: Context) {
   lateinit var model: Model
 
-  fun int(name: String) = Z3Int(name, ctx, ctx.mkIntConst(name))
+  fun int(name: String) = Z3Int(ctx, ctx.mkIntConst(name))
 
   fun solve(equations: List<Z3BoolExpr>) {
     val solver = ctx.mkSolver()
