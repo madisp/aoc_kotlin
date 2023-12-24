@@ -3,6 +3,7 @@ import utils.SegmentD
 import utils.Solution
 import utils.Vec2d
 import utils.Vec4d
+import utils.Vec4l
 import utils.cut
 import utils.eq
 import utils.map
@@ -23,21 +24,27 @@ object Day24 : Solution<List<Day24.Ball>>() {
 
   private fun parseBall(line: String): Ball {
     val (pos, vel) = line.cut(" @ ").map {
-      val (x, y, z) = it.split(", ").map { it.toDouble() }
-      Vec4d(x, y, z, 0.0)
+      val (x, y, z) = it.split(", ").map { it.toLong() }
+      Vec4l(x, y, z, 0)
     }
-    return Ball(pos, vel.copy(w = 1.0))
+    return Ball(pos, vel.copy(w = 1))
   }
 
   data class Ball(
-    val position: Vec4d,
-    val velocity: Vec4d,
+    val position: Vec4l,
+    val velocity: Vec4l,
   )
 
   fun intersect1(a: Ball, b: Ball, start: Vec2d, end: Vec2d): Boolean {
     // check whether x-y intersects
-    val al = SegmentD(Vec2d(a.position.x, a.position.y), Vec2d((a.position + a.velocity).x, (a.position + a.velocity).y))
-    val bl = SegmentD(Vec2d(b.position.x, b.position.y), Vec2d((b.position + b.velocity).x, (b.position + b.velocity).y))
+    val al = SegmentD(
+      Vec2d(a.position.x.toDouble(), a.position.y.toDouble()),
+      Vec2d((a.position + a.velocity).x.toDouble(), (a.position + a.velocity).y.toDouble())
+    )
+    val bl = SegmentD(
+      Vec2d(b.position.x.toDouble(), b.position.y.toDouble()),
+      Vec2d((b.position + b.velocity).x.toDouble(), (b.position + b.velocity).y.toDouble())
+    )
 
     // intersection?
     // ay = a[0] + ax * ad
@@ -148,9 +155,9 @@ object Day24 : Solution<List<Day24.Ball>>() {
 
       val eqs = input.take(3).flatMapIndexed { idx, ball ->
         listOf(
-          (x_t - ball.position.x.toLong()) eq (dt[idx] * (ball.velocity.x.toLong() - xvel_t)),
-          (y_t - ball.position.y.toLong()) eq (dt[idx] * (ball.velocity.y.toLong() - yvel_t)),
-          (z_t - ball.position.z.toLong()) eq (dt[idx] * (ball.velocity.z.toLong() - zvel_t)),
+          (x_t - ball.position.x) eq (dt[idx] * (ball.velocity.x - xvel_t)),
+          (y_t - ball.position.y) eq (dt[idx] * (ball.velocity.y - yvel_t)),
+          (z_t - ball.position.z) eq (dt[idx] * (ball.velocity.z - zvel_t)),
         )
       }
 
