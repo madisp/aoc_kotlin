@@ -7,6 +7,7 @@ plugins {
 dependencies {
   implementation(project(":lib"))
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC")
+  implementation(rootProject.files("z3/com.microsoft.z3.jar"))
 
   ksp(project(":parser-processor"))
 
