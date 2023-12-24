@@ -96,8 +96,8 @@ class Z3Context(private val ctx: Context) {
     this.model = solver.model
   }
 
-  fun getValue(sym: Z3Int): Long {
-    return model.eval(sym.expr, true).toString().toLong()
+  fun eval(expr: Z3Expr): String {
+    return model.eval(expr.expr, true).toString()
   }
 }
 

@@ -9,6 +9,7 @@ import utils.map
 import utils.minus
 import utils.pairs
 import utils.parseItems
+import utils.plus
 import utils.times
 import utils.z3
 
@@ -155,7 +156,7 @@ object Day24 : Solution<List<Day24.Ball>>() {
 
       solve(eqs)
 
-      listOf(x_t, y_t, z_t).sumOf { getValue(it) }
+      eval(x_t + y_t + z_t).toLong()
     }
   }
 }
