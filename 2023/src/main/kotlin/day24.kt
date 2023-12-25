@@ -1,21 +1,14 @@
 import com.microsoft.z3.Context
-import com.microsoft.z3.Expr
-import com.microsoft.z3.Solver
 import com.microsoft.z3.Status
 import utils.Parser
-import utils.Point3d
 import utils.SegmentD
 import utils.Solution
 import utils.Vec2d
-import utils.Vec3d
 import utils.Vec4d
-import utils.bounds
 import utils.cut
 import utils.map
 import utils.pairs
 import utils.parseItems
-import kotlin.math.absoluteValue
-import kotlin.math.sqrt
 
 fun main() {
   Day24.run()
