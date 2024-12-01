@@ -20,7 +20,10 @@ fun readFile(name: String): String {
 }
 
 fun readInput(year: Int, day: Int): String {
-  val file = File("").resolve(year.toString()).resolve("src").resolve("main").resolve("resources").resolve("day${day}.txt")
+  val prefix = try {
+    readFile("folderprefix").trim()
+  } catch (e: Exception) { "" }
+  val file = File(prefix).resolve(year.toString()).resolve("src").resolve("main").resolve("resources").resolve("day${day}.txt")
 
   if (!file.exists()) {
     val cookie = readFile("cookie").trim()
