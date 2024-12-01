@@ -57,8 +57,8 @@ object Day24 : Solution<Pair<Day24.Context, List<Day24.Blizzard>>>() {
     val initialState = State(ctx.startPos, input.second)
 
     val pt1 = graph.shortestPath(initialState) { it.pos == ctx.endPos }
-    val pt2 = graph.shortestPath(pt1.second) { it.pos == ctx.startPos }
-    val pt3 = graph.shortestPath(pt2.second) { it.pos == ctx.endPos }
+    val pt2 = graph.shortestPath(pt1.second.first().first) { it.pos == ctx.startPos }
+    val pt3 = graph.shortestPath(pt2.second.first().first) { it.pos == ctx.endPos }
 
     return pt1.first + pt2.first + pt3.first
   }

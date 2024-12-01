@@ -36,6 +36,6 @@ object Day15 : Solution<IntGrid>() {
       weightFn = { it }
     )
 
-    return graph.shortestPath(start, end)
+    return graph.shortestPath(start, end).first
   }
 }

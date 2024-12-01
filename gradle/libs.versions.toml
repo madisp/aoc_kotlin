@@ -1,0 +1,25 @@
+[versions]
+coroutines = "1.9.0"
+foojay = "0.8.0"
+jmh = "0.7.2"
+junit = "4.13.2"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
+truth = "1.4.4"
+
+[plugins]
+foojay-resolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojay" }
+jmh = { id = "me.champeau.jmh", version.ref = "jmh" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[libraries]
+coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+junit = { module = "junit:junit", version.ref = "junit" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
+ksp-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
+
+gradle-jmh = { module = "me.champeau.jmh:me.champeau.jmh.gradle.plugin", version.ref = "jmh" }
+
+[bundles]
+test = ["junit", "truth"]

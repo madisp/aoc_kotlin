@@ -51,7 +51,7 @@ object Day12Imp : Solution<Grid<Char>>() {
 
     return starts.mapNotNull { start ->
       try {
-        g.shortestPath(Node(start, 0), Node(end, height('E')))
+        g.shortestPath(Node(start, 0), Node(end, height('E'))).first
       } catch (e: IllegalStateException) {
         null
       }

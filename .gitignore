@@ -2,6 +2,7 @@
 /z3/
 /build/
 /.gradle/
+/.kotlin/
 *.iml
 */build/
 */src/main/resources/day*.txt
