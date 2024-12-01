@@ -1,5 +1,6 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import utils.readFile
 import java.lang.StringBuilder
 
 class Day11FastTest {

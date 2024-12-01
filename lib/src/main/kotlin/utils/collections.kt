@@ -1,61 +1,6 @@
 package utils
 
-import java.io.File
-import java.io.IOException
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.time.Duration
 import java.util.Arrays
-
-object Utils
-
-fun readFile(name: String): String {
-  val stream = Utils.javaClass.getResourceAsStream("/$name.txt")
-  require (stream != null) {
-    "No input @ /$name.txt!"
-  }
-  return stream.use { it.readBytes().toString(Charsets.UTF_8) }
-}
-
-fun readInput(year: Int, day: Int): String {
-  val file = File("").resolve(year.toString()).resolve("src").resolve("main").resolve("resources").resolve("day${day}.txt")
-
-  if (!file.exists()) {
-    val cookie = readFile("cookie").trim()
-    val ua = readFile("user-agent").trim()
-    val client = HttpClient.newBuilder()
-      .version(HttpClient.Version.HTTP_1_1)
-      .followRedirects(HttpClient.Redirect.NORMAL)
-      .connectTimeout(Duration.ofSeconds(5))
-      .build()
-
-    val request = HttpRequest.newBuilder()
-      .GET()
-      .uri(URI("https://adventofcode.com/${year}/day/${day}/input"))
-      .header("Cookie", cookie)
-      .header("User-Agent", ua)
-      .build()
-    val resp = client.send(request, HttpResponse.BodyHandlers.ofInputStream())
-
-    if (resp.statusCode() >= 400) {
-      throw IOException("Request to AoC servers failed, status=${resp.statusCode()}")
-    }
-
-    resp.body().use { input ->
-      file.outputStream().use { output ->
-        input.copyTo(output, bufferSize = 8192)
-      }
-    }
-  }
-
-  require (file.exists()) {
-    "Could not fetch input for $year / day $day"
-  }
-
-  return file.readText(Charsets.UTF_8)
-}
 
 fun <A, B> Pair<A, A>.map(fn: (A) -> B): Pair<B, B> = fn(first) to fn(second)
 
@@ -73,14 +18,15 @@ fun <K, V> List<Pair<K, V>>.mergeToMap(collisionFn: (K, V, V) -> V): Map<K, V> {
     .toMap()
 }
 
-fun <T> Iterable<T>.withCounts(): Map<T, Int> {
-  return groupBy { it }.mapValues { (_, c) -> c.size }
+fun <T> Iterable<T>.withCounts(): DefaultMap<T, Int> {
+  return groupingBy { it }.eachCount().withDefault(0)
 }
 
 fun <T> Iterable<T>.withLCounts(): Map<T, Long> {
-  return groupBy { it }.mapValues { (_, c) -> c.size.toLong() }
+  return groupBy { it }.mapValues { (_, c) -> c.size.toLong() }.withDefault(0L)
 }
 
+fun <K, V> Map<K, V>.withDefault(default: V) = DefaultMap(this, default)
 operator fun <T> List<T>.times(other: List<T>): List<Pair<T, T>> {
   return flatMap { first ->
     other.map { second ->
@@ -109,7 +55,6 @@ val <T> List<T>.permutations: Sequence<List<T>> get() {
     list
   }
 }
-
 val <T> List<T>.combinations: Sequence<List<T>> get() {
   val list = MutableList(size) { this[it] }
   val take = BooleanArray(size) { false }
@@ -180,7 +125,6 @@ val <T> List<T>.pairs: Sequence<Pair<T, T>> get() {
 }
 
 fun <T> List<T>.product(other: List<T>): List<Pair<T, T>> = this * other
-
 inline fun <T, V> List<T>.product(other: List<T>, fn: (v1: T, v2: T) -> V): List<V> {
   return flatMap { first ->
     other.map { second ->
@@ -245,66 +189,15 @@ inline fun <reified T> Iterable<T>.takeWhileInclusive(predicate: (T) -> Boolean)
   return list
 }
 
-val String.parts: List<String> get() = split(" ").mapNotNull { it.trim().takeIf(String::isNotEmpty) }
-
-fun String.split(): Pair<String, String> {
-  val mid = length / 2
-  if (mid * 2 != length) {
-    badInput()
-  }
-  return substring(0, mid) to substring(mid)
-}
-
-fun String.findAll(needle: String): List<Int> {
-  val out = mutableListOf<Int>()
-  var index = indexOf(needle, 0)
-  while (index < this.length && index != -1) {
-    out += index
-    index = indexOf(needle, index + needle.length)
-  }
-
-  return out
-}
-
 fun <T> Collection<T>.split(): Pair<Collection<T>, Collection<T>> {
   val halfSize = size / 2
-  if (halfSize * 2 != size) { badInput() }
+  if (halfSize * 2 != size) {
+    badInput()
+  }
   return take(halfSize) to drop(halfSize)
 }
 
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
-
-inline fun pow2(n: Int): Int = 1 shl n
-
-fun Int.pow(n: Int): Int {
-  var value = 1
-  require (n >= 0) {
-    "Cannot do int pow with negative exponent"
-  }
-  repeat(n) {
-    value *= this
-  }
-  return value
-}
-
-fun Long.pow(n: Int): Long {
-  var value = 1L
-  require (n >= 0) {
-    "Cannot do long pow with negative exponent"
-  }
-  repeat(n) {
-    value *= this
-  }
-  return value
-}
-
-fun Int.wrap(max: Int): Int {
-  return if (this > 0) {
-    this % max
-  } else {
-    (max + (this % max)) % max
-  }
-}
 
 /**
  * Split the range into a triplet of ranges:
@@ -328,8 +221,4 @@ infix fun IntRange.tesselateWith(other: IntRange): Pair<IntRange?, List<IntRange
   val left = (first .. minOf(last, other.first - 1))
   val right = (maxOf(first, other.last + 1) .. last)
   return intersection.takeIf { !it.isEmpty() } to listOf(left, right).filter { !it.isEmpty() }
-}
-
-fun badInput(): Nothing {
-  throw IllegalArgumentException("bad input")
 }

@@ -1,9 +1,6 @@
-import utils.Graph
 import utils.Parser
 import utils.Solution
-import utils.Vec2i
 import utils.badInput
-import utils.mapParser
 
 fun main() {
   Day25.run(skipPart2 = true)

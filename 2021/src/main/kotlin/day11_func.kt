@@ -19,7 +19,7 @@ object Day11Func : Solution<IntGrid>() {
       .withCounts()
 
     val flashedGrid = grid.map { coord, value ->
-      (value + (flashSurrounding[coord] ?: 0)).coerceAtMost(10) % 10
+      (value + (flashSurrounding[coord])).coerceAtMost(10) % 10
     }
 
     if (flashedGrid.coords.none { flashedGrid[it] == 0 && it !in alreadyFlashed && it !in flashPts }) {

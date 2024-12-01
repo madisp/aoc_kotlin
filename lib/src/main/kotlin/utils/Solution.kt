@@ -46,7 +46,9 @@ abstract class Solution<In : Any> {
       println()
     }
 
-    val testInput = try { readFile("${name}_test") } catch (_: Throwable) { null }
+    val testInput = try {
+      readFile("${name}_test")
+    } catch (_: Throwable) { null }
 
     if (!skipTest && testInput != null) {
       input = parse(testInput)

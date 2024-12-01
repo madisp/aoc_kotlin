@@ -28,3 +28,34 @@ fun lcm(numbers: List<Int>): Long {
     .map { (k, v) -> k to v.maxOf { it.value } }
     .fold(1L) { acc, (n, e) -> acc * n.toLong().pow(e) }
 }
+
+inline fun pow2(n: Int): Int = 1 shl n
+fun Int.pow(n: Int): Int {
+  var value = 1
+  require (n >= 0) {
+    "Cannot do int pow with negative exponent"
+  }
+  repeat(n) {
+    value *= this
+  }
+  return value
+}
+
+fun Long.pow(n: Int): Long {
+  var value = 1L
+  require (n >= 0) {
+    "Cannot do long pow with negative exponent"
+  }
+  repeat(n) {
+    value *= this
+  }
+  return value
+}
+
+fun Int.wrap(max: Int): Int {
+  return if (this > 0) {
+    this % max
+  } else {
+    (max + (this % max)) % max
+  }
+}

@@ -40,7 +40,7 @@ object Day7 : Solution<List<Day7.Hand>>() {
       return if (!wildcards) {
         counts.values.sortedDescending()
       } else {
-        val wildcardCount = counts['J'] ?: 0
+        val wildcardCount = counts['J']
         val noWildcards = counts
           .filter { (k, _) -> k != 'J' }.values
           .sortedDescending().takeIf { it.isNotEmpty() } ?: listOf(0)

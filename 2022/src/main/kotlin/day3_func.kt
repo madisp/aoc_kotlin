@@ -1,6 +1,5 @@
 import utils.Parser
 import utils.Solution
-import utils.badInput
 import utils.map
 import utils.mapItems
 import utils.split

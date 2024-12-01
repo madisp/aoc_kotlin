@@ -1,5 +1,6 @@
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import utils.readFile
 
 class Day11ImpTest {
   val grid = Day11Imp.parser(readFile("day11_test")).toMutable()

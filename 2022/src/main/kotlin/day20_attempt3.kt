@@ -1,6 +1,5 @@
 import utils.Parser
 import utils.Solution
-import utils.badInput
 import utils.mapItems
 import kotlin.math.absoluteValue
 
