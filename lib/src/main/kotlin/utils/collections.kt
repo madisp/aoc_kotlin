@@ -2,7 +2,11 @@ package utils
 
 import java.util.Arrays
 
+fun Pair<String, String>.toInts(): Pair<Int, Int> = first.toInt() to second.toInt()
+
 fun <A, B> Pair<A, A>.map(fn: (A) -> B): Pair<B, B> = fn(first) to fn(second)
+
+val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
 
 /**
  * Merge a list of pairs into a map. If items are present with the same key multiple times then they will be
@@ -55,6 +59,7 @@ val <T> List<T>.permutations: Sequence<List<T>> get() {
     list
   }
 }
+
 val <T> List<T>.combinations: Sequence<List<T>> get() {
   val list = MutableList(size) { this[it] }
   val take = BooleanArray(size) { false }
@@ -196,8 +201,6 @@ fun <T> Collection<T>.split(): Pair<Collection<T>, Collection<T>> {
   }
   return take(halfSize) to drop(halfSize)
 }
-
-val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
 
 /**
  * Split the range into a triplet of ranges:

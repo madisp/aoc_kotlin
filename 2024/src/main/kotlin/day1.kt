@@ -1,8 +1,8 @@
 import utils.Parser
 import utils.Solution
 import utils.cut
-import utils.map
 import utils.mapItems
+import utils.toInts
 import utils.withCounts
 import kotlin.math.absoluteValue
 
@@ -15,9 +15,9 @@ typealias Day1In = Pair<List<Int>, List<Int>>
 object Day1 : Solution<Day1In>() {
   override val name = "day1"
   override val parser: Parser<Day1In> = Parser.lines.mapItems {
-    it.cut(" ").map { item -> item.toInt() }
-  }.map { pairs ->
-    pairs.map { it.first } to pairs.map { it.second }
+    it.cut(" ").toInts()
+  }.map {
+    it.unzip()
   }
 
   override fun part1(input: Day1In): Int {
