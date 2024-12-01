@@ -3,6 +3,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.the
 
 @Suppress("unused")
@@ -20,6 +21,7 @@ class PuzzleConvention : Plugin<Project> {
       add("implementation", libs.coroutines)
       add("implementation", target.files(target.rootDir.resolve("z3/com.microsoft.z3.jar")))
 
+      add("testImplementation", target.project(":test-lib"))
       add("testImplementation", libs.bundles.test)
 
       add("ksp", target.project(":parser-processor"))
@@ -39,6 +41,10 @@ class PuzzleConvention : Plugin<Project> {
       if (jmhIncludes != null) {
         includes.add(jmhIncludes)
       }
+    }
+
+    target.tasks.withType(Test::class.java) {
+      workingDir = target.rootDir
     }
   }
 }

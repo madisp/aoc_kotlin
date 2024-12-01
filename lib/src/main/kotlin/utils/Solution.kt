@@ -21,6 +21,8 @@ abstract class Solution<In : Any> {
   open fun part1(input: In): Any? = null
   open fun part2(input: In): Any? = null
 
+  val day get() = name.lowercase(Locale.US).removePrefix("day").split('_')[0].trimStart('0').trim().toInt()
+
   fun run(
     header: String? = null,
     printParseTime: Boolean = true,
@@ -29,7 +31,6 @@ abstract class Solution<In : Any> {
     skipPart2: Boolean = false,
   ) {
     val parse = parser
-    val day = name.lowercase(Locale.US).removePrefix("day").split('_')[0].trimStart('0').trim().toInt()
     val year = readFile("year").trim().toInt()
     val (part1Input, parseTime) = measureTimedValue {
       parse(readInput(year, day))
