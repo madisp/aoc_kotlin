@@ -14,6 +14,6 @@ object Day2 : Solution<Day2In>() {
 
   override fun part1(input: Day2In): Int {
     val (tl, br) = input.bounds { it == 'X' }
-    return (br.x - tl.x + br.y - tl.y + 4) * 2
+    return (tl.manhattanDistanceTo(br) + 2) * 2 + 4
   }
 }
