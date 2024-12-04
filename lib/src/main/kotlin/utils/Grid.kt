@@ -169,4 +169,13 @@ inline fun <reified T> Grid<T>.toMutable(): MutableGrid<T> {
   return MutableGrid(arr, width, height, oobBehaviour)
 }
 
+/**
+ * Allows reads to go out of bounds while returning [value].
+ */
+inline fun <reified T> Grid<T>.withDefault(value: T): Grid<T> = withOobBehaviour(Grid.OobBehaviour.Default(value))
+
+inline fun <reified T> Grid<T>.withOobBehaviour(oobBehaviour: Grid.OobBehaviour<T>): Grid<T> {
+  return map(oobBehaviour) { _, v -> v }
+}
+
 inline fun <reified T, reified R> Grid<T>.map(oobBehaviour: Grid.OobBehaviour<R>, fn: (Vec2i, T) -> R) = createGrid(width, height, oobBehaviour) { pos -> fn(pos, this[pos.x][pos.y]) }

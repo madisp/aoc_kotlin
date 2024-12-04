@@ -47,6 +47,9 @@ data class Vec2i(val x: Int, val y: Int) {
     val DOWN = Vec2i(0, 1)
     val LEFT = Vec2i(-1, 0)
     val RIGHT = Vec2i(1, 0)
+
+    val CARDINALS = listOf(UP, DOWN, LEFT, RIGHT)
+    val DIAGONALS = listOf(UP + LEFT, UP + RIGHT, DOWN + RIGHT, DOWN + LEFT)
   }
 }
 
