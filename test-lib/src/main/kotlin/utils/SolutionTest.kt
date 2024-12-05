@@ -2,6 +2,7 @@ package utils
 
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.TruthJUnit.assume
+import org.junit.Before
 import org.junit.Test
 
 abstract class SolutionTest<In : Any>(
@@ -16,24 +17,28 @@ abstract class SolutionTest<In : Any>(
   @Test
   fun testPart1() {
     assume().that(examples.first).isNotNull()
+    solution.input = testInput
     assertThat(solution.part1(testInput)).isEqualTo(examples.first)
   }
 
   @Test
   fun testPart2() {
     assume().that(examples.second).isNotNull()
+    solution.input = testInput
     assertThat(solution.part2(testInput)).isEqualTo(examples.second)
   }
 
   @Test
   fun part1() {
     assume().that(answers.first).isNotNull()
+    solution.input = input
     assertThat(solution.part1(input)).isEqualTo(answers.first)
   }
 
   @Test
   fun part2() {
     assume().that(answers.second).isNotNull()
+    solution.input = input
     assertThat(solution.part2(input)).isEqualTo(answers.second)
   }
 }

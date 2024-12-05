@@ -225,3 +225,5 @@ infix fun IntRange.tesselateWith(other: IntRange): Pair<IntRange?, List<IntRange
   val right = (maxOf(first, other.last + 1) .. last)
   return intersection.takeIf { !it.isEmpty() } to listOf(left, right).filter { !it.isEmpty() }
 }
+
+val <T> List<T>.middle: T get() = this[(size - 1) / 2]

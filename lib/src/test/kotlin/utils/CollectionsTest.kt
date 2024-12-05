@@ -53,4 +53,26 @@ class CollectionsTest {
       "CDE", "BDE", "BCE", "BCD", "ADE", "ACE", "ACD", "ABE", "ABD", "ABC"
     ).inOrder()
   }
+
+  @Test(expected = IndexOutOfBoundsException::class)
+  fun testMiddleOnEmptyThrows() {
+    val list = emptyList<Int>()
+    assertThat(list.middle).isNull()
+  }
+
+  @Test
+  fun testMiddleOnSingletonList() {
+    assertThat(listOf(1).middle).isEqualTo(1)
+  }
+
+  @Test
+  fun testMiddleOnOddList() {
+    assertThat(listOf(1,2,3).middle).isEqualTo(2)
+  }
+
+  @Test
+  fun testMiddleOnEvenList() {
+    // 2 or 3?
+    assertThat(listOf(1,2,3,4).middle).isEqualTo(2)
+  }
 }
