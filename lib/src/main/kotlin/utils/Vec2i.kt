@@ -2,6 +2,14 @@ package utils
 
 import kotlin.math.abs
 
+fun Char.toVec2i() = when (this) {
+  '^' -> Vec2i.UP
+  '>' -> Vec2i.RIGHT
+  'v' -> Vec2i.DOWN
+  '<' -> Vec2i.LEFT
+  else -> throw IllegalArgumentException("Only ^>v< can be converted to a vec")
+}
+
 data class Vec2i(val x: Int, val y: Int) {
   val adjacent get() = listOf(
     copy(x = x - 1),
@@ -37,6 +45,14 @@ data class Vec2i(val x: Int, val y: Int) {
   }
 
   fun toVec2l() = Vec2l(x.toLong(), y.toLong())
+
+  val gridChar: Char get() = when (this) {
+    UP -> '^'
+    RIGHT -> '>'
+    DOWN -> 'v'
+    LEFT -> '<'
+    else -> throw IllegalArgumentException("Only CARDINAL directions (UP, RIGHT, DOWN, LEFT) can be converted to grid chars")
+  }
 
   companion object {
     fun parse(str: String, delimiter: String = ","): Vec2i {
