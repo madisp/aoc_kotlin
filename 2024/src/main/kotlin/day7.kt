@@ -33,20 +33,14 @@ object Day7 : Solution<Day7In>() {
       when (op) {
         Op.ADD -> isValid(EquationTemplate(eq.answ - eq.operands.last(), eq.operands.dropLast(1)), ops)
         Op.MUL -> {
-          if (eq.answ % eq.operands.last() != 0L) {
-            false
-          } else {
+          (eq.answ % eq.operands.last() == 0L) &&
             isValid(EquationTemplate(eq.answ / eq.operands.last(), eq.operands.dropLast(1)), ops)
-          }
         }
         Op.CONCAT -> {
           val answ = eq.answ.toString()
           val operand = eq.operands.last().toString()
-          if (!answ.endsWith(operand)) {
-            false
-          } else {
+          answ.endsWith(operand) &&
             isValid(EquationTemplate(answ.removeSuffix(operand).toLong(), eq.operands.dropLast(1)), ops)
-          }
         }
       }
     }
