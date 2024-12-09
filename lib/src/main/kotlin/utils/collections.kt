@@ -31,6 +31,7 @@ fun <T> Iterable<T>.withLCounts(): Map<T, Long> {
 }
 
 fun <K, V> Map<K, V>.withDefault(default: V) = DefaultMap(this, default)
+
 operator fun <T> List<T>.times(other: List<T>): List<Pair<T, T>> {
   return flatMap { first ->
     other.map { second ->

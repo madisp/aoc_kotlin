@@ -34,12 +34,12 @@ fun interface Parser<In> {
     /**
      * Combine two parsers into one - a header parser and a repeating item parser
      */
-    fun <R1, R2> compoundList(header: Parser<R1>, item: Parser<R2>) = compoundList("\n\n", header, item)
-    fun <R1, R2> compoundList(delimiter: String, header: Parser<R1>, item: Parser<R2>): Parser<Pair<R1, List<R2>>> {
+    fun <R1, R2> compoundList(header: Parser<R1>, item: Parser<R2>) = compoundList(headerDelimiter = "\n\n", itemDelimiter = "\n", header, item)
+    fun <R1, R2> compoundList(headerDelimiter: String, itemDelimiter: String, header: Parser<R1>, item: Parser<R2>): Parser<Pair<R1, List<R2>>> {
       return Parser { input ->
-        val (header, rest) = input.cut(delimiter)
+        val (headerString, rest) = input.cut(headerDelimiter)
 
-        header(header) to rest.split(delimiter).map { it.trim() }.filter(String::isNotBlank).map { item(it) }
+        header(headerString) to rest.split(itemDelimiter).map { it.trim() }.filter(String::isNotBlank).map { item(it) }
       }
     }
   }
