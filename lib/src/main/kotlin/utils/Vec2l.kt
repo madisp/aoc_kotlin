@@ -24,6 +24,8 @@ data class Vec2l(val x: Long, val y: Long) {
 
   operator fun plus(other: Vec2l) = Vec2l(this.x + other.x, this.y + other.y)
 
+  operator fun minus(other: Vec2l) = Vec2l(this.x - other.x, this.y - other.y)
+
   operator fun times(scalar: Long) = Vec2l(this.x * scalar, this.y * scalar)
 
   operator fun plus(scalar: Long) = Vec2l(this.x + scalar, this.y + scalar)
