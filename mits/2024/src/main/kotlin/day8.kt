@@ -59,10 +59,14 @@ object Day8 : Solution<Day8In>() {
       return best
     }
 
-    val bestBrute = (trucks.size - 1 downTo best + 1).find {
-      fit(it, maxWeight, items)
+    var bestGuess = trucks.size
+    for (guess in trucks.size - 1 downTo best) {
+      if (!fit(guess, maxWeight, items)) {
+        return bestGuess
+      }
+      bestGuess = guess
     }
 
-    return bestBrute ?: trucks.size
+    throw IllegalStateException("No solution found")
   }
 }
