@@ -30,7 +30,7 @@ object Day14 : Solution<Day14In>() {
     return robots.map { it.copy(p = (it.p + it.v * steps) % dimen) }
   }
 
-  override fun part1(): Int {
+  override fun part1(input: Day14In): Int {
     val dimen = if (input.size < 20) Vec2l(11, 7) else Vec2l(101, 103)
     // normalize input velocities to pos
     val normalized = input.map {
@@ -71,8 +71,12 @@ object Day14 : Solution<Day14In>() {
     return compressed / arr.size.toDouble()
   }
 
-  override fun part2(): Any? {
-    val dimen = if (input.size < 20) Vec2l(11, 7) else Vec2l(101, 103)
+  override fun part2(input: Day14In): Long? {
+    if (input.size < 20) {
+      return null
+    }
+
+    val dimen = Vec2l(101, 103)
     // normalize input velocities to pos
     val normalized = input.map {
       it.copy(v = (it.v + dimen) % dimen)
