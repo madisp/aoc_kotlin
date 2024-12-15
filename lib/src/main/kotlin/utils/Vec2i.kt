@@ -7,7 +7,7 @@ fun Char.toVec2i() = when (this) {
   '>' -> Vec2i.RIGHT
   'v' -> Vec2i.DOWN
   '<' -> Vec2i.LEFT
-  else -> throw IllegalArgumentException("Only ^>v< can be converted to a vec")
+  else -> throw IllegalArgumentException("Only ^>v< can be converted to a vec (got $this)")
 }
 
 data class Vec2i(val x: Int, val y: Int) {
