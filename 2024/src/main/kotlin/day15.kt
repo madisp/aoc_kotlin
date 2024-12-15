@@ -20,6 +20,7 @@ object Day15 : Solution<Day15In>() {
     for (c in input.second) {
       val dir = c.toVec2i()
       var box = robot + dir
+
       while (g[box] == 'O') {
         box += dir
       }
