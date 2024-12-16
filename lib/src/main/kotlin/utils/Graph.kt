@@ -40,7 +40,7 @@ class Graph<Node : Any, Edge: Any>(
     return shortestPath(start, heuristic = heuristic, end = { it == end })
   }
 
-  fun shortestPaths(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, Set<Node>> {
+  fun shortestPaths(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Triple<Int, MutableMap<Node, MutableSet<Pair<Node, Edge>>>, Sequence<List<Pair<Node, Edge?>>>> {
     return shortestPaths(start, heuristic = heuristic, end = { it == end })
   }
 
@@ -48,10 +48,10 @@ class Graph<Node : Any, Edge: Any>(
     start: Node,
     heuristic: (Node) -> Int = { _ -> 0},
     end: (Node) -> Boolean,
-  ): Pair<Int, Set<Node>> {
+  ): Triple<Int, MutableMap<Node, MutableSet<Pair<Node, Edge>>>, Sequence<List<Pair<Node, Edge?>>>> {
     val queue = PriorityQueue<Pair<Node, Int>>(compareBy { it.second })
     queue.add(start to 0)
-    val src = mutableMapOf<Node, MutableList<Pair<Node, Edge>>>()
+    val src = mutableMapOf<Node, MutableSet<Pair<Node, Edge>>>()
     val cost = mutableMapOf(start to 0)
 
     val counter = AtomicLong(0)
@@ -76,7 +76,10 @@ class Graph<Node : Any, Edge: Any>(
         val nextCost = cost[nextNode]
         if (nextCost == null || newNextCost <= nextCost) {
           cost[nextNode] = newNextCost
-          src.getOrPut(nextNode) { mutableListOf() }.add(node to edge)
+          if (nextCost != null && newNextCost < nextCost) {
+            src[nextNode] = mutableSetOf()
+          }
+          src.getOrPut(nextNode) { mutableSetOf() }.add(node to edge)
           queue.add(nextNode to (newNextCost + heuristic(nextNode)))
         }
       }
@@ -86,20 +89,25 @@ class Graph<Node : Any, Edge: Any>(
       throw IllegalStateException("No path to the end node")
     }
 
-    // TODO(madis) build all backtraces
-    val pts = mutableSetOf<Node>()
-    val btQueue = ArrayDeque<Node>()
-    btQueue.add(endNode)
-
-    while (btQueue.isNotEmpty()) {
-      val node = btQueue.poll()
-      if (node !in pts) {
-        pts.add(node)
-        btQueue.addAll(src[node]?.map { it.first } ?: emptyList())
+    val bt = mutableListOf<Pair<Node, Edge?>>()
+    suspend fun SequenceScope<List<Pair<Node, Edge?>>>.backwards(node: Node) {
+      if (node == start) {
+        yield(bt)
+      } else {
+        src[node]?.forEach {
+          bt.add(it)
+          backwards(it.first)
+          bt.removeLast()
+        }
       }
     }
 
-    return cost[endNode]!! to pts
+    val bts = sequence {
+      bt.add(endNode to null)
+      backwards(endNode)
+    }
+
+    return Triple(cost[endNode]!!, src, bts)
   }
 
   fun shortestPath(
