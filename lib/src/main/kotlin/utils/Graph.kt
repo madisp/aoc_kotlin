@@ -40,6 +40,68 @@ class Graph<Node : Any, Edge: Any>(
     return shortestPath(start, heuristic = heuristic, end = { it == end })
   }
 
+  fun shortestPaths(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, Set<Node>> {
+    return shortestPaths(start, heuristic = heuristic, end = { it == end })
+  }
+
+  fun shortestPaths(
+    start: Node,
+    heuristic: (Node) -> Int = { _ -> 0},
+    end: (Node) -> Boolean,
+  ): Pair<Int, Set<Node>> {
+    val queue = PriorityQueue<Pair<Node, Int>>(compareBy { it.second })
+    queue.add(start to 0)
+    val src = mutableMapOf<Node, MutableList<Pair<Node, Edge>>>()
+    val cost = mutableMapOf(start to 0)
+
+    val counter = AtomicLong(0)
+
+    var endNode: Node? = null
+
+    while (queue.isNotEmpty()) {
+      val (node, currentRisk) = queue.remove()
+
+      if (counter.incrementAndGet() % 1000000 == 0L) {
+        println("--- states ---")
+        println("Visited ${counter.get()} nodes")
+        println("Current node: cost=$currentRisk node=$node heuristic=${heuristic(node)}")
+      }
+
+      if (end(node)) {
+        endNode = node
+      }
+
+      edgeFn(node).forEach { (edge, nextNode) ->
+        val newNextCost = cost[node]!! + weightFn(edge)
+        val nextCost = cost[nextNode]
+        if (nextCost == null || newNextCost <= nextCost) {
+          cost[nextNode] = newNextCost
+          src.getOrPut(nextNode) { mutableListOf() }.add(node to edge)
+          queue.add(nextNode to (newNextCost + heuristic(nextNode)))
+        }
+      }
+    }
+
+    if (endNode == null) {
+      throw IllegalStateException("No path to the end node")
+    }
+
+    // TODO(madis) build all backtraces
+    val pts = mutableSetOf<Node>()
+    val btQueue = ArrayDeque<Node>()
+    btQueue.add(endNode)
+
+    while (btQueue.isNotEmpty()) {
+      val node = btQueue.poll()
+      if (node !in pts) {
+        pts.add(node)
+        btQueue.addAll(src[node]?.map { it.first } ?: emptyList())
+      }
+    }
+
+    return cost[endNode]!! to pts
+  }
+
   fun shortestPath(
     start: Node,
     heuristic: (Node) -> Int = { _ -> 0 },
