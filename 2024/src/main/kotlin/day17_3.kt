@@ -1,3 +1,5 @@
+import kotlin.time.measureTime
+
 // fast version of part 2 that uses
 // hand-compiled version of the input for perf
 fun findBits(a: Long, output: Int): List<Long> {
@@ -20,11 +22,13 @@ fun main() {
 
   var candidates = listOf(0L)
 
-  program.forEach { insn ->
-    candidates = candidates.flatMap { a ->
-      findBits(a, insn)
+  val elapsed = measureTime {
+    program.forEach { insn ->
+      candidates = candidates.flatMap { a ->
+        findBits(a, insn)
+      }
     }
   }
-  println("Best variant:")
+  println("Best variant in ${elapsed}:")
   println(candidates.min())
 }

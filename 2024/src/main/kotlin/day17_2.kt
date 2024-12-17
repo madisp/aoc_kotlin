@@ -11,7 +11,6 @@ fun main() {
 
   outer@for (aInit in (1 shl 46) until Long.MAX_VALUE) {
     var output = 0L
-    var sz = 0
 
     var a = aInit
     var b: Long
@@ -38,11 +37,6 @@ fun main() {
 
       // oot 5
       output = (output shl 3) + (b and 7)
-      sz++
-
-      if (sz > 16) {
-        continue@outer
-      }
 
       // jnz 0
       // loop done by actual while loop
