@@ -53,7 +53,7 @@ object Day16 : Solution<Day16In>() {
     val paths = endStates.map { g.shortestPaths(startState, it) }
     val minCost = paths.minOf { it.first }
     return paths.filter { it.first == minCost }
-      .flatMap { it.third.flatMap { path -> path.map { (s, _) -> s.pos } } }
+      .flatMap { it.second.flatMap { path -> path.map { (s, _) -> s.pos } } }
       .toSet()
       .size
   }

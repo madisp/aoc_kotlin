@@ -40,7 +40,7 @@ class Graph<Node : Any, Edge: Any>(
     return shortestPath(start, heuristic = heuristic, end = { it == end })
   }
 
-  fun shortestPaths(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Triple<Int, MutableMap<Node, MutableSet<Pair<Node, Edge>>>, Sequence<List<Pair<Node, Edge?>>>> {
+  fun shortestPaths(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, Sequence<List<Pair<Node, Edge?>>>> {
     return shortestPaths(start, heuristic = heuristic, end = { it == end })
   }
 
@@ -48,7 +48,7 @@ class Graph<Node : Any, Edge: Any>(
     start: Node,
     heuristic: (Node) -> Int = { _ -> 0},
     end: (Node) -> Boolean,
-  ): Triple<Int, MutableMap<Node, MutableSet<Pair<Node, Edge>>>, Sequence<List<Pair<Node, Edge?>>>> {
+  ): Pair<Int, Sequence<List<Pair<Node, Edge?>>>> {
     val queue = PriorityQueue<Pair<Node, Int>>(compareBy { it.second })
     queue.add(start to 0)
     val src = mutableMapOf<Node, MutableSet<Pair<Node, Edge>>>()
@@ -107,7 +107,7 @@ class Graph<Node : Any, Edge: Any>(
       backwards(endNode)
     }
 
-    return Triple(cost[endNode]!!, src, bts)
+    return cost[endNode]!! to bts
   }
 
   fun shortestPath(
