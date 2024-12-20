@@ -36,8 +36,8 @@ class Graph<Node : Any, Edge: Any>(
     return emptyList()
   }
 
-  fun shortestPath(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, List<Pair<Node, Edge?>>> {
-    return shortestPath(start, heuristic = heuristic, end = { it == end })
+  fun shortestPath(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }, maxCost: Int = Int.MAX_VALUE): Pair<Int, List<Pair<Node, Edge?>>> {
+    return shortestPath(start, heuristic = heuristic, end = { it == end }, maxCost = maxCost)
   }
 
   fun shortestPaths(start: Node, end: Node, heuristic: (Node) -> Int = { _ -> 0 }): Pair<Int, Sequence<List<Pair<Node, Edge?>>>> {
@@ -114,6 +114,7 @@ class Graph<Node : Any, Edge: Any>(
     start: Node,
     heuristic: (Node) -> Int = { _ -> 0 },
     end: (Node) -> Boolean,
+    maxCost: Int = Int.MAX_VALUE,
   ): Pair<Int, List<Pair<Node, Edge?>>> {
     val queue = PriorityQueue<Pair<Node, Int>>(compareBy { it.second })
     queue.add(start to 0)
@@ -147,7 +148,9 @@ class Graph<Node : Any, Edge: Any>(
         if (nextCost == null || newNextCost < nextCost) {
           cost[nextNode] = newNextCost
           src[nextNode] = node to edge
-          queue.add(nextNode to (newNextCost + heuristic(nextNode)))
+          if (newNextCost <= maxCost) {
+            queue.add(nextNode to (newNextCost + heuristic(nextNode)))
+          }
         }
       }
     }
