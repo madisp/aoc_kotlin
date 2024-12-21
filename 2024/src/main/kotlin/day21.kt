@@ -43,7 +43,7 @@ object Day21 : Solution<Day21In>() {
 
     if (start + Vec2i(delta.x, 0) in keypad && keypad[start + Vec2i(delta.x, 0)] == '.') {
       return listOf(vert + horiz)
-    } else if (start + Vec2i(delta.y, 0) in keypad && keypad[start + Vec2i(delta.y, 0)] == '.') {
+    } else if (start + Vec2i(0, delta.y) in keypad && keypad[start + Vec2i(0, delta.y)] == '.') {
       return listOf(horiz + vert)
     } else {
       return listOf(horiz + vert, vert + horiz)
