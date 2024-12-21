@@ -1,5 +1,7 @@
-import utils.*
-import java.math.BigDecimal
+import utils.Grid
+import utils.Parser
+import utils.Solution
+import utils.Vec2i
 import kotlin.math.absoluteValue
 
 fun main() {
@@ -12,14 +14,14 @@ object Day21 : Solution<Day21In>() {
   override val name = "day21"
   override val parser: Parser<Day21In> = Parser.lines
 
-  val codeKeypad = Parser.charGrid("""
+  private val codeKeypad = Parser.charGrid("""
     789
     456
     123
     .0A
   """.trimIndent())
 
-  val dirKeypad = Parser.charGrid("""
+  private val dirKeypad = Parser.charGrid("""
     .^A
     <v>
   """.trimIndent())
@@ -41,12 +43,12 @@ object Day21 : Solution<Day21In>() {
       "v".repeat(delta.y)
     }
 
-    if (start + Vec2i(delta.x, 0) in keypad && keypad[start + Vec2i(delta.x, 0)] == '.') {
-      return listOf(vert + horiz)
+    return if (start + Vec2i(delta.x, 0) in keypad && keypad[start + Vec2i(delta.x, 0)] == '.') {
+      listOf(vert + horiz)
     } else if (start + Vec2i(0, delta.y) in keypad && keypad[start + Vec2i(0, delta.y)] == '.') {
-      return listOf(horiz + vert)
+      listOf(horiz + vert)
     } else {
-      return listOf(horiz + vert, vert + horiz)
+      listOf(horiz + vert, vert + horiz)
     }
   }
 
@@ -61,14 +63,14 @@ object Day21 : Solution<Day21In>() {
     }).toSet()
   }
 
-  fun shortestCode2(code: String, cycles: Int): BigDecimal {
-    val memo = mutableMapOf<Triple<Int, Char, Char>, BigDecimal>()
+  private fun shortestcode(code: String, cycles: Int): Long {
+    val memo = mutableMapOf<Triple<Int, Char, Char>, Long>()
     repeat(cycles) { cycle ->
       "^v<>A".forEach { a ->
         "^v<>A".forEach { b ->
           if (cycle == 0) {
             val move = move(dirKeypad, a, b).minBy { it.length } + "A"
-            memo[Triple(cycle, a, b)] = move.length.toBigDecimal()
+            memo[Triple(cycle, a, b)] = move.length.toLong()
           } else {
             val moves = move(dirKeypad, a, b).map { it + "A" }
             memo[Triple(cycle, a, b)] = moves.minOf {
@@ -82,47 +84,26 @@ object Day21 : Solution<Day21In>() {
     }
 
     val kpMoves = moves(codeKeypad, 'A', code).toSet()
-    val fullMoves = kpMoves.map { kpm ->
+    return kpMoves.minOf { kpm ->
       "A$kpm".zipWithNext().sumOf {
         (a, b) -> memo[Triple(cycles - 1, a, b)]!!
       }
-//      moves(dirKeypad, 'A', kpm).toSet().map { d1 ->
-//        "A$d1".zipWithNext().sumOf {
-//            (a, b) -> memo[Triple(cycles - 1, a, b)]!!
-//        }
-//      }
     }
-
-    return fullMoves.min()
   }
 
-  override fun part1(input: Day21In): BigDecimal {
-    // test p1: 126384
-    // answ p1: 188398
+  override fun part1(input: Day21In): Long {
     return input.sumOf { code ->
-      val c1 = shortestCode2(code, 2)
-      val c2 = code.filter { it.isDigit() }.toInt(10).toBigDecimal()
+      val c1 = shortestcode(code, 2)
+      val c2 = code.filter { it.isDigit() }.toLong(10)
       c1 * c2
     }
   }
 
-  override fun part2(input: Day21In): BigDecimal {
+  override fun part2(input: Day21In): Long {
     return input.sumOf { code ->
-      val c1 = shortestCode2(code, 25)
-//      println("$code - $c1")
-      val c2 = code.filter { it.isDigit() }.toInt(10).toBigDecimal()
+      val c1 = shortestcode(code, 25)
+      val c2 = code.filter { it.isDigit() }.toLong(10)
       c1 * c2
     }
-
-    // 653963398181276 too high
-    // 261252013494090 too high
-    // 198187405225570 wrong
-    // 104367628740070 too low
-
-    // wrong: 132680405989994
-    // 154115708116294
-
-    // wrong: 198187405225570
-    // correct: 230049027535970
   }
 }
