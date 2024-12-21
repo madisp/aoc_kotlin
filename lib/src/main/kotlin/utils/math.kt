@@ -29,6 +29,10 @@ fun lcm(numbers: List<Int>): Long {
     .fold(1L) { acc, (n, e) -> acc * n.toLong().pow(e) }
 }
 
+fun gcd(a: Int, b: Int): Int {
+  return if (b == 0) a else gcd(b, a % b)
+}
+
 inline fun pow2(n: Int): Int = 1 shl n
 fun Int.pow(n: Int): Int {
   var value = 1
