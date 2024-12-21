@@ -43,9 +43,9 @@ object Day21 : Solution<Day21In>() {
       "v".repeat(delta.y)
     }
 
-    return if (start + Vec2i(delta.x, 0) in keypad && keypad[start + Vec2i(delta.x, 0)] == '.') {
+    return if (keypad[start + Vec2i(delta.x, 0)] == '.') {
       listOf(vert + horiz)
-    } else if (start + Vec2i(0, delta.y) in keypad && keypad[start + Vec2i(0, delta.y)] == '.') {
+    } else if (keypad[start + Vec2i(0, delta.y)] == '.') {
       listOf(horiz + vert)
     } else {
       listOf(horiz + vert, vert + horiz)
@@ -63,26 +63,28 @@ object Day21 : Solution<Day21In>() {
     }).toSet()
   }
 
-  private fun shortestcode(code: String, cycles: Int): Long {
-    val memo = mutableMapOf<Triple<Int, Char, Char>, Long>()
-    repeat(cycles) { cycle ->
+  private val maxCycles = 25
+  private val memo: Map<Triple<Int, Char, Char>, Long> = mutableMapOf<Triple<Int, Char, Char>, Long>().apply {
+    repeat(maxCycles) { cycle ->
       "^v<>A".forEach { a ->
         "^v<>A".forEach { b ->
           if (cycle == 0) {
             val move = move(dirKeypad, a, b).minBy { it.length } + "A"
-            memo[Triple(cycle, a, b)] = move.length.toLong()
+            this[Triple(cycle, a, b)] = move.length.toLong()
           } else {
             val moves = move(dirKeypad, a, b).map { it + "A" }
-            memo[Triple(cycle, a, b)] = moves.minOf {
+            this[Triple(cycle, a, b)] = moves.minOf {
               "A$it".zipWithNext().sumOf {
-                (a, b) -> memo[Triple(cycle - 1, a, b)]!!
+                  (a, b) -> this[Triple(cycle - 1, a, b)]!!
               }
             }
           }
         }
       }
     }
+  }
 
+  private fun shortestcode(code: String, cycles: Int): Long {
     val kpMoves = moves(codeKeypad, 'A', code).toSet()
     return kpMoves.minOf { kpm ->
       "A$kpm".zipWithNext().sumOf {
