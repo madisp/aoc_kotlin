@@ -65,6 +65,15 @@ data class Vec4i(val x: Int, val y: Int, val z: Int, val w: Int) {
     }
   }
 
+  operator fun compareTo(o: Vec4i): Int {
+    return when {
+      x != o.x -> x.compareTo(o.x)
+      y != o.y -> y.compareTo(o.y)
+      z != o.z -> z.compareTo(o.z)
+      else -> w.compareTo(o.w)
+    }
+  }
+
   override fun toString(): String {
     return "($x,$y,$z,$w)"
   }
