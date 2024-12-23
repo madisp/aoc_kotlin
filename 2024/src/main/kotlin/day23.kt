@@ -41,12 +41,9 @@ object Day23 : Solution<Day23In>() {
   }
 
   override fun part2(input: Day23In): String {
-    val connected = mutableMapOf<Pair<String, String>, Boolean>()
     val computers = mutableMapOf<String, MutableSet<String>>()
 
     input.forEach { (a, b) ->
-      connected[a to b] = true
-      connected[b to a] = true
       computers.getOrPut(a) { mutableSetOf() }.add(b)
       computers.getOrPut(b) { mutableSetOf() }.add(a)
     }
