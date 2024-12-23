@@ -48,17 +48,20 @@ object Day23 : Solution<Day23In>() {
       computers.getOrPut(b) { mutableSetOf() }.add(a)
     }
 
-    val maxSize = computers.maxOf { it.value.size }
+    val maxSize = computers.maxOf { it.value.size } + 1
 
     for (sz in maxSize downTo 3) {
-      val groupComputers = computers.filter { it.value.size == sz }.keys
+      val groupComputers = computers.filter { it.value.size >= (sz - 1) }.keys
+      if (groupComputers.size < sz) {
+        continue
+      }
       groupComputers.forEach { one ->
         val others = computers[one]!!.toList()
-        if (others.size >= maxSize - 1) {
-          others.selections(maxSize - 1).forEach { selection ->
+        if (others.size >= sz - 1) {
+          others.selections(sz - 1).forEach { selection ->
             val fits = selection.count {
               computers[it]!!.containsAll(selection - it + one)
-            } >= (maxSize - 1)
+            } >= (sz - 1)
             if (fits) {
               return (selection + one).toList().sorted().joinToString(",")
             }
