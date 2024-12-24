@@ -1,4 +1,11 @@
-import utils.*
+import utils.Parse
+import utils.Parser
+import utils.Solution
+import utils.Vec2l
+import utils.badInput
+import utils.mapItems
+import utils.selections
+import java.util.ArrayDeque
 
 fun main() {
   Day24.run()
@@ -149,14 +156,12 @@ object Day24 : Solution<Day24In>() {
   }
 
   private fun test(exprMap: Map<String, Expr>): Int {
-
     // return the lowest bit that failed
     var low = Int.MAX_VALUE
 
     tests.forEachIndexed { i, test ->
       val (a, b) = test
       val c = addLong(a, b)
-//      println("$a + $b = $c")
       val d = evalExpr(exprMap, Vec2l(a, b))
       if (c != d) {
         low = minOf(low, getLowestDiffBit(c, d))
@@ -165,11 +170,42 @@ object Day24 : Solution<Day24In>() {
     return low
   }
 
+  private fun findDeps(bit: Int, swaps: Map<String, String>): Set<String> {
+    val rawExprs = input.second.map {
+      it.copy(target = swaps[it.target] ?: it.target)
+    }
+    val rawExpr = mutableMapOf<String, RawExpr>()
+    rawExprs.forEach { rawExpr[it.target] = it }
+
+    val out = mutableSetOf<String>()
+
+    val q = ArrayDeque<String>()
+    q.add("z${bit.toString(10).padStart(2, '0')}")
+
+    while (q.isNotEmpty()) {
+      val item = q.poll()
+      out += item
+      val e = rawExpr[item] ?: continue
+      q.add(e.a)
+      q.add(e.b)
+    }
+
+    return out
+  }
+
+  private fun guessDeps(bit: Int, swaps: Map<String, String>): List<String> {
+    val minus = findDeps(bit - 1, swaps)
+    val deps = findDeps(bit + 1, swaps)
+    return (deps - minus).toList()
+  }
+
   private fun findBestSwap(swaps: Map<String, String>): Map<String, String> {
     var best = test(buildExpr(swaps).second)
     var bestSwap = swaps
 
-    input.second.map { it.target }.filter { it !in swaps.keys }.selections(2).forEach {
+    val guesses = guessDeps(best, swaps) + "z${best.toString(10).padStart(2, '0')}"
+
+    guesses.selections(2).forEach {
       val newSwaps = swaps + mapOf(it[0] to it[1], it[1] to it[0])
       val (_, exprMap) = runCatching { buildExpr(newSwaps) }.getOrNull() ?: return@forEach
       val score = test(exprMap)
