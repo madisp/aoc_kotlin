@@ -18,5 +18,5 @@ dependencyResolutionManagement {
 rootProject.name = "aoc_kotlin"
 
 include(":lib", ":parser-processor", ":parser-processor-tests", ":test-lib")
-include(":2015", ":2016", ":2019", ":2021", ":2022", ":2023", ":2024")
+include(":2015", ":2016", ":2019", ":2021", ":2022", ":2023", ":2024", ":2025")
 include(":mits:2024")
