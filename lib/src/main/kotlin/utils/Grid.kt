@@ -94,6 +94,7 @@ open class Grid<T>(
     return arr[y * width + x]
   }
   operator fun get(c: Vec2i): T = get(c.x, c.y)
+  operator fun get(cs: List<Vec2i>): List<T> = cs.map { get(it) }
 
   // get col, row
   open operator fun get(x: Int) = Column(this, x)

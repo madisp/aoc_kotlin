@@ -1,3 +1,5 @@
+package year2025
+
 import utils.SolutionTest
 
 class Day2Test : SolutionTest<Day2In>(

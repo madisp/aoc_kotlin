@@ -19,6 +19,7 @@ fun interface Parser<In> {
     val blocks = Parser { it.split("\n\n").map(String::trim).filter(String::isNotBlank) }
     val digitGrid = IntGrid.singleDigits
     val charGrid = Grid.chars()
+    fun charGrid(oobChar: Char) = Grid.chars(oobBehaviour = Grid.OobBehaviour.Default(oobChar))
 
     /**
      * combine two parsers into one, separate by a delimiter

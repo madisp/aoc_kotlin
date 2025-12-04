@@ -1,3 +1,5 @@
+package year2025
+
 import utils.IntGrid
 import utils.Parser
 import utils.Solution

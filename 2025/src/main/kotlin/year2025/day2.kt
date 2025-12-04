@@ -1,3 +1,5 @@
+package year2025
+
 import utils.Parser
 import utils.Solution
 import utils.cut
