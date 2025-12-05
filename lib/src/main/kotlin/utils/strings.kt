@@ -59,3 +59,6 @@ fun <Left, Right, R> String.cut(delimiter: String, p1: (String) -> Left, p2: (St
   require(idx != -1)
   return p3(p1(substring(0, idx).trim()), p2(substring(idx + delimiter.length).trim()))
 }
+
+fun String.toIntRange() = cut("-").toIntRange()
+fun String.toLongRange() = cut("-").toLongRange()

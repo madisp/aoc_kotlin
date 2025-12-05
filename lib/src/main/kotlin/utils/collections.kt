@@ -8,6 +8,11 @@ fun <A, B> Pair<A, A>.map(fn: (A) -> B): Pair<B, B> = fn(first) to fn(second)
 
 val <T1, T2> Pair<T1, T2>.flipped: Pair<T2, T1> get() = second to first
 
+fun Pair<Long, Long>.toRange() = first .. second
+fun Pair<String, String>.toLongRange() = first.toLong() .. second.toLong()
+fun Pair<Int, Int>.toRange() = first .. second
+fun Pair<String, String>.toIntRange() = first.toInt() .. second.toInt()
+
 /**
  * Merge a list of pairs into a map. If items are present with the same key multiple times then they will be
  * reduced according to the collision function.
@@ -216,6 +221,19 @@ infix fun LongRange.tesselateWith(other: LongRange): Pair<LongRange?, List<LongR
 }
 
 /**
+ * Merge this [LongRange] with [other], returning `null` if there's no possibility
+ * to merge the two ranges
+ */
+infix fun LongRange.mergeWith(other: LongRange): LongRange? {
+  if (maxOf(first, other.first) > minOf(last, other.last) + 1) {
+    // no intersection
+    return null
+  } else {
+    return minOf(first, other.first) .. maxOf(last, other.last)
+  }
+}
+
+/**
  * Split the range into a triplet of ranges:
  * - intersection of the two ranges
  * - list of ranges in the first range but not the second
@@ -225,6 +243,19 @@ infix fun IntRange.tesselateWith(other: IntRange): Pair<IntRange?, List<IntRange
   val left = (first .. minOf(last, other.first - 1))
   val right = (maxOf(first, other.last + 1) .. last)
   return intersection.takeIf { !it.isEmpty() } to listOf(left, right).filter { !it.isEmpty() }
+}
+
+/**
+ * Merge this [IntRange] with [other], returning `null` if there's no possibility
+ * to merge the two ranges
+ */
+infix fun IntRange.mergeWith(other: IntRange): IntRange? {
+  if (maxOf(first, other.first) > minOf(last, other.last) + 1) {
+    // no intersection
+    return null
+  } else {
+    return minOf(first, other.first) .. maxOf(last, other.last)
+  }
 }
 
 val <T> List<T>.middle: T get() = this[(size - 1) / 2]
