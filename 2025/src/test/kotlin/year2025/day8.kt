@@ -1,6 +1,6 @@
+package year2025
+
 import utils.SolutionTest
-import year2025.Day8
-import year2025.Day8In
 
 class Day8Test : SolutionTest<Day8In>(
   solution = Day8,

@@ -2,7 +2,7 @@ package utils
 
 import kotlin.math.abs
 
-data class Vec2l(val x: Long, val y: Long) {
+data class Vec2l(val x: Long, val y: Long): Comparable<Vec2l> {
   val adjacent get() = listOf(
     copy(x = x - 1),
     copy(x = x + 1),
@@ -36,6 +36,13 @@ data class Vec2l(val x: Long, val y: Long) {
 
   fun manhattanDistanceTo(other: Vec2l): Long {
     return (abs(other.x - x) + abs(other.y - y))
+  }
+
+  override operator fun compareTo(other: Vec2l): Int {
+    return when {
+      x != other.x -> x.compareTo(other.x)
+      else -> y.compareTo(other.y)
+    }
   }
 
   companion object {

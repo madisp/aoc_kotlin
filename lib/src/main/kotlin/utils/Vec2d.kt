@@ -30,6 +30,13 @@ data class Vec2d(val x: Double, val y: Double) {
     return (abs(other.x - x) + abs(other.y - y))
   }
 
+  operator fun compareTo(o: Vec2d): Int {
+    return when {
+      x != o.x -> x.compareTo(o.x)
+      else -> y.compareTo(o.y)
+    }
+  }
+
   companion object {
     fun parse(str: String, delimiter: String = ","): Vec2d {
       return str.cut(delimiter, String::toDouble, String::toDouble, ::Vec2d)
