@@ -5,7 +5,9 @@ import com.microsoft.z3.BoolSort
 import com.microsoft.z3.Context
 import com.microsoft.z3.Expr
 import com.microsoft.z3.IntExpr
+import com.microsoft.z3.IntSort
 import com.microsoft.z3.Model
+import com.microsoft.z3.Sort
 import com.microsoft.z3.Status
 
 interface Z3Expr {
@@ -80,14 +82,37 @@ infix fun Z3Expr.eq(other: Z3Expr): Z3BoolExpr {
   return Z3BoolExpr(ctx, ctx.mkEq(this.expr, other.expr))
 }
 
+infix fun Z3Expr.greaterOrEqualThan(other: Z3Expr): Z3BoolExpr {
+  return Z3BoolExpr(ctx, ctx.mkGe(this.expr, other.expr))
+}
+
 class Z3Context(private val ctx: Context) {
   lateinit var model: Model
 
   fun int(name: String) = Z3Int(ctx, ctx.mkIntConst(name))
 
-  fun solve(equations: List<Z3BoolExpr>) {
+  fun const(int: Int) = Z3Int(ctx, ctx.mkInt(int))
+
+  fun minimize(equations: List<Z3BoolExpr>, expr: Z3Expr) {
+    val optimizer = ctx.mkOptimize()
+    optimizer.Assert(*equations.map { it.expr }.toTypedArray())
+    optimizer.MkMinimize(expr.expr as IntExpr)
+
+    require(optimizer.Check() == Status.SATISFIABLE) {
+      "Equation set not satisfiable"
+    }
+
+    this.model = optimizer.model
+  }
+
+  fun solve(equations: List<Z3BoolExpr>, minimize: Z3Expr? = null) {
     val solver = ctx.mkSolver()
     solver.add(*equations.map { it.expr }.toTypedArray())
+
+    if (minimize != null) {
+      ctx.mkOptimize().MkMinimize(minimize.expr as IntExpr)
+    }
+//    solver.unsatCore
 
     require(solver.check() == Status.SATISFIABLE) {
       "Equation set not satisfiable"
